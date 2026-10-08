@@ -1,0 +1,78 @@
+{
+  "app": {
+    "name": "RijSchool Planner"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "calendar": "Agenda",
+    "students": "Leerlingen",
+    "myStudents": "Mijn leerlingen",
+    "book": "Les inplannen",
+    "lessons": "Lessen",
+    "payments": "Betalingen & uren",
+    "reports": "Rapportages",
+    "manage": "Beheer",
+    "instructors": "Instructeurs",
+    "vehicles": "Lesauto's",
+    "packages": "Pakketten",
+    "settings": "Instellingen"
+  },
+  "topbar": {
+    "week": "Week {week}",
+    "search": "Zoek leerlingen of lessen",
+    "notifications": "Meldingen",
+    "generate": "Planning genereren"
+  },
+  "user": {
+    "owner": "Eigenaar",
+    "instructor": "Instructeur",
+    "language": "Taal",
+    "signOut": "Uitloggen",
+    "menu": "Gebruikersmenu"
+  },
+  "roles": {
+    "ADMIN": "Beheerder",
+    "INSTRUCTOR": "Instructeur"
+  },
+  "greeting": {
+    "morning": "Goedemorgen, {name}",
+    "afternoon": "Goedemiddag, {name}",
+    "evening": "Goedenavond, {name}"
+  },
+  "login": {
+    "title": "Inloggen",
+    "subtitle": "Log in bij {school}",
+    "email": "E-mailadres",
+    "password": "Wachtwoord",
+    "submit": "Inloggen",
+    "magicLink": "Stuur me een inloglink",
+    "magicLinkSent": "Als dit e-mailadres bekend is, is er een inloglink verstuurd.",
+    "invalid": "E-mailadres of wachtwoord is onjuist.",
+    "tooMany": "Te veel pogingen. Probeer het later opnieuw.",
+    "or": "of"
+  },
+  "pages": {
+    "comingSoon": "Dit onderdeel wordt in een volgende fase gebouwd.",
+    "settings": "Instellingen",
+    "dashboardPhase": "Het dashboard wordt gevuld in fase 1."
+  },
+  "common": {
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "loading": "Laden…",
+    "error": "Er ging iets mis. Probeer het opnieuw."
+  },
+  "language": {
+    "nl": "Nederlands",
+    "en": "English"
+  },
+  "invite": {
+    "title": "Account aanmaken",
+    "name": "Naam",
+    "password": "Kies een wachtwoord",
+    "passwordHint": "Minimaal 10 tekens.",
+    "submit": "Account aanmaken",
+    "expired": "Deze uitnodiging is ongeldig of verlopen. Vraag een nieuwe aan.",
+    "invalid": "Controleer je gegevens (wachtwoord minimaal 10 tekens)."
+  }
+}

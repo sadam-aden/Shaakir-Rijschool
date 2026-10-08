@@ -1,0 +1,78 @@
+{
+  "app": {
+    "name": "RijSchool Planner"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "calendar": "Calendar",
+    "students": "Students",
+    "myStudents": "My students",
+    "book": "Book a lesson",
+    "lessons": "Lessons",
+    "payments": "Payments & hours",
+    "reports": "Reports",
+    "manage": "Manage",
+    "instructors": "Instructors",
+    "vehicles": "Vehicles",
+    "packages": "Packages",
+    "settings": "Settings"
+  },
+  "topbar": {
+    "week": "Week {week}",
+    "search": "Search students or lessons",
+    "notifications": "Notifications",
+    "generate": "Generate schedule"
+  },
+  "user": {
+    "owner": "Owner",
+    "instructor": "Instructor",
+    "language": "Language",
+    "signOut": "Sign out",
+    "menu": "User menu"
+  },
+  "roles": {
+    "ADMIN": "Admin",
+    "INSTRUCTOR": "Instructor"
+  },
+  "greeting": {
+    "morning": "Good morning, {name}",
+    "afternoon": "Good afternoon, {name}",
+    "evening": "Good evening, {name}"
+  },
+  "login": {
+    "title": "Sign in",
+    "subtitle": "Sign in to {school}",
+    "email": "E-mail address",
+    "password": "Password",
+    "submit": "Sign in",
+    "magicLink": "E-mail me a sign-in link",
+    "magicLinkSent": "If this e-mail address is known, a sign-in link has been sent.",
+    "invalid": "E-mail address or password is incorrect.",
+    "tooMany": "Too many attempts. Please try again later.",
+    "or": "or"
+  },
+  "pages": {
+    "comingSoon": "This section will be built in a later phase.",
+    "settings": "Settings",
+    "dashboardPhase": "The dashboard is filled in phase 1."
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading…",
+    "error": "Something went wrong. Please try again."
+  },
+  "language": {
+    "nl": "Nederlands",
+    "en": "English"
+  },
+  "invite": {
+    "title": "Create account",
+    "name": "Name",
+    "password": "Choose a password",
+    "passwordHint": "At least 10 characters.",
+    "submit": "Create account",
+    "expired": "This invitation is invalid or has expired. Ask for a new one.",
+    "invalid": "Please check your details (password at least 10 characters)."
+  }
+}
