@@ -7,7 +7,7 @@ import { inviteInstructorAction } from "@/app/actions/invites";
 import { setInstructorActiveAction, setWorkingHoursAction, updateInstructorAction } from "@/app/actions/manage";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Field, Input, Select } from "@/components/ui/field";
+import { Field, Input, Select, TimeInput } from "@/components/ui/field";
 import type { AppLocale } from "@/i18n/config";
 import { weekdayShort } from "@/lib/i18n-format";
 import { useRunAction } from "@/lib/use-action";
@@ -95,9 +95,9 @@ export function WorkingHoursEditor({ instructorId, initial }: { instructorId: st
               {items.length === 0 && <span className="text-sm text-muted">{t("closed")}</span>}
               {items.map(({ r, i }) => (
                 <span key={i} className="flex items-center gap-1">
-                  <Input type="time" step={900} className="w-28 py-1.5" value={toTime(r.startMin)} onChange={(e) => update(i, { startMin: fromTime(e.target.value) })} />
+                  <TimeInput className="w-20 py-1.5" value={toTime(r.startMin)} onChange={(v) => /^\d{2}:\d{2}$/.test(v) && update(i, { startMin: fromTime(v) })} />
                   –
-                  <Input type="time" step={900} className="w-28 py-1.5" value={toTime(r.endMin)} onChange={(e) => update(i, { endMin: fromTime(e.target.value) })} />
+                  <TimeInput className="w-20 py-1.5" value={toTime(r.endMin)} onChange={(v) => /^\d{2}:\d{2}$/.test(v) && update(i, { endMin: fromTime(v) })} />
                   <Button variant="ghost" size="icon" aria-label={tc("delete")} onClick={() => setRows((x) => x.filter((_, idx) => idx !== i))}><Trash2 className="h-4 w-4" /></Button>
                 </span>
               ))}

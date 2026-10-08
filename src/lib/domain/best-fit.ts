@@ -133,3 +133,35 @@ function scoreSlot(
 export function explanationFactors(slot: RankedSlot, max = 3): Factor[] {
   return slot.factors.filter((f) => f.points > 0).slice(0, max);
 }
+
+/**
+ * Picks what the booking wizard shows for one day: the best OK slots (at least 30 minutes apart,
+ * always including the best fit) plus a few representative blocked slots with their reason.
+ * Result is sorted chronologically.
+ */
+export function pickDisplaySlots(ranked: RankedSlot[], opts: { maxOk?: number; maxBlocked?: number } = {}): RankedSlot[] {
+  const { maxOk = 9, maxBlocked = 6 } = opts;
+  const chosen: RankedSlot[] = [];
+  const okByScore = ranked
+    .filter((s) => s.ok)
+    .sort((a, b) => b.score - a.score || +a.startsAt - +b.startsAt);
+  for (const s of okByScore) {
+    if (chosen.length >= maxOk) break;
+    if (chosen.every((c) => Math.abs(+c.startsAt - +s.startsAt) >= 30 * 60_000)) chosen.push(s);
+  }
+
+  // blocked: skip "outside working hours" noise, one per distinct reason, on a 30-minute grid
+  const seen = new Set<string>();
+  const blocked: RankedSlot[] = [];
+  for (const s of ranked) {
+    if (s.ok || blocked.length >= maxBlocked) continue;
+    const first = s.conflicts[0];
+    if (!first || first.key === "outsideWorkingHours" || first.key === "dayLimit") continue;
+    if (s.startsAt.getUTCMinutes() % 30 !== 0) continue;
+    const id = `${first.key}:${first.params?.with ?? first.params?.gearbox ?? ""}`;
+    if (seen.has(id)) continue;
+    seen.add(id);
+    blocked.push(s);
+  }
+  return [...chosen, ...blocked].sort((a, b) => +a.startsAt - +b.startsAt);
+}

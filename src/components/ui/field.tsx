@@ -23,3 +23,28 @@ export function Field({ label, error, children, className }: { label: string; er
     </label>
   );
 }
+
+/** 24-hour time entry ("HH:MM"). Native time inputs follow the OS locale (often 12 h), the app always uses 24 h. */
+export function TimeInput({ value, onChange, className, ...p }: { value: string; onChange: (v: string) => void; className?: string } & Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "onChange" | "type">) {
+  return (
+    <input
+      {...p}
+      type="text"
+      inputMode="numeric"
+      placeholder="HH:MM"
+      maxLength={5}
+      pattern="([01]\d|2[0-3]):[0-5]\d"
+      value={value}
+      onChange={(e) => {
+        let v = e.target.value.replace(/[^\d:]/g, "");
+        if (/^\d{2}$/.test(v) && value.length < v.length) v += ":";
+        onChange(v);
+      }}
+      onBlur={(e) => {
+        const m = /^(\d{1,2}):?(\d{2})?$/.exec(e.target.value);
+        if (m) onChange(`${m[1].padStart(2, "0")}:${(m[2] ?? "00")}`);
+      }}
+      className={cn(inputClass, className)}
+    />
+  );
+}

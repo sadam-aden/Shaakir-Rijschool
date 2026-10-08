@@ -186,3 +186,19 @@ export async function saveExamAction(studentId: string, examId: string | null, i
   revalidatePath("/leerlingen");
   return ok();
 }
+
+/** Admin: ask a student with few hours left to top up. Respects consent; logs the notification. */
+export async function sendTopUpAction(studentId: string) {
+  const user = await requireAdmin();
+  const student = await findStudentFor(user, studentId);
+  if (!student) return fail("notFound");
+  const { sendStudentMessage } = await import("@/lib/notifications/send");
+  const { topUpMessage } = await import("@/lib/notifications/templates");
+  const { formatHours } = await import("@/lib/format");
+  const left = student.minutesRemaining - student.minutesReserved;
+  const r = await sendStudentMessage(studentId, "topup", ({ locale, school, studentName }) =>
+    topUpMessage(locale, { school, studentName, hoursLeft: formatHours(Math.max(left, 0), locale) }),
+  );
+  if (r.sent === 0) return fail("noConsent");
+  return ok({ sent: r.sent });
+}

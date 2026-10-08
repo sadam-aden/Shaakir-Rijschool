@@ -90,3 +90,18 @@ describe("derived student status", () => {
     expect(r.lessonsLeft).toBe(4);
   });
 });
+
+import { pickDisplaySlots } from "@/lib/domain/best-fit";
+
+describe("pickDisplaySlots", () => {
+  it("includes the best fit, spaces OK slots, sorts by time and adds blocked reasons", () => {
+    const ranked = rankSlots(ctx(), { type: "PRACTICAL", gearbox: "AUTOMATIC" }, day, 60);
+    const shown = pickDisplaySlots(ranked);
+    expect(shown.some((s) => s.best)).toBe(true);
+    const times = shown.map((s) => +s.startsAt);
+    expect([...times].sort((a, b) => a - b)).toEqual(times);
+    const ok = shown.filter((s) => s.ok);
+    for (let i = 1; i < ok.length; i++) expect(+ok[i].startsAt - +ok[i - 1].startsAt).toBeGreaterThanOrEqual(30 * 60_000);
+    expect(shown.some((s) => !s.ok && s.conflicts[0].key === "instructorBusy")).toBe(true);
+  });
+});
