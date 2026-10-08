@@ -3,6 +3,7 @@
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { fail, ok } from "@/lib/action-result";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/dal/session";
 import { getEmailProvider } from "@/lib/providers/email";
@@ -15,7 +16,7 @@ export async function inviteInstructorAction(input: z.infer<typeof inviteSchema>
   const admin = await requireAdmin();
   const data = inviteSchema.parse(input);
   const email = data.email.toLowerCase();
-  if (await db.user.findUnique({ where: { email } })) return { ok: false as const, error: "exists" as const };
+  if (await db.user.findUnique({ where: { email } })) return fail("inviteExists");
 
   const { token, hash } = newToken();
   const school = await db.school.findUniqueOrThrow({ where: { id: admin.schoolId } });
@@ -30,7 +31,7 @@ export async function inviteInstructorAction(input: z.infer<typeof inviteSchema>
     subject: `Uitnodiging voor ${school.name} · RijSchool Planner`,
     text: `Je bent uitgenodigd als instructeur bij ${school.name}.\nMaak je account aan (7 dagen geldig):\n${link}`,
   });
-  return { ok: true as const };
+  return ok();
 }
 
 const acceptSchema = z.object({

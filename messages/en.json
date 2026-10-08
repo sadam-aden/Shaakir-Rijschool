@@ -61,7 +61,37 @@
     "save": "Save",
     "cancel": "Cancel",
     "loading": "Loading…",
-    "error": "Something went wrong. Please try again."
+    "error": "Something went wrong. Please try again.",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "none": "None",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "min": "{n} min",
+    "notes": "Notes",
+    "name": "Name",
+    "email": "E-mail",
+    "phone": "Phone",
+    "status": "Status",
+    "actions": "Actions",
+    "saved": "Saved",
+    "saving": "Saving…",
+    "noResults": "No results",
+    "view": "View",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "from": "From",
+    "to": "To",
+    "reason": "Reason",
+    "optional": "optional",
+    "required": "Required field",
+    "hoursLeft": "{hours} left",
+    "of": "{a} of {b}"
   },
   "language": {
     "nl": "Nederlands",
@@ -81,5 +111,383 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "gearbox": {
+    "MANUAL": "Manual",
+    "AUTOMATIC": "Automatic"
+  },
+  "lessonType": {
+    "PRACTICAL": "Practical",
+    "THEORY": "Theory",
+    "EXAM": "CBR exam"
+  },
+  "lessonStatus": {
+    "DRAFT": "Draft",
+    "PLANNED": "Planned",
+    "COMPLETED": "Completed",
+    "NO_SHOW": "No-show",
+    "CANCELLED_STUDENT": "Cancelled (student)",
+    "CANCELLED_SCHOOL": "Cancelled (school)"
+  },
+  "dayPart": {
+    "MORNING": "Morning",
+    "AFTERNOON": "Afternoon",
+    "EVENING": "Evening"
+  },
+  "dayPartPlural": {
+    "MORNING": "mornings",
+    "AFTERNOON": "afternoons",
+    "EVENING": "evenings"
+  },
+  "dayPartSingular": {
+    "MORNING": "morning",
+    "AFTERNOON": "afternoon",
+    "EVENING": "evening"
+  },
+  "conflicts": {
+    "outsideWorkingHours": "Outside working hours",
+    "instructorTimeOff": "Instructor is off",
+    "instructorBusy": "Clashes with {with}",
+    "travelTooLong": "Not enough travel time for {with} ({gap} of {needed} min)",
+    "studentBusy": "Student already has a lesson",
+    "studentUnavailable": "Student unavailable",
+    "outsideStudentAvailability": "Outside the student's availability",
+    "notEnoughHours": "Not enough hours ({available} min left)",
+    "noVehicle": "No {gearbox} car free",
+    "dayLimit": "Daily limit of {max} min reached",
+    "generic": "This time is not available"
+  },
+  "bestFit": {
+    "intro": "{time} is the best fit.",
+    "onlyInPart": "It is the only {part} slot that fits {duration} min.",
+    "adjacentBefore": "It follows {name}'s lesson, so there are no gaps in the day.",
+    "adjacentAfter": "It is followed directly by {name}'s lesson.",
+    "shortTravel": "Only {minutes} min driving from/to {name}, so no dead kilometres.",
+    "availabilityCenter": "It sits in the middle of the student's availability.",
+    "sameCar": "Same car as usual.",
+    "lightDay": "Keeps the day relaxed."
+  },
+  "errors": {
+    "invalid": "Please check the entered details.",
+    "notFound": "Not found or no access.",
+    "forbidden": "You do not have access to this.",
+    "generic": "Something went wrong. Please try again.",
+    "conflict": "This time was just taken. Please pick another time.",
+    "notEnoughHours": "The student does not have enough hours left.",
+    "overrideReason": "Please give a reason for the override.",
+    "inviteExists": "A user with this e-mail address already exists."
+  },
+  "students": {
+    "title": "Students",
+    "myTitle": "My students",
+    "headerCounts": "{active} active · {waiting} on the waiting list",
+    "add": "Add student",
+    "search": "Search by name or phone",
+    "empty": "No students found.",
+    "filters": {
+      "all": "All",
+      "practical": "Practical",
+      "theoryOnly": "Theory only",
+      "examSoon": "Exam soon",
+      "lowHours": "Low hours",
+      "manual": "Manual",
+      "automatic": "Automatic",
+      "waiting": "Waiting list"
+    },
+    "cols": {
+      "student": "Student",
+      "remaining": "Remaining hours",
+      "availability": "Availability",
+      "next": "Next lesson",
+      "status": "Status"
+    },
+    "lessonsCount": "{n} lessons",
+    "theoryPackage": "Theory package",
+    "hoursOf": "{left} of {total}",
+    "classesOf": "{done} of {total} classes",
+    "next": {
+      "none": "Not scheduled",
+      "needs": "Needs {min} min",
+      "drafted": "drafted",
+      "theoryGroup": "Theory group"
+    },
+    "status": {
+      "examRequested": "Exam requested",
+      "cbrExam": "CBR exam {day}",
+      "theoryExam": "Theory exam {date}",
+      "lowHours": "Low hours",
+      "unscheduled": "Unscheduled",
+      "theoryOnly": "Theory only",
+      "active": "Active",
+      "waitingList": "Waiting list",
+      "paused": "Paused",
+      "passed": "Passed",
+      "archived": "Archived"
+    },
+    "panel": {
+      "since": "Student since {date}",
+      "bookLesson": "Book lesson",
+      "message": "Message",
+      "learnsIn": "Learns in",
+      "remainingHours": "Remaining hours",
+      "hoursLeft": "{left} of {total} h left",
+      "packageSummary": "{n}-lesson package · {payment}",
+      "paidFull": "paid in full",
+      "unpaid": "not paid yet",
+      "partial": "partially paid",
+      "noPackage": "No package",
+      "weeklyAvailability": "Weekly availability",
+      "skills": "Skills progress",
+      "theoryExam": "Theory exam",
+      "practicalExam": "Practical exam",
+      "passedOn": "Passed · {date}",
+      "requested": "Requested",
+      "scheduledOn": "Scheduled · {date}",
+      "notPlanned": "Not planned",
+      "openProfile": "Full profile",
+      "noSkills": "No assessments yet"
+    },
+    "detail": {
+      "tabs": {
+        "lessons": "Lessons",
+        "payments": "Payments",
+        "exams": "Exams",
+        "notes": "Notes"
+      },
+      "profile": "Details",
+      "edit": "Edit details",
+      "noLessons": "No lessons yet.",
+      "package": "Package",
+      "addPackage": "Add package",
+      "choosePackage": "Choose a package",
+      "adjustHours": "Adjust hours",
+      "adjustMinutes": "Minutes (+ or −)",
+      "adjustReason": "Reason",
+      "invoices": "Invoices",
+      "noInvoices": "No invoices yet.",
+      "paidStatus": {
+        "PAID": "Paid",
+        "PARTIAL": "Partially paid",
+        "UNPAID": "Not paid",
+        "NONE": "No invoice"
+      },
+      "ledger": "Hours ledger",
+      "addExam": "Add exam",
+      "noExams": "No exams yet.",
+      "examKind": {
+        "THEORY": "Theory exam",
+        "PRACTICAL": "Practical exam",
+        "TUSSENTIJDSE_TOETS": "Interim test (TTT)"
+      },
+      "examStatus": {
+        "REQUESTED": "Requested",
+        "SCHEDULED": "Scheduled",
+        "PASSED": "Passed",
+        "FAILED": "Failed",
+        "CANCELLED": "Cancelled"
+      },
+      "attempt": "Attempt {n}",
+      "unavailability": "One-off unavailability",
+      "addUnavailability": "Add period",
+      "readiness": {
+        "READY": "Ready",
+        "NEEDS_LESSONS": "{n} lessons left"
+      },
+      "ledgerTypes": {
+        "PURCHASE": "Purchase",
+        "RESERVE": "Reserved",
+        "RELEASE": "Released",
+        "CONSUME": "Used",
+        "ADJUST": "Adjustment",
+        "REFUND": "Refund"
+      }
+    },
+    "form": {
+      "titleNew": "New student",
+      "titleEdit": "Edit student",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "phone": "Phone",
+      "email": "E-mail",
+      "birthDate": "Date of birth",
+      "address": "Address",
+      "postcode": "Postcode",
+      "area": "Area",
+      "gearbox": "Gearbox",
+      "track": "Track",
+      "tracks": {
+        "PRACTICAL": "Practical",
+        "THEORY_ONLY": "Theory only",
+        "BOTH": "Practical + theory"
+      },
+      "status": "Status",
+      "statuses": {
+        "WAITING_LIST": "Waiting list",
+        "ACTIVE": "Active",
+        "PAUSED": "Paused",
+        "PASSED": "Passed",
+        "ARCHIVED": "Archived"
+      },
+      "instructor": "Primary instructor",
+      "language": "Message language",
+      "smsConsent": "Consent for SMS",
+      "emailConsent": "Consent for e-mail",
+      "cbrNumber": "CBR candidate number",
+      "guardian": "Parent / guardian (under 18)",
+      "guardianName": "Guardian name",
+      "guardianPhone": "Guardian phone",
+      "guardianEmail": "Guardian e-mail",
+      "notes": "Notes",
+      "submit": "Save",
+      "created": "Student added",
+      "updated": "Details saved",
+      "invalidEmail": "Invalid e-mail address"
+    }
+  },
+  "vehicles": {
+    "title": "Vehicles",
+    "add": "Add vehicle",
+    "empty": "No vehicles yet.",
+    "plate": "Licence plate",
+    "status": {
+      "ACTIVE": "Active",
+      "IN_MAINTENANCE": "In maintenance",
+      "RETIRED": "Retired"
+    },
+    "apk": "APK",
+    "service": "Service",
+    "insurance": "Insurance",
+    "dueIn": "in {days} days",
+    "dueToday": "today",
+    "overdue": "{days} days overdue",
+    "notSet": "Not set",
+    "assigned": "Assigned instructor",
+    "unassigned": "Nobody",
+    "lessonsThisWeek": "{n} lessons this week",
+    "form": {
+      "name": "Name / model",
+      "plate": "Licence plate",
+      "gearbox": "Gearbox",
+      "color": "Colour",
+      "dualControl": "Dual controls",
+      "status": "Status",
+      "apk": "APK due",
+      "service": "Next service",
+      "insurance": "Insurance until",
+      "odometer": "Odometer (km)",
+      "instructor": "Assigned instructor"
+    },
+    "detail": {
+      "edit": "Details",
+      "unavailability": "Unavailable",
+      "add": "Add period",
+      "none": "No blocked periods."
+    },
+    "alerts": {
+      "apkSoon": "APK of {name} expires in {days} days",
+      "apkExpired": "APK of {name} has expired"
+    },
+    "saved": "Vehicle saved"
+  },
+  "instructors": {
+    "title": "Instructors",
+    "invite": "Invite instructor",
+    "inviteSent": "Invitation sent",
+    "inviteExists": "A user with this e-mail address already exists",
+    "empty": "No instructors yet.",
+    "hoursThisWeek": "{hours} h this week",
+    "studentsCount": "{n} students",
+    "defaultCar": "Default car",
+    "inactive": "Inactive",
+    "detail": {
+      "profile": "Profile",
+      "displayName": "Display name",
+      "licence": "WRM number",
+      "maxPerDay": "Max. teaching minutes per day",
+      "homeAddress": "Home address",
+      "defaultVehicle": "Default car",
+      "color": "Calendar colour",
+      "workingHours": "Working hours",
+      "addRange": "Add time block",
+      "closed": "Off",
+      "timeOff": "Time off",
+      "addTimeOff": "Add time off",
+      "noTimeOff": "No time off planned.",
+      "students": "Assigned students",
+      "noStudents": "No students assigned.",
+      "deactivate": "Deactivate",
+      "activate": "Activate",
+      "deactivateConfirm": "This instructor will no longer be able to sign in. Continue?",
+      "saved": "Saved"
+    },
+    "inviteForm": {
+      "name": "Name",
+      "email": "E-mail address",
+      "send": "Send invitation"
+    }
+  },
+  "packages": {
+    "title": "Packages",
+    "add": "Add package",
+    "editNote": "Price changes only apply to new purchases.",
+    "popular": "Most chosen",
+    "inactive": "Inactive",
+    "types": {
+      "PRACTICAL": "Practical",
+      "THEORY": "Theory",
+      "EXAM_BUNDLE": "Practical + exam"
+    },
+    "includesExam": "Exam included",
+    "form": {
+      "nameNl": "Name (Dutch)",
+      "nameEn": "Name (English)",
+      "descNl": "Description (NL)",
+      "descEn": "Description (EN)",
+      "type": "Type",
+      "lessonCount": "Number of lessons",
+      "price": "Price (incl. VAT)",
+      "vat": "VAT (%)",
+      "popular": "Mark as most chosen",
+      "active": "Active",
+      "sort": "Order"
+    },
+    "saved": "Package saved",
+    "perLesson": "{n} lessons · {hours}"
+  },
+  "settings": {
+    "title": "Settings",
+    "school": "Driving school",
+    "schoolName": "School name",
+    "address": "Address",
+    "postcode": "Postcode",
+    "city": "City",
+    "kvk": "KvK number",
+    "btw": "VAT number",
+    "iban": "IBAN",
+    "defaultLocale": "Default language",
+    "rules": "Scheduling rules",
+    "maxPerDay": "Max. teaching minutes per day (instructor)",
+    "travelBuffer": "Travel buffer between lessons (min)",
+    "lowHours": "Low hours below (min)",
+    "cancellation": "Cancellation",
+    "cancellationWindow": "Free cancellation until (hours before)",
+    "reminder24h": "Reminder 24 hours before",
+    "allowUnpaid": "Allow booking on unpaid packages",
+    "payments": "Payments",
+    "vat": "VAT rate (%)",
+    "paymentTerm": "Payment term (days)",
+    "smsSender": "SMS sender name (max. 11 characters)",
+    "integrations": "Integrations",
+    "integration": {
+      "email": "E-mail (Resend)",
+      "sms": "SMS",
+      "mollie": "Payments (Mollie)",
+      "ai": "AI summary (Anthropic)",
+      "connected": "Connected",
+      "mock": "Test mode (console)"
+    },
+    "users": "Users",
+    "save": "Save",
+    "saved": "Settings saved"
   }
 }

@@ -61,7 +61,37 @@
     "save": "Opslaan",
     "cancel": "Annuleren",
     "loading": "Laden…",
-    "error": "Er ging iets mis. Probeer het opnieuw."
+    "error": "Er ging iets mis. Probeer het opnieuw.",
+    "add": "Toevoegen",
+    "edit": "Bewerken",
+    "delete": "Verwijderen",
+    "close": "Sluiten",
+    "confirm": "Bevestigen",
+    "back": "Terug",
+    "none": "Geen",
+    "yes": "Ja",
+    "no": "Nee",
+    "all": "Alles",
+    "min": "{n} min",
+    "notes": "Notities",
+    "name": "Naam",
+    "email": "E-mail",
+    "phone": "Telefoon",
+    "status": "Status",
+    "actions": "Acties",
+    "saved": "Opgeslagen",
+    "saving": "Opslaan…",
+    "noResults": "Geen resultaten",
+    "view": "Bekijken",
+    "today": "Vandaag",
+    "tomorrow": "Morgen",
+    "from": "Van",
+    "to": "Tot",
+    "reason": "Reden",
+    "optional": "optioneel",
+    "required": "Verplicht veld",
+    "hoursLeft": "{hours} over",
+    "of": "{a} van {b}"
   },
   "language": {
     "nl": "Nederlands",
@@ -81,5 +111,383 @@
     "light": "Licht",
     "dark": "Donker",
     "system": "Systeem"
+  },
+  "gearbox": {
+    "MANUAL": "Schakel",
+    "AUTOMATIC": "Automaat"
+  },
+  "lessonType": {
+    "PRACTICAL": "Praktijk",
+    "THEORY": "Theorie",
+    "EXAM": "CBR-examen"
+  },
+  "lessonStatus": {
+    "DRAFT": "Concept",
+    "PLANNED": "Gepland",
+    "COMPLETED": "Afgerond",
+    "NO_SHOW": "Niet verschenen",
+    "CANCELLED_STUDENT": "Geannuleerd (leerling)",
+    "CANCELLED_SCHOOL": "Geannuleerd (school)"
+  },
+  "dayPart": {
+    "MORNING": "Ochtend",
+    "AFTERNOON": "Middag",
+    "EVENING": "Avond"
+  },
+  "dayPartPlural": {
+    "MORNING": "ochtenden",
+    "AFTERNOON": "middagen",
+    "EVENING": "avonden"
+  },
+  "dayPartSingular": {
+    "MORNING": "ochtend",
+    "AFTERNOON": "middag",
+    "EVENING": "avond"
+  },
+  "conflicts": {
+    "outsideWorkingHours": "Buiten werktijden",
+    "instructorTimeOff": "Instructeur heeft verlof",
+    "instructorBusy": "Botst met {with}",
+    "travelTooLong": "Te weinig reistijd bij {with} ({gap} van {needed} min)",
+    "studentBusy": "Leerling heeft al een les",
+    "studentUnavailable": "Leerling niet beschikbaar",
+    "outsideStudentAvailability": "Buiten beschikbaarheid van de leerling",
+    "notEnoughHours": "Te weinig uren ({available} min over)",
+    "noVehicle": "Geen {gearbox} vrij",
+    "dayLimit": "Daglimiet van {max} min bereikt",
+    "generic": "Dit tijdstip is niet beschikbaar"
+  },
+  "bestFit": {
+    "intro": "{time} is de beste keuze.",
+    "onlyInPart": "Het is het enige {part}tijdstip waar {duration} min past.",
+    "adjacentBefore": "De les sluit aan op die van {name}, dus geen gaten in de dag.",
+    "adjacentAfter": "Daarna volgt direct de les van {name}.",
+    "shortTravel": "Slechts {minutes} min rijden van/naar {name}, dus geen lege kilometers.",
+    "availabilityCenter": "Het valt midden in de beschikbaarheid van de leerling.",
+    "sameCar": "Dezelfde lesauto als anders.",
+    "lightDay": "Houdt de dag rustig."
+  },
+  "errors": {
+    "invalid": "Controleer de ingevulde gegevens.",
+    "notFound": "Niet gevonden of geen toegang.",
+    "forbidden": "Je hebt hier geen toegang toe.",
+    "generic": "Er ging iets mis. Probeer het opnieuw.",
+    "conflict": "Dit tijdstip is zojuist bezet geraakt. Kies een ander tijdstip.",
+    "notEnoughHours": "De leerling heeft te weinig uren over.",
+    "overrideReason": "Geef een reden voor de overschrijving.",
+    "inviteExists": "Er bestaat al een gebruiker met dit e-mailadres."
+  },
+  "students": {
+    "title": "Leerlingen",
+    "myTitle": "Mijn leerlingen",
+    "headerCounts": "{active} actief · {waiting} op de wachtlijst",
+    "add": "Leerling toevoegen",
+    "search": "Zoek op naam of telefoon",
+    "empty": "Geen leerlingen gevonden.",
+    "filters": {
+      "all": "Alle",
+      "practical": "Praktijk",
+      "theoryOnly": "Alleen theorie",
+      "examSoon": "Examen binnenkort",
+      "lowHours": "Weinig uren",
+      "manual": "Schakel",
+      "automatic": "Automaat",
+      "waiting": "Wachtlijst"
+    },
+    "cols": {
+      "student": "Leerling",
+      "remaining": "Resterende uren",
+      "availability": "Beschikbaarheid",
+      "next": "Volgende les",
+      "status": "Status"
+    },
+    "lessonsCount": "{n} lessen",
+    "theoryPackage": "Theoriepakket",
+    "hoursOf": "{left} van {total}",
+    "classesOf": "{done} van {total} lessen",
+    "next": {
+      "none": "Niet ingepland",
+      "needs": "Heeft {min} min nodig",
+      "drafted": "concept",
+      "theoryGroup": "Theoriegroep"
+    },
+    "status": {
+      "examRequested": "Examen aangevraagd",
+      "cbrExam": "CBR-examen {day}",
+      "theoryExam": "Theorie-examen {date}",
+      "lowHours": "Weinig uren",
+      "unscheduled": "Niet ingepland",
+      "theoryOnly": "Alleen theorie",
+      "active": "Actief",
+      "waitingList": "Wachtlijst",
+      "paused": "Gepauzeerd",
+      "passed": "Geslaagd",
+      "archived": "Gearchiveerd"
+    },
+    "panel": {
+      "since": "Leerling sinds {date}",
+      "bookLesson": "Les inplannen",
+      "message": "Bericht",
+      "learnsIn": "Leert in",
+      "remainingHours": "Resterende uren",
+      "hoursLeft": "{left} van {total} u over",
+      "packageSummary": "{n}-lessenpakket · {payment}",
+      "paidFull": "volledig betaald",
+      "unpaid": "nog niet betaald",
+      "partial": "deels betaald",
+      "noPackage": "Geen pakket",
+      "weeklyAvailability": "Wekelijkse beschikbaarheid",
+      "skills": "Voortgang vaardigheden",
+      "theoryExam": "Theorie-examen",
+      "practicalExam": "Praktijkexamen",
+      "passedOn": "Geslaagd · {date}",
+      "requested": "Aangevraagd",
+      "scheduledOn": "Gepland · {date}",
+      "notPlanned": "Niet gepland",
+      "openProfile": "Volledig profiel",
+      "noSkills": "Nog geen beoordelingen"
+    },
+    "detail": {
+      "tabs": {
+        "lessons": "Lessen",
+        "payments": "Betalingen",
+        "exams": "Examens",
+        "notes": "Notities"
+      },
+      "profile": "Gegevens",
+      "edit": "Gegevens bewerken",
+      "noLessons": "Nog geen lessen.",
+      "package": "Pakket",
+      "addPackage": "Pakket toevoegen",
+      "choosePackage": "Kies een pakket",
+      "adjustHours": "Uren corrigeren",
+      "adjustMinutes": "Minuten (+ of −)",
+      "adjustReason": "Reden",
+      "invoices": "Facturen",
+      "noInvoices": "Nog geen facturen.",
+      "paidStatus": {
+        "PAID": "Betaald",
+        "PARTIAL": "Deels betaald",
+        "UNPAID": "Niet betaald",
+        "NONE": "Geen factuur"
+      },
+      "ledger": "Urenoverzicht",
+      "addExam": "Examen toevoegen",
+      "noExams": "Nog geen examens.",
+      "examKind": {
+        "THEORY": "Theorie-examen",
+        "PRACTICAL": "Praktijkexamen",
+        "TUSSENTIJDSE_TOETS": "Tussentijdse toets (TTT)"
+      },
+      "examStatus": {
+        "REQUESTED": "Aangevraagd",
+        "SCHEDULED": "Gepland",
+        "PASSED": "Geslaagd",
+        "FAILED": "Gezakt",
+        "CANCELLED": "Geannuleerd"
+      },
+      "attempt": "Poging {n}",
+      "unavailability": "Eenmalig niet beschikbaar",
+      "addUnavailability": "Periode toevoegen",
+      "readiness": {
+        "READY": "Klaar",
+        "NEEDS_LESSONS": "Nog {n} lessen"
+      },
+      "ledgerTypes": {
+        "PURCHASE": "Aankoop",
+        "RESERVE": "Gereserveerd",
+        "RELEASE": "Vrijgegeven",
+        "CONSUME": "Verbruikt",
+        "ADJUST": "Correctie",
+        "REFUND": "Terugbetaling"
+      }
+    },
+    "form": {
+      "titleNew": "Nieuwe leerling",
+      "titleEdit": "Leerling bewerken",
+      "firstName": "Voornaam",
+      "lastName": "Achternaam",
+      "phone": "Telefoon",
+      "email": "E-mail",
+      "birthDate": "Geboortedatum",
+      "address": "Adres",
+      "postcode": "Postcode",
+      "area": "Wijk",
+      "gearbox": "Versnellingsbak",
+      "track": "Traject",
+      "tracks": {
+        "PRACTICAL": "Praktijk",
+        "THEORY_ONLY": "Alleen theorie",
+        "BOTH": "Praktijk + theorie"
+      },
+      "status": "Status",
+      "statuses": {
+        "WAITING_LIST": "Wachtlijst",
+        "ACTIVE": "Actief",
+        "PAUSED": "Gepauzeerd",
+        "PASSED": "Geslaagd",
+        "ARCHIVED": "Gearchiveerd"
+      },
+      "instructor": "Vaste instructeur",
+      "language": "Taal berichten",
+      "smsConsent": "Toestemming voor SMS",
+      "emailConsent": "Toestemming voor e-mail",
+      "cbrNumber": "CBR-kandidaatnummer",
+      "guardian": "Ouder / voogd (onder 18)",
+      "guardianName": "Naam ouder/voogd",
+      "guardianPhone": "Telefoon ouder/voogd",
+      "guardianEmail": "E-mail ouder/voogd",
+      "notes": "Notities",
+      "submit": "Opslaan",
+      "created": "Leerling toegevoegd",
+      "updated": "Gegevens opgeslagen",
+      "invalidEmail": "Ongeldig e-mailadres"
+    }
+  },
+  "vehicles": {
+    "title": "Lesauto's",
+    "add": "Lesauto toevoegen",
+    "empty": "Nog geen lesauto's.",
+    "plate": "Kenteken",
+    "status": {
+      "ACTIVE": "Actief",
+      "IN_MAINTENANCE": "In onderhoud",
+      "RETIRED": "Uit gebruik"
+    },
+    "apk": "APK",
+    "service": "Onderhoud",
+    "insurance": "Verzekering",
+    "dueIn": "over {days} dagen",
+    "dueToday": "vandaag",
+    "overdue": "{days} dagen te laat",
+    "notSet": "Niet ingesteld",
+    "assigned": "Vaste instructeur",
+    "unassigned": "Niemand",
+    "lessonsThisWeek": "{n} lessen deze week",
+    "form": {
+      "name": "Naam / model",
+      "plate": "Kenteken",
+      "gearbox": "Versnellingsbak",
+      "color": "Kleur",
+      "dualControl": "Dubbele bediening",
+      "status": "Status",
+      "apk": "APK vervalt op",
+      "service": "Volgend onderhoud",
+      "insurance": "Verzekering tot",
+      "odometer": "Kilometerstand",
+      "instructor": "Vaste instructeur"
+    },
+    "detail": {
+      "edit": "Gegevens",
+      "unavailability": "Niet beschikbaar",
+      "add": "Periode toevoegen",
+      "none": "Geen geblokkeerde perioden."
+    },
+    "alerts": {
+      "apkSoon": "APK van {name} verloopt over {days} dagen",
+      "apkExpired": "APK van {name} is verlopen"
+    },
+    "saved": "Lesauto opgeslagen"
+  },
+  "instructors": {
+    "title": "Instructeurs",
+    "invite": "Instructeur uitnodigen",
+    "inviteSent": "Uitnodiging verstuurd",
+    "inviteExists": "Er bestaat al een gebruiker met dit e-mailadres",
+    "empty": "Nog geen instructeurs.",
+    "hoursThisWeek": "{hours} u deze week",
+    "studentsCount": "{n} leerlingen",
+    "defaultCar": "Vaste auto",
+    "inactive": "Inactief",
+    "detail": {
+      "profile": "Profiel",
+      "displayName": "Weergavenaam",
+      "licence": "WRM-nummer",
+      "maxPerDay": "Max. lesminuten per dag",
+      "homeAddress": "Thuisadres",
+      "defaultVehicle": "Vaste lesauto",
+      "color": "Kleur in agenda",
+      "workingHours": "Werktijden",
+      "addRange": "Tijdsblok toevoegen",
+      "closed": "Vrij",
+      "timeOff": "Verlof",
+      "addTimeOff": "Verlof toevoegen",
+      "noTimeOff": "Geen verlof gepland.",
+      "students": "Toegewezen leerlingen",
+      "noStudents": "Geen leerlingen toegewezen.",
+      "deactivate": "Deactiveren",
+      "activate": "Activeren",
+      "deactivateConfirm": "Deze instructeur kan niet meer inloggen. Doorgaan?",
+      "saved": "Opgeslagen"
+    },
+    "inviteForm": {
+      "name": "Naam",
+      "email": "E-mailadres",
+      "send": "Uitnodiging versturen"
+    }
+  },
+  "packages": {
+    "title": "Pakketten",
+    "add": "Pakket toevoegen",
+    "editNote": "Prijswijzigingen gelden alleen voor nieuwe aankopen.",
+    "popular": "Meest gekozen",
+    "inactive": "Inactief",
+    "types": {
+      "PRACTICAL": "Praktijk",
+      "THEORY": "Theorie",
+      "EXAM_BUNDLE": "Praktijk + examen"
+    },
+    "includesExam": "Inclusief examen",
+    "form": {
+      "nameNl": "Naam (Nederlands)",
+      "nameEn": "Naam (Engels)",
+      "descNl": "Omschrijving (NL)",
+      "descEn": "Omschrijving (EN)",
+      "type": "Type",
+      "lessonCount": "Aantal lessen",
+      "price": "Prijs (incl. btw)",
+      "vat": "Btw (%)",
+      "popular": "Markeer als meest gekozen",
+      "active": "Actief",
+      "sort": "Volgorde"
+    },
+    "saved": "Pakket opgeslagen",
+    "perLesson": "{n} lessen · {hours}"
+  },
+  "settings": {
+    "title": "Instellingen",
+    "school": "Rijschool",
+    "schoolName": "Naam rijschool",
+    "address": "Adres",
+    "postcode": "Postcode",
+    "city": "Plaats",
+    "kvk": "KvK-nummer",
+    "btw": "Btw-nummer",
+    "iban": "IBAN",
+    "defaultLocale": "Standaardtaal",
+    "rules": "Planningsregels",
+    "maxPerDay": "Max. lesminuten per dag (instructeur)",
+    "travelBuffer": "Reisbuffer tussen lessen (min)",
+    "lowHours": "Weinig uren onder (min)",
+    "cancellation": "Annulering",
+    "cancellationWindow": "Gratis annuleren tot (uren vooraf)",
+    "reminder24h": "Herinnering 24 uur van tevoren",
+    "allowUnpaid": "Inplannen toestaan bij onbetaalde pakketten",
+    "payments": "Betalingen",
+    "vat": "Btw-tarief (%)",
+    "paymentTerm": "Betaaltermijn (dagen)",
+    "smsSender": "SMS-afzendernaam (max. 11 tekens)",
+    "integrations": "Koppelingen",
+    "integration": {
+      "email": "E-mail (Resend)",
+      "sms": "SMS",
+      "mollie": "Betalingen (Mollie)",
+      "ai": "AI-samenvatting (Anthropic)",
+      "connected": "Gekoppeld",
+      "mock": "Testmodus (console)"
+    },
+    "users": "Gebruikers",
+    "save": "Opslaan",
+    "saved": "Instellingen opgeslagen"
   }
 }

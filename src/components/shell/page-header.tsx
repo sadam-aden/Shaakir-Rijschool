@@ -9,7 +9,7 @@ import { isoWeek } from "@/lib/domain/time";
  * Top bar used by every page: small date/week label above a large title, search,
  * notification bell and the primary "Generate schedule" button (wired up in Phase 3).
  */
-export async function PageHeader({ title, eyebrow, actions }: { title: string; eyebrow?: ReactNode; actions?: ReactNode }) {
+export async function PageHeader({ title, eyebrow, actions, hideSearch }: { title: string; eyebrow?: ReactNode; actions?: ReactNode; hideSearch?: boolean }) {
   const t = await getTranslations("topbar");
   const locale = (await getLocale()) as AppLocale;
   const now = new Date();
@@ -22,6 +22,7 @@ export async function PageHeader({ title, eyebrow, actions }: { title: string; e
       </div>
       <div className="flex items-center gap-3">
         {actions}
+        {!hideSearch && (
         <label className="relative hidden md:block">
           <span className="sr-only">{t("search")}</span>
           <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" aria-hidden />
@@ -31,6 +32,7 @@ export async function PageHeader({ title, eyebrow, actions }: { title: string; e
             className="w-72 rounded-xl border border-line bg-card py-2.5 pl-10 pr-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </label>
+        )}
         <button aria-label={t("notifications")} className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-card hover:bg-primary-faint">
           <Bell className="h-4 w-4" aria-hidden />
         </button>
