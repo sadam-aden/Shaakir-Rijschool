@@ -28,7 +28,8 @@
     "instructor": "Instructor",
     "language": "Language",
     "signOut": "Sign out",
-    "menu": "User menu"
+    "menu": "User menu",
+    "theme": "Theme"
   },
   "roles": {
     "ADMIN": "Admin",
@@ -74,5 +75,11 @@
     "submit": "Create account",
     "expired": "This invitation is invalid or has expired. Ask for a new one.",
     "invalid": "Please check your details (password at least 10 characters)."
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
   }
 }

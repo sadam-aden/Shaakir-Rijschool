@@ -28,10 +28,10 @@ export async function PageHeader({ title, eyebrow, actions }: { title: string; e
           <input
             type="search"
             placeholder={t("search")}
-            className="w-72 rounded-xl border border-line bg-white py-2.5 pl-10 pr-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+            className="w-72 rounded-xl border border-line bg-card py-2.5 pl-10 pr-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </label>
-        <button aria-label={t("notifications")} className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-white hover:bg-primary-faint">
+        <button aria-label={t("notifications")} className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-card hover:bg-primary-faint">
           <Bell className="h-4 w-4" aria-hidden />
         </button>
         <button className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/30 hover:bg-primary-600">

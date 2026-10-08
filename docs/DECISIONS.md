@@ -23,3 +23,5 @@
 - **Seed** places lessons relative to the current ISO week so screens are populated whenever it is run.
 - Node 25 (non-LTS) is installed locally; CI uses Node 24 LTS.
 - Docker is not installed on the dev machine; `docker-compose.yml` is provided and any local PostgreSQL works.
+- **Themes**: Light / Dark / System. Colours are CSS variables in `globals.css`; `<html data-theme>` is set server-side from the
+  `theme` cookie (no flash). The choice is stored in a cookie only (not on the user record) to avoid a schema change; moving it to `User` is a small follow-up if wanted.

@@ -24,7 +24,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
           onClick={() => start(async () => { await setLocaleAction(l); router.refresh(); })}
           className={cn(
             "rounded-md px-2.5 py-1 text-xs font-semibold uppercase transition",
-            locale === l ? "bg-white text-primary shadow-sm" : "text-muted hover:text-ink",
+            locale === l ? "bg-card text-primary shadow-sm" : "text-muted hover:text-ink",
           )}
         >
           {l}

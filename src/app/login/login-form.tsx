@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { loginAction, requestMagicLinkAction } from "@/app/actions/auth";
 
 const input =
-  "mt-1 w-full rounded-xl border border-line bg-white px-3 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20";
+  "mt-1 w-full rounded-xl border border-line bg-card px-3 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20";
 
 export function LoginForm() {
   const t = useTranslations("login");
@@ -44,7 +44,7 @@ export function LoginForm() {
         <input name="email" type="email" required placeholder={t("email")} aria-label={t("email")} className={input} />
         <button
           disabled={magicPending}
-          className="w-full rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-semibold text-primary hover:bg-primary-faint disabled:opacity-60"
+          className="w-full rounded-xl border border-line bg-card px-4 py-2.5 text-sm font-semibold text-primary hover:bg-primary-faint disabled:opacity-60"
         >
           {t("magicLink")}
         </button>

@@ -5,8 +5,10 @@ import { LogOut } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { logoutAction } from "@/app/actions/auth";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+import type { Theme } from "@/lib/theme";
 
-export function UserMenu({ name, role, initials }: { name: string; role: "ADMIN" | "INSTRUCTOR"; initials: string }) {
+export function UserMenu({ name, role, initials, theme }: { name: string; role: "ADMIN" | "INSTRUCTOR"; initials: string; theme: Theme }) {
   const t = useTranslations("user");
   const subtitle = role === "ADMIN" ? `${t("owner")} · ${t("instructor")}` : t("instructor");
   return (
@@ -24,13 +26,17 @@ export function UserMenu({ name, role, initials }: { name: string; role: "ADMIN"
         </span>
       </Dropdown.Trigger>
       <Dropdown.Portal>
-        <Dropdown.Content side="top" align="start" sideOffset={8} className="z-50 w-60 rounded-2xl border border-line bg-white p-3 shadow-lg">
+        <Dropdown.Content side="top" align="start" sideOffset={8} className="z-50 w-72 rounded-2xl border border-line bg-card p-3 shadow-lg">
           <div className="flex items-center justify-between px-1 pb-3">
             <span className="text-sm font-medium">{t("language")}</span>
             <LanguageSwitcher />
           </div>
+          <div className="flex items-center justify-between px-1 pb-3">
+            <span className="text-sm font-medium">{t("theme")}</span>
+            <ThemeSwitcher initial={theme} labels />
+          </div>
           <form action={logoutAction}>
-            <button className="flex w-full items-center gap-2 rounded-xl px-2 py-2 text-sm font-medium text-slate-700 hover:bg-page">
+            <button className="flex w-full items-center gap-2 rounded-xl px-2 py-2 text-sm font-medium text-ink hover:bg-page">
               <LogOut className="h-4 w-4" aria-hidden /> {t("signOut")}
             </button>
           </form>

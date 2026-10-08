@@ -2,13 +2,15 @@ import { getTranslations } from "next-intl/server";
 import { mainNav, manageNav } from "./nav";
 import { SidebarNav } from "./sidebar-nav";
 import { UserMenu } from "./user-menu";
+import { getTheme } from "@/lib/theme-server";
 import type { SessionUser } from "@/lib/dal/session";
 
 export async function Sidebar({ user, schoolName }: { user: SessionUser; schoolName: string }) {
   const t = await getTranslations("nav");
+  const theme = await getTheme();
   const initials = user.name.split(/\s+/).map((p) => p[0]).slice(0, 2).join("").toUpperCase();
   return (
-    <aside className="sticky top-0 hidden h-screen w-[230px] shrink-0 flex-col border-r border-line bg-white p-5 lg:flex">
+    <aside className="sticky top-0 hidden h-screen w-[230px] shrink-0 flex-col border-r border-line bg-card p-5 lg:flex">
       <div className="mb-8 flex items-center gap-3">
         <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-sm font-bold text-white">SR</div>
         <div className="min-w-0">
@@ -25,7 +27,7 @@ export async function Sidebar({ user, schoolName }: { user: SessionUser; schoolN
           </>
         )}
       </nav>
-      <UserMenu name={user.name} role={user.role} initials={initials} />
+      <UserMenu name={user.name} role={user.role} initials={initials} theme={theme} />
     </aside>
   );
 }

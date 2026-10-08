@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { acceptInviteAction } from "@/app/actions/invites";
 
 const input =
-  "mt-1 w-full rounded-xl border border-line bg-white px-3 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20";
+  "mt-1 w-full rounded-xl border border-line bg-card px-3 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20";
 
 export function AcceptForm({ token, defaultName }: { token: string; defaultName: string }) {
   const t = useTranslations("invite");

@@ -28,7 +28,8 @@
     "instructor": "Instructeur",
     "language": "Taal",
     "signOut": "Uitloggen",
-    "menu": "Gebruikersmenu"
+    "menu": "Gebruikersmenu",
+    "theme": "Thema"
   },
   "roles": {
     "ADMIN": "Beheerder",
@@ -74,5 +75,11 @@
     "submit": "Account aanmaken",
     "expired": "Deze uitnodiging is ongeldig of verlopen. Vraag een nieuwe aan.",
     "invalid": "Controleer je gegevens (wachtwoord minimaal 10 tekens)."
+  },
+  "theme": {
+    "label": "Thema",
+    "light": "Licht",
+    "dark": "Donker",
+    "system": "Systeem"
   }
 }

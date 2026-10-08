@@ -1,44 +1,117 @@
 @import "tailwindcss";
 
-/* Design tokens taken from docs/RijSchool-Planner-mockups.pdf */
+/*
+ * Design tokens from docs/RijSchool-Planner-mockups.pdf.
+ * Colours are CSS variables so themes only override values.
+ * Theme is chosen with <html data-theme="light | dark | system"> (cookie "theme", see src/lib/theme.ts).
+ */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+  --page: #f4f5f7;
+  --card: #ffffff;
+  --line: #e6e8ee;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --primary: #1d4ed8;
+  --primary-600: #1e40af;
+  --primary-soft: #e8efff;
+  --primary-faint: #f1f5ff;
+  --theory: #f59e0b;
+  --theory-soft: #fdeccd;
+  --theory-ink: #92400e;
+  --exam: #0f172a;
+  --success-soft: #dcf5ea;
+  --success-ink: #0f6b4b;
+  --warn-soft: #fdeccd;
+  --warn-ink: #b45309;
+  --danger: #dc2626;
+  --danger-soft: #fde2e2;
+  --danger-ink: #b91c1c;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0b1120;
+  --card: #131c2e;
+  --line: #243049;
+  --ink: #e8edf6;
+  --muted: #94a3b8;
+  --primary: #3b6fe8;
+  --primary-600: #2f5fd6;
+  --primary-soft: #1b2a52;
+  --primary-faint: #16213f;
+  --theory: #f59e0b;
+  --theory-soft: #3a2b0f;
+  --theory-ink: #fbbf61;
+  --exam: #334155;
+  --success-soft: #0f2f25;
+  --success-ink: #5fd6a4;
+  --warn-soft: #3a2b0f;
+  --warn-ink: #fbbf61;
+  --danger: #f87171;
+  --danger-soft: #3b1618;
+  --danger-ink: #fca5a5;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] {
+    color-scheme: dark;
+    --page: #0b1120;
+    --card: #131c2e;
+    --line: #243049;
+    --ink: #e8edf6;
+    --muted: #94a3b8;
+    --primary: #3b6fe8;
+    --primary-600: #2f5fd6;
+    --primary-soft: #1b2a52;
+    --primary-faint: #16213f;
+    --theory: #f59e0b;
+    --theory-soft: #3a2b0f;
+    --theory-ink: #fbbf61;
+    --exam: #334155;
+    --success-soft: #0f2f25;
+    --success-ink: #5fd6a4;
+    --warn-soft: #3a2b0f;
+    --warn-ink: #fbbf61;
+    --danger: #f87171;
+    --danger-soft: #3b1618;
+    --danger-ink: #fca5a5;
+  }
+}
+
 @theme inline {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
-  --color-page: #f4f5f7;
-  --color-card: #ffffff;
-  --color-line: #e6e8ee;
-  --color-ink: #0f172a;
-  --color-muted: #64748b;
-
-  --color-primary: #1d4ed8;
-  --color-primary-600: #1e40af;
-  --color-primary-soft: #e8efff;
-  --color-primary-faint: #f1f5ff;
-
-  --color-theory: #f59e0b;
-  --color-theory-soft: #fdeccd;
-  --color-theory-ink: #92400e;
-  --color-exam: #0f172a;
-  --color-success-soft: #dcf5ea;
-  --color-success-ink: #0f6b4b;
-  --color-warn-soft: #fdeccd;
-  --color-warn-ink: #b45309;
-  --color-danger: #dc2626;
-  --color-danger-soft: #fde2e2;
-  --color-danger-ink: #b91c1c;
-}
-
-:root {
-  color-scheme: light;
+  --color-page: var(--page);
+  --color-card: var(--card);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-primary-600: var(--primary-600);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-faint: var(--primary-faint);
+  --color-theory: var(--theory);
+  --color-theory-soft: var(--theory-soft);
+  --color-theory-ink: var(--theory-ink);
+  --color-exam: var(--exam);
+  --color-success-soft: var(--success-soft);
+  --color-success-ink: var(--success-ink);
+  --color-warn-soft: var(--warn-soft);
+  --color-warn-ink: var(--warn-ink);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-ink: var(--danger-ink);
 }
 
 body {
-  background: var(--color-page);
-  color: var(--color-ink);
+  background: var(--page);
+  color: var(--ink);
   font-family: var(--font-sans);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
