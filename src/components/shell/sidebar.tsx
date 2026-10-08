@@ -7,6 +7,7 @@ import type { SessionUser } from "@/lib/dal/session";
 
 export async function Sidebar({ user, schoolName }: { user: SessionUser; schoolName: string }) {
   const t = await getTranslations("nav");
+  const tc = await getTranslations("common");
   const theme = await getTheme();
   const initials = user.name.split(/\s+/).map((p) => p[0]).slice(0, 2).join("").toUpperCase();
   return (
@@ -18,7 +19,7 @@ export async function Sidebar({ user, schoolName }: { user: SessionUser; schoolN
           <div className="truncate text-xs text-muted">{schoolName}</div>
         </div>
       </div>
-      <nav className="flex-1 overflow-y-auto" aria-label="Main">
+      <nav className="flex-1 overflow-y-auto" aria-label={tc("mainNavigation")}>
         <SidebarNav items={mainNav(user.role)} />
         {user.role === "ADMIN" && (
           <>

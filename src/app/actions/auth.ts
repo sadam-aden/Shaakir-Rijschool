@@ -10,19 +10,20 @@ import { getEmailProvider } from "@/lib/providers/email";
 import { rateLimit } from "@/lib/rate-limit";
 import { newToken } from "@/lib/tokens";
 
-export type LoginState = { error?: "invalid" | "tooMany"; magicSent?: boolean } | undefined;
+export type LoginState = { error?: "invalid" | "tooMany"; magicSent?: boolean; email?: string } | undefined;
 
 const loginSchema = z.object({ email: z.string().email(), password: z.string().min(1) });
 
 export async function loginAction(_prev: LoginState, formData: FormData): Promise<LoginState> {
+  const email = String(formData.get("email") ?? "");
   const parsed = loginSchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) return { error: "invalid" };
+  if (!parsed.success) return { error: "invalid", email };
   try {
     await signIn("password", { ...parsed.data, redirectTo: "/" });
   } catch (e) {
     if (e instanceof AuthError) {
       const tooMany = String((e as { cause?: { err?: Error } }).cause?.err?.message).includes("TooManyAttempts");
-      return { error: tooMany ? "tooMany" : "invalid" };
+      return { error: tooMany ? "tooMany" : "invalid", email };
     }
     throw e; // redirect
   }

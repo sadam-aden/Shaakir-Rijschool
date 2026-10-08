@@ -376,7 +376,7 @@ export function BookingWizard({ todayKey, isAdmin, students, instructors, defaul
             <div className="mt-5 rounded-2xl bg-primary-faint p-4">
               <div className="mb-2 flex justify-between text-sm font-bold">
                 <span>{ts("hoursAfter")}</span>
-                <span>{hoursNumber(student.minutesAvailable, locale)} → {hoursNumber(Math.max(0, left), locale)} {locale === "nl" ? "u" : "h"}</span>
+                <span>{hoursNumber(student.minutesAvailable, locale)} → {formatHours(Math.max(0, left), locale)}</span>
               </div>
               <div className="flex h-2 overflow-hidden rounded-full bg-primary-soft" aria-hidden>
                 <span className="bg-muted/50" style={{ width: `${purchased ? (used / purchased) * 100 : 0}%` }} />

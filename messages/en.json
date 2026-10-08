@@ -91,7 +91,9 @@
     "optional": "optional",
     "required": "Required field",
     "hoursLeft": "{hours} left",
-    "of": "{a} of {b}"
+    "of": "{a} of {b}",
+    "mainNavigation": "Main navigation",
+    "tabs": "Tabs"
   },
   "language": {
     "nl": "Nederlands",
@@ -304,7 +306,8 @@
         "CONSUME": "Used",
         "ADJUST": "Adjustment",
         "REFUND": "Refund"
-      }
+      },
+      "examLocation": "Location"
     },
     "form": {
       "titleNew": "New student",

@@ -30,7 +30,7 @@ Without API keys the app uses console/mock providers: e-mails and magic links ar
 | --- | --- |
 | `npm run dev` / `build` / `start` | Next.js |
 | `npm run lint` / `typecheck` / `test` | Quality checks (run by CI) |
-| `npm run test:e2e` | Playwright (from Phase 1) |
+| `npm run test:e2e` | Playwright end-to-end tests: builds the app into `.next-e2e`, serves it on port 3100 against a separate `<database>_test` database that is re-seeded on every run (never touches your dev data). Uses the installed Edge locally; in CI run `npx playwright install chromium` first. The first run takes several minutes (build). |
 | `npm run db:migrate` / `db:seed` / `db:reset` | Database |
 
 ## Project layout
@@ -51,3 +51,11 @@ docs               prompt, mockups, PROGRESS.md, DECISIONS.md
 1. Create a Postgres database in an EU region; set `DATABASE_URL`.
 2. Create a Vercel project (region `fra1`/`ams1`), add all variables from `.env.example`.
 3. Run `npx prisma migrate deploy` against the production database (do **not** run the seed).
+
+## Try the Phase 1 features
+
+1. `npm run dev`, log in as `shaakir@example.com`.
+2. **Agenda** → drag a student from "In te plannen" onto a day (the student's availability lights up); drag a lesson to move it.
+3. **Les inplannen** → pick a student, a date and the "Beste keuze" slot, then confirm (e-mails/SMS are printed in the server log).
+4. **Lessen** → open a lesson, check it off with skill sliders, mark a no-show or cancel (see how the 24-hour rule decides if hours are charged).
+5. **Leerlingen** → filters, availability grid, profile page; **Instructeurs / Lesauto's / Pakketten / Instellingen** under "Beheer".

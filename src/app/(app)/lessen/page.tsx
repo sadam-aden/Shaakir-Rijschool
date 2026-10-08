@@ -28,7 +28,8 @@ export default async function LessonsPage({ searchParams }: { searchParams: Prom
 
   const keep = (over: Record<string, string | undefined>) => {
     const p = new URLSearchParams();
-    for (const [k, v] of Object.entries({ ...sp, ...over })) if (v && k !== "lesson") p.set(k, v);
+    // the open sheet is not part of the filters, so it is only kept when asked for explicitly
+    for (const [k, v] of Object.entries({ ...sp, lesson: undefined, ...over })) if (v) p.set(k, v);
     return `/lessen?${p}`;
   };
   const rows: LessonRow[] = list.rows.map((l) => ({

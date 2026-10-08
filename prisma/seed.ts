@@ -7,6 +7,7 @@ import "dotenv/config";
 import bcrypt from "bcryptjs";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
+import { AREA_COORDS } from "../src/lib/domain/geo";
 import { localParts, startOfIsoWeek, zonedToUtc } from "../src/lib/domain/time";
 
 if (process.env.NODE_ENV === "production") throw new Error("Refusing to seed in production");
@@ -128,7 +129,7 @@ async function main() {
     { f: "Thijs", l: "Kok", g: "MANUAL", pkg: p10, usedMin: 4 * 60, paid: 59500, days: [2, 4], part: "MORNING", area: "Blijdorp", addr: "Heemraadssingel 80, Rotterdam", skills: [40, 30, 10, 5] },
     { f: "Noor", l: "Bos", g: "MANUAL", pkg: p20, usedMin: 8 * 60, paid: 115000, days: [1, 2, 3, 4, 5], part: "EVENING", area: "Hillegersberg", addr: "Ringdijk 14, Rotterdam", skills: [45, 35, 25, 10] },
     { f: "Sem", l: "de Jong", g: "MANUAL", pkg: p10, usedMin: 6 * 60, paid: 59500, days: [5], part: "AFTERNOON", area: "Kralingen", addr: "Rubensplein 3, Rotterdam", skills: [50, 40, 30, 20] },
-    { f: "Tim", l: "Dekker", g: "MANUAL", pkg: p20, usedMin: 20 * 60, paid: 115000, days: [2, 4], part: "MORNING", area: "Blijdorp", addr: "Zaagmolenstraat 12, Rotterdam", skills: [70, 60, 50, 40], instr: anouk },
+    { f: "Tim", l: "Dekker", g: "MANUAL", pkg: p20, usedMin: 15 * 60, paid: 115000, days: [2, 4], part: "MORNING", area: "Blijdorp", addr: "Zaagmolenstraat 12, Rotterdam", skills: [70, 60, 50, 40], instr: anouk },
     // waiting list
     { f: "Iris", l: "van Dam", g: "MANUAL", pkg: undefined, usedMin: 0, paid: 0, days: [2, 4], part: "EVENING", area: "Kralingen", addr: "Avenue Concordia 30, Rotterdam", status: "WAITING_LIST" },
     { f: "Milan", l: "Koster", g: "AUTOMATIC", pkg: undefined, usedMin: 0, paid: 0, days: [1, 3], part: "MORNING", area: "Delfshaven", addr: "Nieuwe Binnenweg 200, Rotterdam", status: "WAITING_LIST" },
@@ -136,7 +137,7 @@ async function main() {
 
   const parts = { MORNING: [8 * 60, 12 * 60], AFTERNOON: [12 * 60, 17 * 60], EVENING: [17 * 60, 20 * 60] } as const;
   void parts;
-  const students: Record<string, { id: string; g: "MANUAL" | "AUTOMATIC"; addr: string; instr: string }> = {};
+  const students: Record<string, { id: string; g: "MANUAL" | "AUTOMATIC"; addr: string; instr: string; lat: number; lng: number; avail: number }> = {};
   let invoiceSeq = 0;
   const year = now.getFullYear();
   const sinceDefault = new Date("2026-04-01");
@@ -149,11 +150,13 @@ async function main() {
         status: s.status ?? "ACTIVE", area: s.area, address: s.addr, postcode: "3000 AA",
         phone: `06 1234 ${String(1000 + i)}`, email: `${s.f}.${s.l}`.toLowerCase().replace(/\s/g, "") + "@example.com",
         smsConsent: true, emailConsent: true, locale: "nl", avatarColor: colors[i % colors.length],
+        lat: (AREA_COORDS[s.area]?.lat ?? 51.92) + (((i * 37) % 100) - 50) / 20000,
+        lng: (AREA_COORDS[s.area]?.lng ?? 4.48) + (((i * 53) % 100) - 50) / 20000,
         primaryInstructorId: s.status === "WAITING_LIST" ? null : instr.id,
         since: new Date(s.since ?? sinceDefault),
       },
     });
-    students[`${s.f} ${s.l}`] = { id: st.id, g: s.g, addr: s.addr, instr: instr.id };
+    students[`${s.f} ${s.l}`] = { id: st.id, g: s.g, addr: s.addr, instr: instr.id, lat: st.lat ?? 0, lng: st.lng ?? 0, avail: (s.pkg ? (s.pkg.type === "THEORY" ? 0 : s.pkg.minutesIncluded) : 0) - s.usedMin };
 
     for (const d of s.days) {
       await db.studentAvailability.create({ data: { schoolId: sid, studentId: st.id, weekday: d, part: s.part ?? "AFTERNOON" } });
@@ -209,23 +212,29 @@ async function main() {
   const past = lessons.map((l) => ({ l, start: at(l.dow, l.time) })).filter((x) => x.start < now && x.l.instr == null).sort((a, b) => +b.start - +a.start);
   const needsCheckOff = past[0]?.start.getTime();
 
-  for (const l of lessons) {
-    const stu = students[l.who];
-    const start = at(l.dow, l.time);
-    const isPast = start < now;
-    const status = isPast && start.getTime() !== needsCheckOff ? "COMPLETED" : "PLANNED";
-    const veh = stu.g === "AUTOMATIC" ? picanto : l.instr === anouk ? yaris : polo;
-    const lesson = await db.lesson.create({
-      data: {
-        schoolId: sid, type: "PRACTICAL", instructorId: l.instr?.id ?? shaakir.id, studentId: stu.id, vehicleId: veh.id,
-        startsAt: start, endsAt: plusMin(start, l.dur), durationMin: l.dur, gearbox: stu.g, pickupAddress: stu.addr,
-        status, instructorNotes: l.note, completedAt: status === "COMPLETED" ? plusMin(start, l.dur) : null,
-      },
-    });
-    // planned lessons reserve hours; completed ones were consumed in the historic balance above
-    if (status === "PLANNED") {
-      await db.hoursLedgerEntry.create({ data: { schoolId: sid, studentId: stu.id, lessonId: lesson.id, type: "RESERVE", minutes: -l.dur, createdById: shaakirUser.id } });
-      await db.student.update({ where: { id: stu.id }, data: { minutesReserved: { increment: l.dur } } });
+  const skipNextWeek = new Set(["Noah Smit", "Fatima Ouali", "Emma Visser"]); // keep a few students "to schedule"
+  for (const weekOffset of [0, 1]) {
+    for (const l of lessons) {
+      if (weekOffset === 1 && skipNextWeek.has(l.who)) continue;
+      const stu = students[l.who];
+      const start = at(l.dow, l.time, weekOffset);
+      const isPast = start < now;
+      const status = isPast && start.getTime() !== needsCheckOff ? "COMPLETED" : "PLANNED";
+      // planned lessons reserve hours: never plan beyond what the student has left
+      if (status === "PLANNED" && stu.avail < l.dur) continue;
+      const veh = stu.g === "AUTOMATIC" ? picanto : l.instr === anouk ? yaris : polo;
+      const lesson = await db.lesson.create({
+        data: {
+          schoolId: sid, type: "PRACTICAL", instructorId: l.instr?.id ?? shaakir.id, studentId: stu.id, vehicleId: veh.id,
+          startsAt: start, endsAt: plusMin(start, l.dur), durationMin: l.dur, gearbox: stu.g, pickupAddress: stu.addr, pickupLat: stu.lat, pickupLng: stu.lng,
+          status, instructorNotes: l.note, completedAt: status === "COMPLETED" ? plusMin(start, l.dur) : null,
+        },
+      });
+      if (status === "PLANNED") {
+        stu.avail -= l.dur;
+        await db.hoursLedgerEntry.create({ data: { schoolId: sid, studentId: stu.id, lessonId: lesson.id, type: "RESERVE", minutes: -l.dur, createdById: shaakirUser.id } });
+        await db.student.update({ where: { id: stu.id }, data: { minutesReserved: { increment: l.dur } } });
+      }
     }
   }
 
@@ -238,10 +247,11 @@ async function main() {
     [3, "19:00", "20:00", "Theorie · Q&A", "Theory · Q&A", "Vragenuur", 5],
   ];
   const theoryStudents = Object.values(students);
-  for (const [dow, from, to, titleNl, titleEn, topic, seats] of groups) {
-    const start = at(dow, from);
+  for (const [weekOffset, [dow, from, to, titleNl, titleEn, topic, seatsThisWeek]] of [0, 1].flatMap((w) => groups.map((g) => [w, g] as const))) {
+    const seats = weekOffset === 1 ? Math.max(2, seatsThisWeek - 4) : seatsThisWeek;
+    const start = at(dow, from, weekOffset);
     const [th, tm] = to.split(":").map(Number);
-    const end = at(dow, `${th}:${tm}`);
+    const end = at(dow, `${th}:${tm}`, weekOffset);
     const g = await db.theoryGroup.create({ data: { schoolId: sid, titleNl, titleEn, topic, startsAt: start, endsAt: end, location: "Klaslokaal", capacity: 10, instructorId: shaakir.id } });
     for (let k = 0; k < seats; k++) {
       await db.theoryEnrollment.create({ data: { schoolId: sid, theoryGroupId: g.id, studentId: theoryStudents[k % theoryStudents.length].id, attendance: end < now ? "ATTENDED" : "ENROLLED" } });
@@ -265,7 +275,7 @@ async function main() {
   // ── Invoice counter ──
   await db.invoiceCounter.create({ data: { schoolId: sid, year, last: invoiceSeq } });
 
-  console.log(`Seeded ${S.length} students, ${lessons.length + groups.length} lessons.`);
+  console.log(`Seeded ${S.length} students with lessons this week and next.`);
   console.log(`Logins: shaakir@example.com (admin) / anouk@example.com (instructor), password: ${PASSWORD}`);
 }
 

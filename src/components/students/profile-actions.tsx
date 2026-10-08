@@ -93,7 +93,7 @@ export function ExamDialog({ studentId, exam }: { studentId: string; exam?: Exam
             </Select>
           </Field>
           <Field label={tc("from")}><Input type="datetime-local" value={v.scheduledAt} onChange={(e) => set("scheduledAt", e.target.value)} /></Field>
-          <Field label="CBR"><Input value={v.cbrLocation} onChange={(e) => set("cbrLocation", e.target.value)} /></Field>
+          <Field label={t("examLocation")}><Input value={v.cbrLocation} onChange={(e) => set("cbrLocation", e.target.value)} /></Field>
           <Field label={tc("notes")} className="sm:col-span-2"><Textarea value={v.notes} onChange={(e) => set("notes", e.target.value)} /></Field>
         </div>
         <div className="mt-4 flex justify-end">

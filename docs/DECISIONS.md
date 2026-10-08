@@ -25,3 +25,16 @@
 - Docker is not installed on the dev machine; `docker-compose.yml` is provided and any local PostgreSQL works.
 - **Themes**: Light / Dark / System. Colours are CSS variables in `globals.css`; `<html data-theme>` is set server-side from the
   `theme` cookie (no flash). The choice is stored in a cookie only (not on the user record) to avoid a schema change; moving it to `User` is a small follow-up if wanted.
+
+## Phase 1
+- **Slot engine is a pure function** (`checkSlot`) fed by a `SlotContext` loaded in one place (`src/lib/dal/slot-context.ts`). Booking, drag & drop, editing and (Phase 3) the generator all use it; DB exclusion constraints stay the last guard.
+- **Overridable conflicts**: only "outside student availability", "student unavailable" and "not enough hours" can be overridden, only by admins, only with a written reason (audit log).
+- **Travel feasibility** v1: straight-line distance × 1.3 at 40 km/h between consecutive pickups; falls back to the travel buffer (10 min) when coordinates are missing. Student coordinates are seeded from area centres; PDOK geocoding comes later.
+- **Chargeable cancellations**: student cancellation inside the window (24 h default) consumes the hours; school cancellations never do; admin can flip it per case. No-shows consume hours by default.
+- **Hours reservation**: planned lessons RESERVE, completion RELEASE + CONSUME; DRAFT lessons reserve nothing. Booking locks the student row (`SELECT … FOR UPDATE`) so two bookings cannot spend the same hours.
+- **Exam lessons** create a linked `Exam` row and use a package exam credit when available; otherwise they will be invoiced in Phase 2.
+- **Theory in the wizard** enrols the student in an existing group (no hours used). Theory groups also exist as `Lesson` rows so calendars/conflicts treat them like other blocks.
+- **Notifications**: plain-text templates (NL/EN) built in code, ICS attached to e-mail confirmations; React Email can replace the plain templates when more mail types arrive in Phase 2. Reminders are queued (`Notification.scheduledFor`); the sender job comes in Phase 2.
+- **Calendar drag & drop** uses `@dnd-kit/core` with pointer-based drop detection (column rectangles) instead of droppable zones, which keeps 15-minute snapping exact.
+- **E2E isolation**: tests run a separate production build (`.next-e2e`, port 3100) on a `<db>_test` database that is re-seeded for each run.
+- **React Compiler lint**: no manual `useMemo` where the compiler already memoises; time-dependent values are read once with `useState(() => Date.now())`.

@@ -91,7 +91,9 @@
     "optional": "optioneel",
     "required": "Verplicht veld",
     "hoursLeft": "{hours} over",
-    "of": "{a} van {b}"
+    "of": "{a} van {b}",
+    "mainNavigation": "Hoofdmenu",
+    "tabs": "Tabbladen"
   },
   "language": {
     "nl": "Nederlands",
@@ -304,7 +306,8 @@
         "CONSUME": "Verbruikt",
         "ADJUST": "Correctie",
         "REFUND": "Terugbetaling"
-      }
+      },
+      "examLocation": "Locatie"
     },
     "form": {
       "titleNew": "Nieuwe leerling",

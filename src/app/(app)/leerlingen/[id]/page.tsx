@@ -24,6 +24,7 @@ export default async function StudentProfilePage({ params, searchParams }: { par
   const { id } = await params;
   const sp = await searchParams;
   const t = await getTranslations("students");
+  const tc = await getTranslations("common");
   const tl = await getTranslations("lessonStatus");
   const tt = await getTranslations("lessonType");
   const locale = (await getLocale()) as AppLocale;
@@ -74,7 +75,7 @@ export default async function StudentProfilePage({ params, searchParams }: { par
       <div className="grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
         <Card className="h-fit p-6"><StudentDetailPanel student={student} payment={payment} /></Card>
         <div className="space-y-4">
-          <nav className="flex gap-2" aria-label="Tabs">
+          <nav className="flex gap-2" aria-label={tc("tabs")}>
             {allowed.map((x) => (
               <Link key={x} href={`/leerlingen/${id}?tab=${x}`} aria-current={tab === x ? "page" : undefined}
                 className={cn("rounded-xl border px-4 py-2 text-sm font-semibold", tab === x ? "border-exam bg-exam text-white" : "border-line bg-card hover:bg-primary-faint")}>
