@@ -5,14 +5,32 @@
  */
 const hits = new Map<string, number[]>();
 
-export function rateLimit(key: string, limit: number, windowMs: number): boolean {
+function recent(key: string, windowMs: number) {
   const now = Date.now();
-  const recent = (hits.get(key) ?? []).filter((t) => now - t < windowMs);
-  if (recent.length >= limit) {
-    hits.set(key, recent);
-    return false;
-  }
-  recent.push(now);
-  hits.set(key, recent);
+  const list = (hits.get(key) ?? []).filter((t) => now - t < windowMs);
+  hits.set(key, list);
+  return list;
+}
+
+/** Counts this call and says whether it is still allowed (every call counts). */
+export function rateLimit(key: string, limit: number, windowMs: number): boolean {
+  const list = recent(key, windowMs);
+  if (list.length >= limit) return false;
+  list.push(Date.now());
   return true;
+}
+
+/** True when `limit` hits were already recorded in the window. Does not count the call itself. */
+export function isLimited(key: string, limit: number, windowMs: number): boolean {
+  return recent(key, windowMs).length >= limit;
+}
+
+/** Records one hit (e.g. a failed login attempt). */
+export function recordHit(key: string) {
+  hits.set(key, [...(hits.get(key) ?? []), Date.now()]);
+}
+
+/** Forgets all hits for a key (e.g. after a successful login). */
+export function resetHits(key: string) {
+  hits.delete(key);
 }

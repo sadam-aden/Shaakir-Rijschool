@@ -38,3 +38,5 @@
 - **Calendar drag & drop** uses `@dnd-kit/core` with pointer-based drop detection (column rectangles) instead of droppable zones, which keeps 15-minute snapping exact.
 - **E2E isolation**: tests run a separate production build (`.next-e2e`, port 3100) on a `<db>_test` database that is re-seeded for each run.
 - **React Compiler lint**: no manual `useMemo` where the compiler already memoises; time-dependent values are read once with `useState(() => Date.now())`.
+- **Minimum student age 18** (`MIN_STUDENT_AGE` in `src/lib/domain/age.ts`): date of birth is required and must make the student 18 or older on the day of saving (someone turning 18 today is accepted). Enforced by the shared Zod schema (form + server action). Change the constant for another age; use "19" if "older than 18" must be strict.
+- **Login rate limit counts failed attempts only** (8 per 10 min per e-mail); a successful login clears the counter.

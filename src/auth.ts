@@ -3,7 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { rateLimit } from "@/lib/rate-limit";
+import { isLimited, recordHit, resetHits } from "@/lib/rate-limit";
 import { hashToken } from "@/lib/tokens";
 import { authConfig } from "./auth.config";
 
@@ -33,12 +33,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const parsed = passwordSchema.safeParse(raw);
         if (!parsed.success) return null;
         const email = parsed.data.email.toLowerCase();
-        // 8 attempts per 10 minutes per e-mail address
-        if (!rateLimit(`login:${email}`, 8, 10 * 60_000)) throw new Error("TooManyAttempts");
+        // 8 failed attempts per 10 minutes per e-mail address; successful logins do not count
+        const key = `login:${email}`;
+        if (isLimited(key, 8, 10 * 60_000)) throw new Error("TooManyAttempts");
         const user = await db.user.findUnique({ where: { email } });
-        if (!user?.passwordHash || !user.isActive) return null;
-        const ok = await bcrypt.compare(parsed.data.password, user.passwordHash);
-        return ok ? toAuthUser(user.id) : null;
+        const valid = !!user?.passwordHash && user.isActive && (await bcrypt.compare(parsed.data.password, user.passwordHash));
+        if (!valid || !user) {
+          recordHit(key);
+          return null;
+        }
+        resetHits(key);
+        return toAuthUser(user.id);
       },
     }),
     Credentials({

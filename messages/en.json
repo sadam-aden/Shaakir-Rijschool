@@ -340,7 +340,7 @@
       "smsConsent": "Consent for SMS",
       "emailConsent": "Consent for e-mail",
       "cbrNumber": "CBR candidate number",
-      "guardian": "Parent / guardian (under 18)",
+      "guardian": "Parent / guardian (optional)",
       "guardianName": "Guardian name",
       "guardianPhone": "Guardian phone",
       "guardianEmail": "Guardian e-mail",
@@ -348,7 +348,11 @@
       "submit": "Save",
       "created": "Student added",
       "updated": "Details saved",
-      "invalidEmail": "Invalid e-mail address"
+      "invalidEmail": "Invalid e-mail address",
+      "birthRequired": "Date of birth is required.",
+      "birthInvalid": "Not a valid date.",
+      "birthFuture": "The date of birth is in the future.",
+      "tooYoung": "The student must be at least 18 years old."
     }
   },
   "vehicles": {

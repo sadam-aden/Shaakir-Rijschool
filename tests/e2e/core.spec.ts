@@ -116,3 +116,17 @@ test("cancelling shows whether the hours are charged or returned", async ({ page
   await expect(page.getByText(/Uren in rekening brengen/)).toBeVisible();
   await expect(page.getByText(/Ruim op tijd|Binnen \d+ uur/)).toBeVisible();
 });
+
+test("only accepts students who are at least 18 years old", async ({ page }) => {
+  await login(page);
+  await page.goto("/leerlingen");
+  await page.getByRole("button", { name: "Leerling toevoegen" }).click();
+  await page.getByLabel("Voornaam").fill("Testy");
+  await page.getByLabel("Achternaam").fill("Jong");
+  await page.getByLabel("Geboortedatum").fill("2015-05-05");
+  await page.getByRole("button", { name: "Opslaan" }).click();
+  await expect(page.getByText("De leerling moet minimaal 18 jaar oud zijn.")).toBeVisible();
+  await page.getByLabel("Geboortedatum").fill("2000-05-05");
+  await page.getByRole("button", { name: "Opslaan" }).click();
+  await expectToast(page, "Leerling toegevoegd");
+});

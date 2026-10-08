@@ -340,7 +340,7 @@
       "smsConsent": "Toestemming voor SMS",
       "emailConsent": "Toestemming voor e-mail",
       "cbrNumber": "CBR-kandidaatnummer",
-      "guardian": "Ouder / voogd (onder 18)",
+      "guardian": "Ouder / voogd (optioneel)",
       "guardianName": "Naam ouder/voogd",
       "guardianPhone": "Telefoon ouder/voogd",
       "guardianEmail": "E-mail ouder/voogd",
@@ -348,7 +348,11 @@
       "submit": "Opslaan",
       "created": "Leerling toegevoegd",
       "updated": "Gegevens opgeslagen",
-      "invalidEmail": "Ongeldig e-mailadres"
+      "invalidEmail": "Ongeldig e-mailadres",
+      "birthRequired": "Geboortedatum is verplicht.",
+      "birthInvalid": "Geen geldige datum.",
+      "birthFuture": "De geboortedatum ligt in de toekomst.",
+      "tooYoung": "De leerling moet minimaal 18 jaar oud zijn."
     }
   },
   "vehicles": {

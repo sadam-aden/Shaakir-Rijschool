@@ -10,6 +10,8 @@ import { createStudentAction, updateStudentAction } from "@/app/actions/students
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
+import { latestBirthDate } from "@/lib/domain/age";
+import { localDateKey } from "@/lib/domain/time";
 import { studentSchema, type StudentData, type StudentInput } from "@/lib/schemas/student";
 import { useRunAction } from "@/lib/use-action";
 
@@ -41,8 +43,14 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
     defaultValues: initial ?? emptyStudent,
   });
   const { register, handleSubmit, formState: { errors } } = form;
-  const err = (k: keyof StudentInput) =>
-    errors[k] ? (k === "email" || k === "guardianEmail" ? t("invalidEmail") : tc("required")) : undefined;
+  const err = (k: keyof StudentInput) => {
+    if (!errors[k]) return undefined;
+    if (k === "birthDate") {
+      const code = String(errors.birthDate?.message ?? "");
+      return t.has(code) ? t(code) : tc("required");
+    }
+    return k === "email" || k === "guardianEmail" ? t("invalidEmail") : tc("required");
+  };
 
   const onSubmit = handleSubmit((values) => {
     run(
@@ -73,7 +81,7 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
             <Field label={t("lastName")} error={err("lastName")}><Input {...register("lastName")} autoComplete="off" /></Field>
             <Field label={t("phone")}><Input {...register("phone")} type="tel" /></Field>
             <Field label={t("email")} error={err("email")}><Input {...register("email")} type="email" /></Field>
-            <Field label={t("birthDate")}><Input {...register("birthDate")} type="date" /></Field>
+            <Field label={t("birthDate")} error={err("birthDate")}><Input {...register("birthDate")} type="date" max={latestBirthDate(localDateKey(new Date()))} /></Field>
             <Field label={t("cbrNumber")}><Input {...register("cbrCandidateNumber")} /></Field>
             <Field label={t("address")} className="sm:col-span-2"><Input {...register("address")} /></Field>
             <Field label={t("postcode")}><Input {...register("postcode")} /></Field>
