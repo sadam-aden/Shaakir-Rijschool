@@ -14,7 +14,7 @@ type Detail = Awaited<ReturnType<typeof getStudentDetail>>;
 type Payment = ReturnType<typeof paymentSummary>;
 
 /** Right-hand panel on /leerlingen (matches mockup 3) and the overview block on the profile page. */
-export async function StudentDetailPanel({ student, payment, profileLink }: { student: Detail; payment: Payment; profileLink?: boolean }) {
+export async function StudentDetailPanel({ student, payment, profileLink, actions }: { student: Detail; payment: Payment; profileLink?: boolean; actions?: React.ReactNode }) {
   const t = await getTranslations("students.panel");
   const locale = (await getLocale()) as AppLocale;
 
@@ -61,7 +61,7 @@ export async function StudentDetailPanel({ student, payment, profileLink }: { st
 
       <div className="flex items-center justify-between">
         <span className="text-sm font-bold">{t("learnsIn")}</span>
-        <GearboxToggle studentId={student.id} initial={student.gearbox} />
+        <GearboxToggle key={student.id} studentId={student.id} initial={student.gearbox} />
       </div>
 
       <div className="flex items-center gap-4 rounded-2xl bg-primary-faint p-4">
@@ -78,6 +78,7 @@ export async function StudentDetailPanel({ student, payment, profileLink }: { st
       <section>
         <h3 className="mb-2 text-sm font-bold">{t("weeklyAvailability")}</h3>
         <AvailabilityGrid
+          key={student.id}
           studentId={student.id}
           initial={student.availability.map((a) => ({ weekday: a.weekday, part: a.part, startMin: a.startMin, endMin: a.endMin }))}
         />
@@ -112,6 +113,7 @@ export async function StudentDetailPanel({ student, payment, profileLink }: { st
           <Link href={`/leerlingen/${student.id}`}>{t("openProfile")}</Link>
         </Button>
       )}
+      {actions}
     </div>
   );
 }

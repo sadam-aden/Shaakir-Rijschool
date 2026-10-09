@@ -42,7 +42,7 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
     resolver: zodResolver(studentSchema),
     defaultValues: initial ?? emptyStudent,
   });
-  const { register, handleSubmit, formState: { errors } } = form;
+  const { register, handleSubmit, reset, formState: { errors } } = form;
   const err = (k: keyof StudentInput) => {
     if (!errors[k]) return undefined;
     if (k === "birthDate") {
@@ -57,6 +57,8 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
       () => (mode === "create" ? createStudentAction(values) : updateStudentAction(studentId!, values)),
       {
         success: mode === "create" ? t("created") : t("updated"),
+        // after creating, navigating to the new student already loads fresh data; a parallel refresh would undo it
+        refresh: mode !== "create",
         onOk: (data) => {
           setOpen(false);
           if (mode === "create" && data && typeof data === "object" && "id" in data) router.push(`/leerlingen?id=${(data as { id: string }).id}`);
@@ -66,7 +68,7 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
   });
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={(o) => { if (o) reset(initial ?? emptyStudent); setOpen(o); }}>
       <DialogTrigger asChild>
         {trigger ?? (
           <Button variant="soft">

@@ -181,7 +181,10 @@
     "invalidState": "Deze les kan in de huidige status niet meer worden gewijzigd.",
     "groupFull": "Deze theoriegroep is vol.",
     "outside": "Buiten de beschikbare uren van de agenda.",
-    "noConsent": "Er is niets verstuurd: de leerling heeft geen toestemming of geen contactgegevens."
+    "noConsent": "Er is niets verstuurd: de leerling heeft geen toestemming of geen contactgegevens.",
+    "hasInvoices": "Deze leerling heeft facturen. Facturen moeten bewaard blijven voor de belastingdienst: archiveer de leerling in plaats van te verwijderen.",
+    "hasFutureLessons": "Deze leerling heeft nog geplande lessen. Annuleer of verplaats die eerst.",
+    "nameMismatch": "De ingevulde naam komt niet overeen."
   },
   "students": {
     "title": "Leerlingen",
@@ -198,7 +201,8 @@
       "lowHours": "Weinig uren",
       "manual": "Schakel",
       "automatic": "Automaat",
-      "waiting": "Wachtlijst"
+      "waiting": "Wachtlijst",
+      "archived": "Gearchiveerd"
     },
     "cols": {
       "student": "Leerling",
@@ -353,6 +357,19 @@
       "birthInvalid": "Geen geldige datum.",
       "birthFuture": "De geboortedatum ligt in de toekomst.",
       "tooYoung": "De leerling moet minimaal 18 jaar oud zijn."
+    },
+    "delete": {
+      "edit": "Bewerken",
+      "archive": "Archiveren",
+      "archived": "Leerling gearchiveerd",
+      "archiveHint": "Verbergt de leerling uit de lijsten. Je kunt dit terugdraaien via Bewerken → Status.",
+      "delete": "Verwijderen",
+      "title": "Leerling definitief verwijderen",
+      "warn": "Dit verwijdert {name} met alle lessen, uren, examens en berichten. Dit kan niet ongedaan worden gemaakt.",
+      "invoicesNote": "Heeft de leerling facturen, dan kan verwijderen niet: archiveer in plaats daarvan.",
+      "typeName": "Typ de volledige naam ter bevestiging",
+      "confirm": "Definitief verwijderen",
+      "deleted": "Leerling verwijderd"
     }
   },
   "vehicles": {

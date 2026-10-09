@@ -15,6 +15,8 @@ import { db } from "@/lib/db";
 import { formatDateLong, formatHours, formatMoney, formatTime } from "@/lib/format";
 import { getStudentDetail, paymentSummary } from "@/lib/queries/students";
 import { cn } from "@/lib/utils";
+import { studentToFormValues } from "@/lib/student-form";
+import { StudentActions } from "@/components/students/student-actions";
 
 const TABS = ["lessons", "payments", "exams", "notes"] as const;
 const tone = { PLANNED: "blue", DRAFT: "grey", COMPLETED: "green", NO_SHOW: "amber", CANCELLED_STUDENT: "grey", CANCELLED_SCHOOL: "grey" } as const;
@@ -47,14 +49,7 @@ export default async function StudentProfilePage({ params, searchParams }: { par
     isAdmin ? db.hoursLedgerEntry.findMany({ where: { studentId: id }, orderBy: { createdAt: "desc" }, take: 50 }) : [],
   ]);
 
-  const form = {
-    firstName: student.firstName, lastName: student.lastName, phone: student.phone ?? "", email: student.email ?? "",
-    birthDate: student.birthDate ? student.birthDate.toISOString().slice(0, 10) : "", address: student.address ?? "",
-    postcode: student.postcode ?? "", area: student.area ?? "", gearbox: student.gearbox, track: student.track, status: student.status,
-    primaryInstructorId: student.primaryInstructorId ?? "", locale: student.locale, smsConsent: student.smsConsent,
-    emailConsent: student.emailConsent, cbrCandidateNumber: student.cbrCandidateNumber ?? "", guardianName: student.guardianName ?? "",
-    guardianPhone: student.guardianPhone ?? "", guardianEmail: student.guardianEmail ?? "", notes: student.notes ?? "",
-  };
+  const form = studentToFormValues(student);
   const toLocalInput = (d: Date | null) => (d ? new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16) : "");
 
   return (
@@ -73,7 +68,7 @@ export default async function StudentProfilePage({ params, searchParams }: { par
         }
       />
       <div className="grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
-        <Card className="h-fit p-6"><StudentDetailPanel student={student} payment={payment} /></Card>
+        <Card className="h-fit p-6"><StudentDetailPanel student={student} payment={payment} actions={<StudentActions student={student} user={user} />} /></Card>
         <div className="space-y-4">
           <nav className="flex gap-2" aria-label={tc("tabs")}>
             {allowed.map((x) => (

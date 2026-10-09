@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { PageHeader } from "@/components/shell/page-header";
+import { StudentActions } from "@/components/students/student-actions";
 import { StudentDetailPanel } from "@/components/students/detail-panel";
 import { StudentFormDialog } from "@/components/students/student-form";
 import { StudentTable } from "@/components/students/student-table";
@@ -12,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const FILTERS: StudentFilter[] = ["all", "practical", "theoryOnly", "examSoon", "lowHours", "manual", "automatic", "waiting"];
+const FILTERS: StudentFilter[] = ["all", "practical", "theoryOnly", "examSoon", "lowHours", "manual", "automatic", "waiting", "archived"];
 
 export default async function StudentsPage({ searchParams }: { searchParams: Promise<{ filter?: string; q?: string; id?: string }> }) {
   const user = await requireUser();
@@ -96,8 +97,8 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
           )}
         </Card>
         {selected && (
-          <Card className="h-fit p-6 xl:sticky xl:top-8">
-            <StudentDetailPanel student={selected} payment={paymentSummary(user, selected.packages)} profileLink />
+          <Card key={selected.id} className="h-fit p-6 xl:sticky xl:top-8">
+            <StudentDetailPanel student={selected} payment={paymentSummary(user, selected.packages)} profileLink actions={<StudentActions student={selected} user={user} />} />
           </Card>
         )}
       </div>

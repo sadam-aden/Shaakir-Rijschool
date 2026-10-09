@@ -7,7 +7,7 @@ import type { Avail } from "@/lib/domain/availability";
 import { deriveStatus, type DerivedStatus } from "@/lib/domain/student-status";
 import { getSchoolSettings } from "./settings";
 
-export type StudentFilter = "all" | "practical" | "theoryOnly" | "examSoon" | "lowHours" | "manual" | "automatic" | "waiting";
+export type StudentFilter = "all" | "practical" | "theoryOnly" | "examSoon" | "lowHours" | "manual" | "automatic" | "waiting" | "archived";
 
 export type StudentRow = {
   id: string;
@@ -43,7 +43,7 @@ export async function getStudentRows(user: SessionUser): Promise<{ rows: Student
   const { settings } = await getSchoolSettings(user.schoolId);
   const now = new Date();
   const students = await db.student.findMany({
-    where: { ...studentScope(user), status: { in: ["ACTIVE", "PAUSED", "WAITING_LIST"] } },
+    where: { ...studentScope(user), status: { in: ["ACTIVE", "PAUSED", "WAITING_LIST", "PASSED", "ARCHIVED"] } },
     orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
     include: {
       availability: true,
@@ -98,7 +98,7 @@ export async function getStudentRows(user: SessionUser): Promise<{ rows: Student
 }
 
 export function filterStudents(rows: StudentRow[], filter: StudentFilter, q: string, lowHoursMinutes: number) {
-  const active = rows.filter((r) => r.status !== "WAITING_LIST");
+  const active = rows.filter((r) => r.status === "ACTIVE" || r.status === "PAUSED");
   const counts = {
     all: active.length,
     practical: active.filter((r) => r.track !== "THEORY_ONLY").length,
@@ -108,8 +108,12 @@ export function filterStudents(rows: StudentRow[], filter: StudentFilter, q: str
     manual: active.filter((r) => r.gearbox === "MANUAL").length,
     automatic: active.filter((r) => r.gearbox === "AUTOMATIC").length,
     waiting: rows.filter((r) => r.status === "WAITING_LIST").length,
+    archived: rows.filter((r) => r.status === "ARCHIVED" || r.status === "PASSED").length,
   };
-  let list = filter === "waiting" ? rows.filter((r) => r.status === "WAITING_LIST") : active;
+  let list =
+    filter === "waiting" ? rows.filter((r) => r.status === "WAITING_LIST")
+    : filter === "archived" ? rows.filter((r) => r.status === "ARCHIVED" || r.status === "PASSED")
+    : active;
   switch (filter) {
     case "practical": list = list.filter((r) => r.track !== "THEORY_ONLY"); break;
     case "theoryOnly": list = list.filter((r) => r.track === "THEORY_ONLY"); break;

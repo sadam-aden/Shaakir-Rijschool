@@ -24,6 +24,7 @@
 - [x] **Dashboard**: greeting, KPIs, today's lessons, upcoming exams with readiness, running-low card with "Stuur aanvulling", lessons to check off, APK alerts; instructor sees "Mijn uren" and no money
 - [x] **E-mail confirmations** (+ ICS attachment) in the student's language, SMS via mock provider, queued 24 h reminders, everything logged in `Notification`
 - [x] Playwright suite (login, roles, language switch, booking, drag & drop, refusal feedback, check-off, cancellation policy) on an isolated test database
+- [x] Edit, archive and permanently delete a student (delete: admin only, blocked when invoices exist)
 - [x] Student age rule: date of birth required, at least 18 years
 - [ ] Moved to later phases: month view + recurring-lesson management UI (Phase 4), AI banner/generator (Phase 3), invoices/iDEAL/SMS providers/reminder job (Phase 2), search ⌘K + bell (Phase 4), mobile sidebar drawer (Phase 4)
 

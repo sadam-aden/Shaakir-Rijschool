@@ -181,7 +181,10 @@
     "invalidState": "This lesson can no longer be changed in its current status.",
     "groupFull": "This theory group is full.",
     "outside": "Outside the hours of the calendar.",
-    "noConsent": "Nothing was sent: the student has no consent or no contact details."
+    "noConsent": "Nothing was sent: the student has no consent or no contact details.",
+    "hasInvoices": "This student has invoices. Invoices must be kept for the tax authorities: archive the student instead of deleting.",
+    "hasFutureLessons": "This student still has planned lessons. Cancel or move them first.",
+    "nameMismatch": "The name you typed does not match."
   },
   "students": {
     "title": "Students",
@@ -198,7 +201,8 @@
       "lowHours": "Low hours",
       "manual": "Manual",
       "automatic": "Automatic",
-      "waiting": "Waiting list"
+      "waiting": "Waiting list",
+      "archived": "Archived"
     },
     "cols": {
       "student": "Student",
@@ -353,6 +357,19 @@
       "birthInvalid": "Not a valid date.",
       "birthFuture": "The date of birth is in the future.",
       "tooYoung": "The student must be at least 18 years old."
+    },
+    "delete": {
+      "edit": "Edit",
+      "archive": "Archive",
+      "archived": "Student archived",
+      "archiveHint": "Hides the student from the lists. You can undo this via Edit → Status.",
+      "delete": "Delete",
+      "title": "Permanently delete student",
+      "warn": "This deletes {name} with all lessons, hours, exams and messages. This cannot be undone.",
+      "invoicesNote": "If the student has invoices they cannot be deleted: archive instead.",
+      "typeName": "Type the full name to confirm",
+      "confirm": "Delete permanently",
+      "deleted": "Student deleted"
     }
   },
   "vehicles": {

@@ -202,3 +202,51 @@ export async function sendTopUpAction(studentId: string) {
   if (r.sent === 0) return fail("noConsent");
   return ok({ sent: r.sent });
 }
+
+/** Reversible alternative to deleting: hides the student from lists (restore via Edit → Status). */
+export async function archiveStudentAction(studentId: string) {
+  const user = await requireUser();
+  if (!(await findStudentFor(user, studentId))) return fail("notFound");
+  const future = await db.lesson.count({ where: { studentId, status: "PLANNED", startsAt: { gte: new Date() } } });
+  if (future > 0) return fail("hasFutureLessons");
+  await db.student.update({ where: { id: studentId }, data: { status: "ARCHIVED" } });
+  revalidatePath("/leerlingen");
+  revalidatePath(`/leerlingen/${studentId}`);
+  return ok();
+}
+
+/**
+ * Admin: permanently erases a student and everything attached to them (GDPR erasure).
+ * Refused when invoices exist, because invoices must be kept for the tax authorities: archive instead.
+ * The audit log only stores the id and counts, never personal data.
+ */
+export async function deleteStudentAction(studentId: string, confirmName: string) {
+  const user = await requireAdmin();
+  const student = await findStudentFor(user, studentId);
+  if (!student) return fail("notFound");
+  if (`${student.firstName} ${student.lastName}`.trim().toLowerCase() !== confirmName.trim().toLowerCase()) return fail("nameMismatch");
+  if ((await db.invoice.count({ where: { studentId } })) > 0) return fail("hasInvoices");
+
+  const counts = await db.$transaction(async (tx) => {
+    // the hours ledger is append-only; erasure is the one sanctioned exception (see migration 0002)
+    await tx.$queryRaw`SELECT set_config('app.allow_ledger_delete', 'on', true)`;
+    const lessons = await tx.lesson.findMany({ where: { studentId }, select: { id: true } });
+    const lessonIds = lessons.map((l) => l.id);
+    await tx.hoursLedgerEntry.deleteMany({ where: { OR: [{ studentId }, { lessonId: { in: lessonIds } }] } });
+    await tx.skillAssessment.deleteMany({ where: { OR: [{ studentId }, { lessonId: { in: lessonIds } }] } });
+    await tx.scheduleDraftItem.deleteMany({ where: { lessonId: { in: lessonIds } } });
+    await tx.exam.deleteMany({ where: { OR: [{ studentId }, { lessonId: { in: lessonIds } }] } });
+    await tx.theoryEnrollment.deleteMany({ where: { studentId } });
+    await tx.lesson.deleteMany({ where: { studentId } });
+    await tx.studentPackage.deleteMany({ where: { studentId } });
+    await tx.notification.deleteMany({ where: { studentId } });
+    await tx.student.delete({ where: { id: studentId } }); // availability, unavailability and skills cascade
+    await audit(tx, user, "student.delete", "Student", studentId, { lessons: lessonIds.length });
+    return { lessons: lessonIds.length };
+  });
+  revalidatePath("/leerlingen");
+  revalidatePath("/agenda");
+  revalidatePath("/lessen");
+  revalidatePath("/");
+  return ok(counts);
+}

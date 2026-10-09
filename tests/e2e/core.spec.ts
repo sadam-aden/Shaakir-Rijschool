@@ -130,3 +130,52 @@ test("only accepts students who are at least 18 years old", async ({ page }) => 
   await page.getByRole("button", { name: "Opslaan" }).click();
   await expectToast(page, "Leerling toegevoegd");
 });
+
+test("creates, edits and permanently deletes a student", async ({ page }) => {
+  await login(page);
+  await page.goto("/leerlingen");
+  await page.getByRole("button", { name: "Leerling toevoegen" }).click();
+  await page.getByLabel("Voornaam").fill("Dolf");
+  await page.getByLabel("Achternaam").fill("Tijdelijk");
+  await page.getByLabel("Geboortedatum").fill("1990-01-01");
+  await page.getByRole("button", { name: "Opslaan" }).click();
+  await expectToast(page, "Leerling toegevoegd");
+  await expect(page.getByRole("heading", { name: "Dolf Tijdelijk" })).toBeVisible();
+
+  // edit
+  await page.getByRole("button", { name: "Bewerken", exact: true }).click();
+  await page.getByLabel("Achternaam").fill("Verwijder");
+  await page.getByRole("button", { name: "Opslaan" }).click();
+  await expectToast(page, "Gegevens opgeslagen");
+  await expect(page.getByRole("heading", { name: "Dolf Verwijder" })).toBeVisible();
+
+  // delete needs the full name typed
+  await page.getByRole("button", { name: "Verwijderen", exact: true }).click();
+  const confirm = page.getByRole("button", { name: "Definitief verwijderen" });
+  await expect(confirm).toBeDisabled();
+  await page.getByLabel("Typ de volledige naam ter bevestiging").fill("Dolf Verwijder");
+  await expect(confirm).toBeEnabled();
+  await confirm.click();
+  await expectToast(page, "Leerling verwijderd");
+  await expect(page.getByText("Dolf Verwijder")).toHaveCount(0);
+});
+
+test("an instructor cannot delete students", async ({ page }) => {
+  await login(page, "anouk@example.com");
+  await page.goto("/leerlingen");
+  await expect(page.getByRole("button", { name: "Verwijderen", exact: true })).toHaveCount(0);
+});
+
+test("the edit form always belongs to the student that is selected", async ({ page }) => {
+  await login(page);
+  await page.goto("/leerlingen");
+  await page.getByRole("row", { name: /Julia Vos/ }).click();
+  await expect(page.getByRole("heading", { name: "Julia Vos" })).toBeVisible();
+  await page.getByRole("button", { name: "Bewerken", exact: true }).click();
+  await expect(page.getByLabel("Voornaam")).toHaveValue("Julia");
+  await page.keyboard.press("Escape");
+  await page.getByRole("row", { name: /Ayoub Haddad/ }).click();
+  await expect(page.getByRole("heading", { name: "Ayoub Haddad" })).toBeVisible();
+  await page.getByRole("button", { name: "Bewerken", exact: true }).click();
+  await expect(page.getByLabel("Voornaam")).toHaveValue("Ayoub");
+});

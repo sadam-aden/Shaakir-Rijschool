@@ -40,3 +40,5 @@
 - **React Compiler lint**: no manual `useMemo` where the compiler already memoises; time-dependent values are read once with `useState(() => Date.now())`.
 - **Minimum student age 18** (`MIN_STUDENT_AGE` in `src/lib/domain/age.ts`): date of birth is required and must make the student 18 or older on the day of saving (someone turning 18 today is accepted). Enforced by the shared Zod schema (form + server action). Change the constant for another age; use "19" if "older than 18" must be strict.
 - **Login rate limit counts failed attempts only** (8 per 10 min per e-mail); a successful login clears the counter.
+- **Deleting students**: admin only, permanent (GDPR erasure), needs the full name typed. Refused when the student has invoices (invoices must be kept for the tax authorities) — archive instead (reversible, hides from lists, "Gearchiveerd" filter). The hours ledger trigger allows deletion only inside the erasure transaction. The audit log keeps just the id and counts.
+- **Panel state**: the student panel is keyed by student id so client state (edit form, availability grid, gearbox toggle) can never leak from one selected student to another.
