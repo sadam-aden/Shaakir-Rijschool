@@ -157,7 +157,8 @@
     "notEnoughHours": "Not enough hours ({available} min left)",
     "noVehicle": "No {gearbox} car free",
     "dayLimit": "Daily limit of {max} min reached",
-    "generic": "This time is not available"
+    "generic": "This time is not available",
+    "noVehicleRegistered": "No {gearbox} car added yet: add one under Manage → Vehicles"
   },
   "bestFit": {
     "intro": "{time} is the best fit.",

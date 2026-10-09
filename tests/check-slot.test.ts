@@ -94,6 +94,16 @@ describe("checkSlot", () => {
     c.vehicles[1].status = "IN_MAINTENANCE";
     expect(keys(checkSlot(c, slot(13, 0, 60)))).toContain("noVehicle");
   });
+  it("says so when the school has no car of that type at all", () => {
+    const c = ctx();
+    c.vehicles = c.vehicles.filter((v) => v.gearbox !== "AUTOMATIC"); // only a manual car is registered
+    const r = checkSlot(c, slot(13, 0, 60));
+    expect(r.conflicts[0]).toEqual({ key: "noVehicleRegistered", params: { gearbox: "AUTOMATIC" } });
+    // a car exists but is busy: that is a normal clash, not "not registered"
+    const d = ctx();
+    d.vehicles[1].busy = [{ id: "x", startsAt: at(13), endsAt: at(14) }];
+    expect(checkSlot(d, slot(13, 0, 60)).conflicts[0].key).toBe("noVehicle");
+  });
   it("skips cars whose APK has expired", () => {
     const c = ctx();
     c.vehicles[1].apkDueDate = new Date("2026-09-01T00:00:00Z");

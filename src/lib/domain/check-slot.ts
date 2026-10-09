@@ -67,6 +67,7 @@ export type ConflictKey =
   | "outsideStudentAvailability"
   | "notEnoughHours"
   | "noVehicle"
+  | "noVehicleRegistered"
   | "dayLimit";
 
 export type Conflict = { key: ConflictKey; params?: Record<string, string | number> };
@@ -161,7 +162,10 @@ export function checkSlot(ctx: SlotContext, input: SlotInput): SlotResult {
       matches.find((v) => v.id === instructor.defaultVehicleId) ??
       matches[0];
     if (pick) vehicleId = pick.id;
-    else raw.push({ key: "noVehicle", params: { gearbox: gearbox ?? "MANUAL" } });
+    else if (gearbox && !ctx.vehicles.some((v) => v.gearbox === gearbox)) {
+      // not a clash: the school has no car of this type registered at all (Manage → Vehicles)
+      raw.push({ key: "noVehicleRegistered", params: { gearbox } });
+    } else raw.push({ key: "noVehicle", params: { gearbox: gearbox ?? "MANUAL" } });
   }
 
   // 7. Instructor day total

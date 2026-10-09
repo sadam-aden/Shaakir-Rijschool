@@ -157,7 +157,8 @@
     "notEnoughHours": "Te weinig uren ({available} min over)",
     "noVehicle": "Geen {gearbox} vrij",
     "dayLimit": "Daglimiet van {max} min bereikt",
-    "generic": "Dit tijdstip is niet beschikbaar"
+    "generic": "Dit tijdstip is niet beschikbaar",
+    "noVehicleRegistered": "Nog geen {gearbox} lesauto toegevoegd: voeg er een toe onder Beheer → Lesauto's"
   },
   "bestFit": {
     "intro": "{time} is de beste keuze.",
