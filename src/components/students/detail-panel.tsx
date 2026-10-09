@@ -43,7 +43,7 @@ export async function StudentDetailPanel({ student, payment, profileLink, action
           <h2 className="truncate text-xl font-bold">{student.firstName} {student.lastName}</h2>
           <p className="text-sm text-muted">
             {t("since", { date: new Intl.DateTimeFormat(locale === "nl" ? "nl-NL" : "en-GB", { month: "long", year: "numeric" }).format(student.since) })}
-            {student.area ? ` · ${student.area}` : ""}
+            {[student.area, student.city].filter(Boolean).length ? ` · ${[student.area, student.city].filter(Boolean).join(", ")}` : ""}
           </p>
         </div>
       </div>

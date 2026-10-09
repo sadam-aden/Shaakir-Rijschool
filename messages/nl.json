@@ -363,7 +363,16 @@
         "lessons": "Lessen",
         "consent": "Toestemming voor berichten"
       },
-      "subtitleNew": "Voeg een nieuwe leerling toe. Leerlingen moeten minimaal 18 jaar zijn."
+      "subtitleNew": "Voeg een nieuwe leerling toe. Leerlingen moeten minimaal 18 jaar zijn.",
+      "province": "Provincie",
+      "provincePlaceholder": "Kies een provincie",
+      "city": "Plaats (stad of dorp)",
+      "cityPlaceholder": "Begin te typen, bijv. Rotterdam",
+      "chooseProvinceFirst": "Kies eerst een provincie",
+      "wijkPlaceholder": "Kies of typ een wijk",
+      "cityUnknown": "Kies een plaats uit de lijst van deze provincie.",
+      "addressPlaceholder": "Begin te typen, bijv. Oostzeedijk 120",
+      "addressNeedsProvince": "Kies eerst een provincie voor adressuggesties"
     },
     "delete": {
       "edit": "Bewerken",

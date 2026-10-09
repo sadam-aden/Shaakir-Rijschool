@@ -21,6 +21,11 @@ export const studentSchema = z.object({
   }),
   address: optionalText,
   postcode: optionalText,
+  // exact position, set when an address suggestion is picked (otherwise derived from the chosen place)
+  lat: z.number().min(50).max(54).optional(),
+  lng: z.number().min(3).max(8).optional(),
+  province: optionalText,
+  city: optionalText,
   area: optionalText,
   gearbox: z.enum(["MANUAL", "AUTOMATIC"]),
   track: z.enum(["PRACTICAL", "THEORY_ONLY", "BOTH"]),

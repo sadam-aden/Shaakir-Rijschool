@@ -1,15 +1,18 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Pencil, Plus, UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState, type ReactNode } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { createStudentAction, updateStudentAction } from "@/app/actions/students";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
+import provinceIndex from "@/data/places/index.json";
+import { AddressField } from "./address-field";
 import { latestBirthDate } from "@/lib/domain/age";
 import { localDateKey } from "@/lib/domain/time";
 import { studentSchema, type StudentData, type StudentInput } from "@/lib/schemas/student";
@@ -42,17 +45,45 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
     resolver: zodResolver(studentSchema),
     defaultValues: initial ?? emptyStudent,
   });
-  const { register, handleSubmit, reset, formState: { errors } } = form;
+  const { register, handleSubmit, reset, control, setValue, setError, formState: { errors } } = form;
+
+  // province → city/village → wijk: suggestions come from the Dutch places list (per province, loaded on demand)
+  const province = useWatch({ control, name: "province" }) ?? "";
+  const city = useWatch({ control, name: "city" }) ?? "";
+  const provinceSlug = provinceIndex.find((p) => p.name === province)?.slug;
+  const qc = useQueryClient();
+  const placesOptions = (slug: string | undefined) => ({
+    queryKey: ["places", slug],
+    staleTime: Infinity,
+    queryFn: async () => {
+      const r = await fetch(`/api/places?province=${slug}`);
+      if (!r.ok) throw new Error("places");
+      return (await r.json()) as { places: { name: string; municipality: string }[]; wijken: Record<string, string[]> };
+    },
+  });
+  const placesQ = useQuery({ ...placesOptions(provinceSlug), enabled: !!provinceSlug && open });
+  const placeOptions = placesQ.data?.places ?? [];
+  const chosenPlace = placeOptions.find((p) => p.name === city);
+  const wijkOptions = chosenPlace ? (placesQ.data?.wijken[chosenPlace.municipality] ?? []) : [];
   const err = (k: keyof StudentInput) => {
     if (!errors[k]) return undefined;
-    if (k === "birthDate") {
-      const code = String(errors.birthDate?.message ?? "");
+    if (k === "birthDate" || k === "city") {
+      const code = String(errors[k]?.message ?? "");
       return t.has(code) ? t(code) : tc("required");
     }
     return k === "email" || k === "guardianEmail" ? t("invalidEmail") : tc("required");
   };
 
-  const onSubmit = handleSubmit((values) => {
+  const onSubmit = handleSubmit(async (values) => {
+    // a chosen city must exist in the chosen province (typing is allowed, but only list values are accepted);
+    // wait for the list if it is still loading so a fast typist cannot slip past the check
+    if (values.province && values.city) {
+      const list = (await qc.fetchQuery(placesOptions(provinceIndex.find((p) => p.name === values.province)?.slug))).places;
+      if (!list.some((p) => p.name === values.city)) {
+        setError("city", { message: "cityUnknown" });
+        return;
+      }
+    }
     run(
       () => (mode === "create" ? createStudentAction(values) : updateStudentAction(studentId!, values)),
       {
@@ -100,9 +131,28 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
           </Section>
 
           <Section title={t("sections.address")}>
-            <Field label={t("address")} className="sm:col-span-2"><Input {...register("address")} /></Field>
+            <Field label={t("address")} className="sm:col-span-2"><AddressField form={form} province={province} city={city} /></Field>
             <Field label={t("postcode")}><Input {...register("postcode")} /></Field>
-            <Field label={t("area")}><Input {...register("area")} /></Field>
+            <Field label={t("province")}>
+              <Select {...register("province", { onChange: () => { setValue("city", ""); setValue("area", ""); } })}>
+                <option value="">{t("provincePlaceholder")}</option>
+                {provinceIndex.map((p) => <option key={p.slug} value={p.name}>{p.name}</option>)}
+              </Select>
+            </Field>
+            <Field label={t("city")} error={err("city")}>
+              <Input
+                {...register("city", { onChange: () => setValue("area", "") })}
+                list="student-city-options" autoComplete="off" disabled={!province}
+                placeholder={province ? t("cityPlaceholder") : t("chooseProvinceFirst")}
+              />
+              <datalist id="student-city-options">
+                {placeOptions.map((p) => <option key={`${p.name}-${p.municipality}`} value={p.name} label={p.municipality !== p.name ? p.municipality : undefined} />)}
+              </datalist>
+            </Field>
+            <Field label={t("area")}>
+              <Input {...register("area")} list="student-wijk-options" autoComplete="off" disabled={!city} placeholder={wijkOptions.length ? t("wijkPlaceholder") : undefined} />
+              <datalist id="student-wijk-options">{wijkOptions.map((w) => <option key={w} value={w} />)}</datalist>
+            </Field>
           </Section>
 
           <Section title={t("sections.lessons")}>

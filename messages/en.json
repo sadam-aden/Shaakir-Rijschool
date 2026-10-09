@@ -323,7 +323,7 @@
       "birthDate": "Date of birth",
       "address": "Address",
       "postcode": "Postcode",
-      "area": "Area",
+      "area": "Neighbourhood (wijk)",
       "gearbox": "Gearbox",
       "track": "Track",
       "tracks": {
@@ -363,7 +363,16 @@
         "lessons": "Lessons",
         "consent": "Consent for messages"
       },
-      "subtitleNew": "Add a new student. Students must be at least 18 years old."
+      "subtitleNew": "Add a new student. Students must be at least 18 years old.",
+      "province": "Province",
+      "provincePlaceholder": "Choose a province",
+      "city": "City or village",
+      "cityPlaceholder": "Start typing, e.g. Rotterdam",
+      "chooseProvinceFirst": "Choose a province first",
+      "wijkPlaceholder": "Choose or type a neighbourhood",
+      "cityUnknown": "Choose a place from this province's list.",
+      "addressPlaceholder": "Start typing, e.g. Oostzeedijk 120",
+      "addressNeedsProvince": "Choose a province first to get address suggestions"
     },
     "delete": {
       "edit": "Edit",

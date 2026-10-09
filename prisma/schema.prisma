@@ -328,6 +328,10 @@ model Student {
   birthDate           DateTime?     @db.Date
   address             String?
   postcode            String?
+  /// province (e.g. Zuid-Holland) and city/village (e.g. Rotterdam) chosen from the Dutch places list
+  province            String?
+  city                String?
+  /// neighbourhood (wijk), e.g. Delfshaven
   area                String?
   lat                 Float?
   lng                 Float?

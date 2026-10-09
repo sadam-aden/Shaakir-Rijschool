@@ -1,0 +1,62 @@
+[
+ {
+  "name": "Drenthe",
+  "slug": "drenthe",
+  "places": 227
+ },
+ {
+  "name": "Flevoland",
+  "slug": "flevoland",
+  "places": 19
+ },
+ {
+  "name": "Fryslân",
+  "slug": "fryslan",
+  "places": 419
+ },
+ {
+  "name": "Gelderland",
+  "slug": "gelderland",
+  "places": 335
+ },
+ {
+  "name": "Groningen",
+  "slug": "groningen",
+  "places": 199
+ },
+ {
+  "name": "Limburg",
+  "slug": "limburg",
+  "places": 190
+ },
+ {
+  "name": "Noord-Brabant",
+  "slug": "noord-brabant",
+  "places": 279
+ },
+ {
+  "name": "Noord-Holland",
+  "slug": "noord-holland",
+  "places": 239
+ },
+ {
+  "name": "Overijssel",
+  "slug": "overijssel",
+  "places": 180
+ },
+ {
+  "name": "Utrecht",
+  "slug": "utrecht",
+  "places": 104
+ },
+ {
+  "name": "Zeeland",
+  "slug": "zeeland",
+  "places": 127
+ },
+ {
+  "name": "Zuid-Holland",
+  "slug": "zuid-holland",
+  "places": 185
+ }
+]

@@ -8,6 +8,7 @@ import { findStudentFor } from "@/lib/dal/guards";
 import { requireAdmin, requireUser } from "@/lib/dal/session";
 import { db } from "@/lib/db";
 import { refreshStudentCache } from "@/lib/dal/ledger";
+import { coordsFor } from "@/lib/places";
 import { studentSchema, type StudentInput } from "@/lib/schemas/student";
 
 const COLORS = ["#DBEAFE", "#E0E7FF", "#DCFCE7", "#FEE2E2", "#FEF3C7", "#F3E8FF"];
@@ -18,9 +19,11 @@ export async function createStudentAction(input: StudentInput) {
   if (!parsed.success) return fail("invalid");
   const d = parsed.data;
   const count = await db.student.count({ where: { schoolId: user.schoolId } });
+  const coords = await coordsFor(d.province, d.city, d.area);
   const s = await db.student.create({
     data: {
       ...d,
+      lat: d.lat ?? coords?.lat, lng: d.lng ?? coords?.lng,
       schoolId: user.schoolId,
       birthDate: d.birthDate ? new Date(d.birthDate) : null,
       // instructors can only add students for themselves
@@ -38,10 +41,12 @@ export async function updateStudentAction(id: string, input: StudentInput) {
   const parsed = studentSchema.safeParse(input);
   if (!parsed.success) return fail("invalid");
   const d = parsed.data;
+  const coords = await coordsFor(d.province, d.city, d.area);
   await db.student.update({
     where: { id },
     data: {
       ...d,
+      ...(d.lat != null && d.lng != null ? { lat: d.lat, lng: d.lng } : coords ? { lat: coords.lat, lng: coords.lng } : {}),
       birthDate: d.birthDate ? new Date(d.birthDate) : null,
       // only admins may reassign students
       primaryInstructorId: user.role === "ADMIN" ? (d.primaryInstructorId ?? null) : undefined,

@@ -179,3 +179,62 @@ test("the edit form always belongs to the student that is selected", async ({ pa
   await page.getByRole("button", { name: "Bewerken", exact: true }).click();
   await expect(page.getByLabel("Voornaam")).toHaveValue("Ayoub");
 });
+
+test("picks province, city and neighbourhood from the Dutch places list", async ({ page }) => {
+  await login(page);
+  await page.goto("/leerlingen");
+  await page.getByRole("button", { name: "Leerling toevoegen" }).click();
+  await page.getByLabel("Voornaam").fill("Pien");
+  await page.getByLabel("Achternaam").fill("Plaats");
+  await page.getByLabel("Geboortedatum").fill("1995-03-03");
+
+  // the city box is locked until a province is chosen
+  await expect(page.getByLabel("Plaats (stad of dorp)")).toBeDisabled();
+  await page.getByLabel("Provincie").selectOption("Zuid-Holland");
+  await page.getByLabel("Plaats (stad of dorp)").fill("Atlantis");
+  await page.getByRole("button", { name: "Opslaan" }).click();
+  await expect(page.getByText("Kies een plaats uit de lijst van deze provincie.")).toBeVisible();
+
+  await page.getByLabel("Plaats (stad of dorp)").fill("Rotterdam");
+  await expect(page.locator("#student-wijk-options option[value='Delfshaven']")).toHaveCount(1);
+  await page.getByLabel("Wijk").fill("Delfshaven");
+  await page.getByRole("button", { name: "Opslaan" }).click();
+  await expectToast(page, "Leerling toegevoegd");
+  await expect(page.getByText(/Delfshaven, Rotterdam/)).toBeVisible();
+});
+
+test("suggests addresses once a province is chosen and fills in the rest", async ({ page }) => {
+  // the real address service (PDOK) is replaced by a fixed answer so the test never depends on the internet
+  await page.route("**/api/address**", (route) =>
+    route.fulfill({
+      json: {
+        suggestions: [
+          { address: "Oostzeedijk 120", postcode: "3063 BB", city: "Rotterdam", wijk: "Kralingen-Crooswijk", lat: 51.9197, lng: 4.5135 },
+          { address: "Oostzeedijk 122", postcode: "3063 BB", city: "Rotterdam", wijk: "Kralingen-Crooswijk", lat: 51.9198, lng: 4.5136 },
+        ],
+      },
+    }),
+  );
+  await login(page);
+  await page.goto("/leerlingen");
+  await page.getByRole("button", { name: "Leerling toevoegen" }).click();
+  await page.getByLabel("Voornaam").fill("Adres");
+  await page.getByLabel("Achternaam").fill("Voorstel");
+  await page.getByLabel("Geboortedatum").fill("1992-02-02");
+
+  const address = page.locator("input[name=address]");
+  await expect(address).toHaveAttribute("placeholder", /Kies eerst een provincie/);
+  await page.getByLabel("Provincie").selectOption("Zuid-Holland");
+  await address.fill("Oostz");
+  const suggestions = page.locator("ul[role=listbox] li[role=option]");
+  await expect(suggestions).toHaveCount(2);
+  await suggestions.first().click();
+
+  await expect(address).toHaveValue("Oostzeedijk 120");
+  await expect(page.getByLabel("Postcode")).toHaveValue("3063 BB");
+  await expect(page.getByLabel("Plaats (stad of dorp)")).toHaveValue("Rotterdam");
+  await expect(page.getByLabel("Wijk")).toHaveValue("Kralingen-Crooswijk");
+  await page.getByRole("button", { name: "Opslaan" }).click();
+  await expectToast(page, "Leerling toegevoegd");
+  await expect(page.getByText(/Kralingen-Crooswijk, Rotterdam/)).toBeVisible();
+});
