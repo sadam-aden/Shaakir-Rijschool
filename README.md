@@ -59,3 +59,16 @@ docs               prompt, mockups, PROGRESS.md, DECISIONS.md
 3. **Les inplannen** → pick a student, a date and the "Beste keuze" slot, then confirm (e-mails/SMS are printed in the server log).
 4. **Lessen** → open a lesson, check it off with skill sliders, mark a no-show or cancel (see how the 24-hour rule decides if hours are charged).
 5. **Leerlingen** → filters, availability grid, profile page; **Instructeurs / Lesauto's / Pakketten / Instellingen** under "Beheer".
+
+## Money: invoices, iDEAL, SMS and background jobs
+
+Everything works without accounts (test/mock mode). To go live, set these in `.env` (see `.env.example`):
+
+| What | Variables | Notes |
+| --- | --- | --- |
+| iDEAL | `MOLLIE_API_KEY`, `APP_URL` | `test_…` = Mollie test mode. `APP_URL` must be the public https address so Mollie can reach `/api/webhooks/mollie`. Without a key the app shows a local mock checkout page. |
+| SMS | `SMS_PROVIDER=twilio` + `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` — or — `SMS_PROVIDER=bird` + `BIRD_API_KEY` | The sender name (max 11 characters, default ShaakirRS) is set in Settings. Without keys SMS texts are printed in the server log. |
+| E-mail | `RESEND_API_KEY`, `EMAIL_FROM` | Invoices go out as PDF attachments. |
+| Jobs | `CRON_SECRET` (long random value) | Call `GET /api/cron/run` with `Authorization: Bearer <secret>`. `vercel.json` schedules it daily; use Vercel Pro or an external scheduler every 15 minutes for exact 24 h reminders. Settings → "Run now" runs it by hand. |
+
+Try it locally: **Students → a student → Payments → Add package** creates an invoice. **Payments & hours → Send iDEAL link** creates the link; open it from the invoice page and press "Payment succeeds" on the mock checkout.

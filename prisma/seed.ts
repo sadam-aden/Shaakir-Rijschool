@@ -8,6 +8,7 @@ import bcrypt from "bcryptjs";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { AREA_COORDS } from "../src/lib/domain/geo";
+import { invoiceTotals, lineFromGross } from "../src/lib/domain/money";
 import { localParts, startOfIsoWeek, zonedToUtc } from "../src/lib/domain/time";
 
 if (process.env.NODE_ENV === "production") throw new Error("Refusing to seed in production");
@@ -174,21 +175,23 @@ async function main() {
 
     // purchase + invoice
     const minutes = s.pkg.type === "THEORY" ? 6 * 60 : s.pkg.minutesIncluded;
-    const sub = Math.round(s.pkg.priceCents / 1.21);
+    // prices include 21 % VAT; the invoice total always equals the package price
+    const lines = [lineFromGross(s.pkg.nameNl, s.pkg.priceCents, 21)];
+    const totals = invoiceTotals(lines);
     invoiceSeq += 1;
     const overdue = s.overdueDays != null;
     const status = s.paid >= s.pkg.priceCents ? "PAID" : overdue ? "OVERDUE" : s.paid > 0 ? "PARTIALLY_PAID" : "OPEN";
-    const issued = overdue ? day(-(14 + s.overdueDays!)) : day(-30);
+    // overdue ones are past their 14-day term; partly paid ones are recent (still within the term); the rest were paid long ago
+    const issued = overdue ? day(-(14 + s.overdueDays!)) : s.paid < s.pkg.priceCents ? day(-5) : day(-30);
     const inv = await db.invoice.create({
       data: {
         schoolId: sid, studentId: st.id, number: `${year}-${String(invoiceSeq).padStart(4, "0")}`, status,
-        lines: [{ description: s.pkg.nameNl, quantity: 1, unitPriceCents: sub, vatRate: 21 }],
-        subtotalCents: sub, vatCents: s.pkg.priceCents - sub, totalCents: s.pkg.priceCents,
+        lines, subtotalCents: totals.subtotalCents, vatCents: totals.vatCents, totalCents: totals.totalCents,
         issuedAt: issued, dueDate: new Date(issued.getTime() + 14 * 86_400_000),
       },
     });
     if (s.paid > 0) {
-      await db.payment.create({ data: { schoolId: sid, invoiceId: inv.id, method: "IDEAL", amountCents: s.paid, status: "PAID", paidAt: day(-(i % 25) - 1) } });
+      await db.payment.create({ data: { schoolId: sid, invoiceId: inv.id, method: "IDEAL", amountCents: s.paid, status: "PAID", paidAt: day(-((i * 9) % 150) - 1) /* spread over ~5 months so the revenue chart has history */ } });
     }
     const sp = await db.studentPackage.create({
       data: { schoolId: sid, studentId: st.id, packageId: s.pkg.id, priceCents: s.pkg.priceCents, minutesPurchased: minutes, examCredits: s.pkg.includesExam ? 1 : 0, invoiceId: inv.id, purchasedAt: issued },

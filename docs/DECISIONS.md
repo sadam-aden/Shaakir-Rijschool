@@ -48,3 +48,16 @@
 - **Default primary instructor**: new students get the creating admin's own instructor record (Shaakir) pre-selected, and the server falls back to it when none is chosen.
 - **Dev DB client refresh**: `src/lib/db.ts` fingerprints the generated Prisma client and replaces the cached dev client when the schema changed, so a new column no longer needs a dev-server restart ("Unknown argument …" after `prisma generate`).
 - **Default place**: new students start with province Zuid-Holland and city Rotterdam (`src/lib/defaults.ts`); the field is called just "City" / "Stad".
+
+## Phase 2
+- **Invoice amounts**: lines store the GROSS price; net and VAT are derived per rate (VAT = gross − net), so an invoice always equals the package price to the cent. Overdue wins over "partially paid" when the due date has passed (as in the mockup).
+- **Hours exist from the moment of sale** (PURCHASE entry at purchase, like the mockup's unpaid students with hours). The setting `allowBookingOnUnpaid` (default off) instead blocks *new* bookings while the student has an overdue unpaid invoice; admins can override with a reason (audited). Moving an already booked lesson is never blocked.
+- **Mollie**: plain REST calls (no SDK). The webhook never trusts the request body: it re-fetches the payment. Mollie only calls public URLs, so on localhost the webhook URL is omitted and the status is synced when the student returns to `/pay/return`. A `test_` key = Mollie test mode.
+- **Mock mode** (no keys): iDEAL → local mock checkout page (disabled as soon as a Mollie key exists); SMS and e-mail → server log. Every flow can be tested locally without accounts.
+- **SMS**: Twilio (Basic auth, alphanumeric sender) and Bird/MessageBird REST. Sender names are cleaned to 11 characters.
+- **Jobs**: no job queue service; idempotent jobs behind one secret-protected route (Vercel Cron header supported). Queued lesson reminders are claimed atomically before sending so two runs never send twice.
+- **Reminder rules**: level 1 after 3 days overdue, level 2 after 10 (setting `reminderDaysOverdue`); never the same level twice; manual "send all" skips invoices reminded in the last 24 h and always shows the list first.
+- **Ledger drift**: the nightly check recomputes balances from the append-only ledger, repairs the cache, writes an audit entry and notifies the admins.
+- **Server action safety**: exported functions of `"use server"` files are callable from the browser, so helpers that take a school id live in normal modules (`src/lib/jobs`, `src/lib/dal`), never in action files.
+- **PDF storage**: `storage/` locally; on read-only hosts (Vercel) the PDF is simply rendered on demand. Plug object storage in behind `FileStorage` for permanent copies.
+- **Accountant export**: CSV (semicolon, BOM, decimal comma, formulas neutralised) in Phase 2; the accountant PDF with VAT summary and prepaid-hours liability comes in Phase 4.

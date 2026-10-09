@@ -951,7 +951,8 @@
       "voidText": "An unpaid invoice is voided and the hours of the package are taken back.",
       "voidReason": "Reason",
       "voidConfirm": "Void",
-      "voided": "Invoice voided"
+      "voided": "Invoice voided",
+      "openLink": "Open payment link"
     }
   }
 }

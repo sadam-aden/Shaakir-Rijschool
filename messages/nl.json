@@ -951,7 +951,8 @@
       "voidText": "Een niet-betaalde factuur vervalt en de uren van het pakket worden teruggenomen.",
       "voidReason": "Reden",
       "voidConfirm": "Laten vervallen",
-      "voided": "Factuur is vervallen"
+      "voided": "Factuur is vervallen",
+      "openLink": "Betaallink openen"
     }
   }
 }

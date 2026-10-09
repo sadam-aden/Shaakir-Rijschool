@@ -77,7 +77,10 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
                       <span className="block font-bold">{t(`methods.${p.method}`)} · {money(p.amountCents)}</span>
                       <span className="block text-xs text-muted">{formatDateLong(p.paidAt ?? p.createdAt, locale)} {formatTime(p.paidAt ?? p.createdAt, locale)}</span>
                     </span>
-                    <Badge tone={p.status === "PAID" ? "green" : p.status === "PENDING" ? "amber" : "grey"}>{t(`paymentStatus.${p.status}`)}</Badge>
+                    <span className="flex flex-col items-end gap-1">
+                      <Badge tone={p.status === "PAID" ? "green" : p.status === "PENDING" ? "amber" : "grey"}>{t(`paymentStatus.${p.status}`)}</Badge>
+                      {p.status === "PENDING" && p.checkoutUrl && <a href={p.checkoutUrl} target="_blank" rel="noreferrer" className="text-xs font-bold text-primary">{ti("openLink")}</a>}
+                    </span>
                   </li>
                 ))}
               </ul>

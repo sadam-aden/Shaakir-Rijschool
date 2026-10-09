@@ -28,9 +28,24 @@
 - [x] Student address: province → city/village → wijk lists (all of the Netherlands) and address suggestions after choosing a province
 - [x] Netherlands-only students (Dutch phone in +31 format, e-mail, province + city required); Shaakir is the default primary instructor
 - [x] Student age rule: date of birth required, at least 18 years
-- [ ] Moved to later phases: month view + recurring-lesson management UI (Phase 4), AI banner/generator (Phase 3), invoices/iDEAL/SMS providers/reminder job (Phase 2), search ⌘K + bell (Phase 4), mobile sidebar drawer (Phase 4)
+- [ ] Moved to later phases: month view + recurring-lesson management UI (Phase 4), AI banner/generator (Phase 3), search ⌘K + bell (Phase 4), mobile sidebar drawer (Phase 4), accountant PDF report (Phase 4)
+
+## Phase 2 – Money  (tag `phase-2`) ✅
+- [x] **Invoices**: created when a package is sold (prices include 21 % VAT, total always equals the package price), sequential number per year (2026-0142, atomic), due date from the payment term (14 days), status OPEN → PARTIALLY_PAID → PAID / OVERDUE / VOID
+- [x] **Invoice PDF** (@react-pdf/renderer): Dutch-compliant (number, dates, KvK, BTW number, IBAN, customer details, VAT breakdown, paid/void stamp), in the student's language; stored in `storage/`; download button, e-mail attachment
+- [x] **Mollie iDEAL**: payment link per invoice for the amount still owed; webhook `/api/webhooks/mollie` re-fetches the payment and updates idempotently; return page `/pay/return`; without a Mollie key a local **mock checkout** (`/pay/mock/…`) lets you walk through the whole flow
+- [x] **Manual payments** (cash, pin, bank transfer) with over-payment protection; void an unpaid invoice (takes the unused hours back)
+- [x] **Payments & hours page** (mockup 5): KPIs, student balances with the right action per row (view invoice / send top-up / send iDEAL link / send reminder), filters, revenue chart, packages, "Send all reminders" with a confirm list, accountant CSV export
+- [x] **Invoice detail**: lines, VAT breakdown, payment history, reminders sent, mark as paid, copy iDEAL link, send invoice, void
+- [x] **Top-up** ("Stuur aanvulling"): choose a package → invoice + iDEAL link by SMS/e-mail (consent respected)
+- [x] **SMS**: provider interface with Twilio and Bird implementations (REST, no SDK) and a console mock; sender name from Settings
+- [x] **Jobs** (`/api/cron/run`, secret-protected, idempotent): due 24 h lesson reminders, overdue invoices, automatic payment reminders (after 3 and 10 days), nightly ledger check (repairs drift and alerts admins); "Run now" button in Settings
+- [x] **Booking rule**: no new lessons while an invoice is overdue (setting `allowBookingOnUnpaid`), admin can override with a reason; the booking wizard's admin overrides now really unlock slots
+- [x] Tests: money rules, providers (fake network), PDF rendering, CSV, overdue rule, 11 end-to-end money flows
 
 ### Known issues / notes
 - Date inputs (`type=date`, `datetime-local`) follow the browser/OS locale; time of day in lesson and working-hour forms uses a 24 h text field.
 - Theory groups cannot be created from the UI yet (seeded); group management comes in Phase 4.
 - The Dev server (`npm run dev`) on OneDrive may serve stale CSS after style changes; stop it, delete `.next`, restart.
+- Real e-mail needs RESEND_API_KEY, real iDEAL needs MOLLIE_API_KEY and a public APP_URL, real SMS needs SMS_PROVIDER plus its keys; without them everything runs in test/mock mode (see README).
+- Vercel Hobby runs the cron job once a day; for exact 24 h reminders call `/api/cron/run` every 15 minutes from Vercel Pro or any external scheduler.

@@ -13,6 +13,10 @@ const env = {
   NEXT_DIST_DIR: ".next-e2e",
   AUTH_SECRET: process.env.AUTH_SECRET ?? "e2e-secret-0123456789abcdef0123456789",
   AUTH_TRUST_HOST: "true",
+  CRON_SECRET: "e2e-cron-secret",
+  MOLLIE_API_KEY: "",
+  RESEND_API_KEY: "",
+  SMS_PROVIDER: "",
   APP_URL: "http://localhost:3100",
 };
 
