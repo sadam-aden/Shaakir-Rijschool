@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import provinceIndex from "@/data/places/index.json";
+import { DEFAULT_CITY, DEFAULT_PROVINCE } from "@/lib/defaults";
 import { AddressField } from "./address-field";
 import { latestBirthDate } from "@/lib/domain/age";
 import { localDateKey } from "@/lib/domain/time";
@@ -22,7 +23,7 @@ import { useRunAction } from "@/lib/use-action";
 const SPECIFIC_ERRORS = new Set(["birthRequired", "birthInvalid", "birthFuture", "tooYoung", "cityUnknown", "cityRequired", "provinceRequired", "phoneRequired", "phoneInvalid", "emailRequired"]);
 
 export const emptyStudent: StudentInput = {
-  firstName: "", lastName: "", phone: "", email: "", birthDate: "", address: "", postcode: "", province: "", city: "", area: "",
+  firstName: "", lastName: "", phone: "", email: "", birthDate: "", address: "", postcode: "", province: DEFAULT_PROVINCE, city: DEFAULT_CITY, area: "",
   gearbox: "MANUAL", track: "PRACTICAL", status: "ACTIVE", primaryInstructorId: "", locale: "nl",
   smsConsent: false, emailConsent: false, cbrCandidateNumber: "", guardianName: "", guardianPhone: "", guardianEmail: "", notes: "",
 };

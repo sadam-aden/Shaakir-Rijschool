@@ -123,7 +123,7 @@ async function fillRequired(page: import("@playwright/test").Page, opts: { city?
   await page.getByLabel("Telefoon (Nederlands nummer)").fill(opts.phone ?? "06 12345678");
   await page.getByLabel("E-mail", { exact: true }).fill("student@gmail.com");
   await page.getByLabel("Provincie").selectOption("Zuid-Holland");
-  if (opts.city !== false) await page.getByLabel("Plaats (stad of dorp)").fill("Rotterdam");
+  if (opts.city !== false) await page.locator("input[name=city]").fill("Rotterdam");
 }
 
 test("only accepts students who are at least 18 years old", async ({ page }) => {
@@ -201,17 +201,17 @@ test("picks province and city from the Dutch places list", async ({ page }) => {
   await page.getByLabel("Telefoon (Nederlands nummer)").fill("06 12345678");
   await page.getByLabel("E-mail", { exact: true }).fill("pien@gmail.com");
 
-  // the city box is locked until a province is chosen
-  await expect(page.getByLabel("Plaats (stad of dorp)")).toBeDisabled();
-  await page.getByLabel("Provincie").selectOption("Zuid-Holland");
-  await page.getByLabel("Plaats (stad of dorp)").fill("Atlantis");
+  // new students start in Zuid-Holland / Rotterdam
+  await expect(page.getByLabel("Provincie")).toHaveValue("Zuid-Holland");
+  await expect(page.locator("input[name=city]")).toHaveValue("Rotterdam");
+  await page.locator("input[name=city]").fill("Atlantis");
   await page.getByRole("button", { name: "Opslaan" }).click();
-  await expect(page.getByText("Kies een plaats uit de lijst van deze provincie.")).toBeVisible();
+  await expect(page.getByText("Kies een stad uit de lijst van deze provincie.")).toBeVisible();
 
-  await page.getByLabel("Plaats (stad of dorp)").fill("Rotterdam");
+  await page.locator("input[name=city]").fill("Schiedam"); // a village/city from the list of the chosen province
   await page.getByRole("button", { name: "Opslaan" }).click();
   await expectToast(page, "Leerling toegevoegd");
-  await expect(page.getByText(/Rotterdam/).first()).toBeVisible();
+  await expect(page.getByText(/Schiedam/).first()).toBeVisible();
 });
 
 test("suggests addresses once a province is chosen and fills in the rest", async ({ page }) => {
@@ -236,6 +236,7 @@ test("suggests addresses once a province is chosen and fills in the rest", async
   await page.getByLabel("E-mail", { exact: true }).fill("adres@gmail.com");
 
   const address = page.locator("input[name=address]");
+  await page.getByLabel("Provincie").selectOption("");
   await expect(address).toHaveAttribute("placeholder", /Kies eerst een provincie/);
   await page.getByLabel("Provincie").selectOption("Zuid-Holland");
   await address.fill("Oostz");
@@ -245,7 +246,7 @@ test("suggests addresses once a province is chosen and fills in the rest", async
 
   await expect(address).toHaveValue("Oostzeedijk 120");
   await expect(page.getByLabel("Postcode")).toHaveValue("3063 BB");
-  await expect(page.getByLabel("Plaats (stad of dorp)")).toHaveValue("Rotterdam");
+  await expect(page.locator("input[name=city]")).toHaveValue("Rotterdam");
   await page.getByRole("button", { name: "Opslaan" }).click();
   await expectToast(page, "Leerling toegevoegd");
   await expect(page.getByText(/Kralingen-Crooswijk, Rotterdam/)).toBeVisible();
@@ -275,6 +276,7 @@ test("a student needs an e-mail address and a place in the Netherlands", async (
   await page.getByLabel("Voornaam").fill("Leeg");
   await page.getByLabel("Achternaam").fill("Formulier");
   await page.getByLabel("Geboortedatum").fill("1991-01-01");
+  await page.getByLabel("Provincie").selectOption(""); // clearing the pre-filled province
   await page.getByRole("button", { name: "Opslaan" }).click();
   await expect(page.getByText("Telefoonnummer is verplicht.")).toBeVisible();
   await expect(page.getByText("E-mailadres is verplicht.")).toBeVisible();
@@ -287,4 +289,14 @@ test("new students get Shaakir as the primary instructor by default", async ({ p
   await page.getByRole("button", { name: "Leerling toevoegen" }).click();
   const select = page.getByLabel("Vaste instructeur");
   await expect(select.locator("option:checked")).toHaveText("Shaakir");
+});
+
+test("the province and city are pre-filled for new students but not for existing ones", async ({ page }) => {
+  await login(page);
+  await page.goto("/leerlingen");
+  await page.getByRole("button", { name: "Leerling toevoegen" }).click();
+  await expect(page.getByLabel("Provincie")).toHaveValue("Zuid-Holland");
+  await expect(page.locator("input[name=city]")).toHaveValue("Rotterdam");
+  await page.getByLabel("Provincie").selectOption("Utrecht");
+  await expect(page.locator("input[name=city]")).toHaveValue(""); // changing the province clears the city
 });

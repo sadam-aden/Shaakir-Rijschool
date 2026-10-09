@@ -365,10 +365,10 @@
       "subtitleNew": "Add a new student. Students must be at least 18 years old.",
       "province": "Province",
       "provincePlaceholder": "Choose a province",
-      "city": "City or village",
+      "city": "City",
       "cityPlaceholder": "Start typing, e.g. Rotterdam",
       "chooseProvinceFirst": "Choose a province first",
-      "cityUnknown": "Choose a place from this province's list.",
+      "cityUnknown": "Choose a city from this province's list.",
       "addressPlaceholder": "Start typing, e.g. Oostzeedijk 120",
       "addressNeedsProvince": "Choose a province first to get address suggestions",
       "phonePlaceholder": "06 12345678 or +31 6 12345678",
@@ -377,7 +377,7 @@
       "phoneInvalid": "Enter a Dutch phone number, e.g. 06 12345678 or +31 6 12345678.",
       "emailRequired": "E-mail address is required.",
       "provinceRequired": "Choose a province: students must live in the Netherlands.",
-      "cityRequired": "Choose a place in the Netherlands."
+      "cityRequired": "Choose a city in the Netherlands."
     },
     "delete": {
       "edit": "Edit",

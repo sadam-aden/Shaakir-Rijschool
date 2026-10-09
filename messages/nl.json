@@ -365,10 +365,10 @@
       "subtitleNew": "Voeg een nieuwe leerling toe. Leerlingen moeten minimaal 18 jaar zijn.",
       "province": "Provincie",
       "provincePlaceholder": "Kies een provincie",
-      "city": "Plaats (stad of dorp)",
+      "city": "Stad",
       "cityPlaceholder": "Begin te typen, bijv. Rotterdam",
       "chooseProvinceFirst": "Kies eerst een provincie",
-      "cityUnknown": "Kies een plaats uit de lijst van deze provincie.",
+      "cityUnknown": "Kies een stad uit de lijst van deze provincie.",
       "addressPlaceholder": "Begin te typen, bijv. Oostzeedijk 120",
       "addressNeedsProvince": "Kies eerst een provincie voor adressuggesties",
       "phonePlaceholder": "06 12345678 of +31 6 12345678",
@@ -377,7 +377,7 @@
       "phoneInvalid": "Vul een Nederlands telefoonnummer in, bijv. 06 12345678 of +31 6 12345678.",
       "emailRequired": "E-mailadres is verplicht.",
       "provinceRequired": "Kies een provincie: leerlingen moeten in Nederland wonen.",
-      "cityRequired": "Kies een plaats in Nederland."
+      "cityRequired": "Kies een stad in Nederland."
     },
     "delete": {
       "edit": "Bewerken",
