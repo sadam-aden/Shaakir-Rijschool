@@ -158,7 +158,8 @@
     "noVehicle": "Geen {gearbox} vrij",
     "dayLimit": "Daglimiet van {max} min bereikt",
     "generic": "Dit tijdstip is niet beschikbaar",
-    "noVehicleRegistered": "Nog geen {gearbox} lesauto toegevoegd: voeg er een toe onder Beheer → Lesauto's"
+    "noVehicleRegistered": "Nog geen {gearbox} lesauto toegevoegd: voeg er een toe onder Beheer → Lesauto's",
+    "unpaidOverdue": "Er staat een te late factuur open"
   },
   "bestFit": {
     "intro": "{time} is de beste keuze.",
@@ -185,7 +186,12 @@
     "noConsent": "Er is niets verstuurd: de leerling heeft geen toestemming of geen contactgegevens.",
     "hasInvoices": "Deze leerling heeft facturen. Facturen moeten bewaard blijven voor de belastingdienst: archiveer de leerling in plaats van te verwijderen.",
     "hasFutureLessons": "Deze leerling heeft nog geplande lessen. Annuleer of verplaats die eerst.",
-    "nameMismatch": "De ingevulde naam komt niet overeen."
+    "nameMismatch": "De ingevulde naam komt niet overeen.",
+    "overpayment": "Het bedrag is hoger dan wat nog openstaat.",
+    "alreadyPaid": "Deze factuur is al volledig betaald.",
+    "paymentProvider": "De betaalprovider gaf een fout. Probeer het zo nog eens.",
+    "hasPayments": "Een factuur met betalingen kan niet vervallen.",
+    "hoursInUse": "De uren van dit pakket zijn al (deels) gebruikt of gepland."
   },
   "students": {
     "title": "Leerlingen",
@@ -312,7 +318,9 @@
         "ADJUST": "Correctie",
         "REFUND": "Terugbetaling"
       },
-      "examLocation": "Locatie"
+      "examLocation": "Locatie",
+      "addPackageHint": "De factuur wordt automatisch aangemaakt (prijzen incl. btw); de uren zijn direct beschikbaar.",
+      "sendInvoiceNow": "Factuur mailen met iDEAL-link"
     },
     "form": {
       "titleNew": "Nieuwe leerling",
@@ -534,11 +542,19 @@
       "mollie": "Betalingen (Mollie)",
       "ai": "AI-samenvatting (Anthropic)",
       "connected": "Gekoppeld",
-      "mock": "Testmodus (console)"
+      "mock": "Testmodus (console)",
+      "live": "Live",
+      "test": "Testmodus (Mollie)"
     },
     "users": "Gebruikers",
     "save": "Opslaan",
-    "saved": "Instellingen opgeslagen"
+    "saved": "Instellingen opgeslagen",
+    "jobs": {
+      "title": "Achtergrondtaken",
+      "text": "Verstuurt de herinneringen die klaarstaan, zet te late facturen op 'te laat', stuurt betalingsherinneringen en controleert de urenadministratie. Dit gebeurt ook automatisch via de geplande taak.",
+      "run": "Nu uitvoeren",
+      "done": "Klaar: {reminders} lesherinneringen, {overdue} facturen te laat, {payments} betalingsherinneringen, {drift} afwijkingen hersteld"
+    }
   },
   "booking": {
     "breadcrumbRoot": "Agenda",
@@ -606,7 +622,8 @@
       "title": "Overschrijven (beheerder)",
       "availability": "Buiten beschikbaarheid van de leerling toestaan",
       "hours": "Meer uren boeken dan beschikbaar",
-      "reason": "Reden (verplicht)"
+      "reason": "Reden (verplicht)",
+      "payment": "Boeken ondanks een te late factuur"
     },
     "conflictTitle": "Deze tijd is niet beschikbaar",
     "packageLine": "{n}-lessenpakket",
@@ -781,5 +798,160 @@
     "apkSoon": "{name}: APK verloopt over {days} dagen",
     "apkToday": "{name}: APK verloopt vandaag",
     "apkOverdue": "{name}: APK is {days} dagen verlopen"
+  },
+  "pay": {
+    "school": "Rijschool",
+    "invoice": "Factuur",
+    "amount": "Bedrag",
+    "title": {
+      "PAID": "Betaling gelukt",
+      "PENDING": "Betaling wordt verwerkt",
+      "FAILED": "Betaling mislukt",
+      "CANCELLED": "Betaling geannuleerd",
+      "EXPIRED": "Betaallink verlopen",
+      "NONE": "Betaling niet gevonden",
+      "REFUNDED": "Betaling terugbetaald"
+    },
+    "text": {
+      "PAID": "Bedankt! Je betaling is ontvangen.",
+      "PENDING": "We wachten nog op de bevestiging van je bank. Vernieuw deze pagina over een minuut.",
+      "FAILED": "Er ging iets mis met de betaling. Gebruik de link nog eens of neem contact met ons op.",
+      "CANCELLED": "Je hebt de betaling geannuleerd. Je kunt de link opnieuw gebruiken.",
+      "EXPIRED": "Deze betaallink is niet meer geldig. Vraag een nieuwe aan.",
+      "NONE": "Deze betaling bestaat niet (meer).",
+      "REFUNDED": "Deze betaling is terugbetaald."
+    },
+    "mock": {
+      "badge": "Testmodus",
+      "title": "iDEAL (test)",
+      "text": "Er is nog geen Mollie-koppeling. Kies hieronder hoe de betaling afloopt.",
+      "amount": "Te betalen",
+      "pay": "Betaling slaagt",
+      "fail": "Betaling mislukt",
+      "done": "Deze betaling is al afgerond."
+    }
+  },
+  "payments": {
+    "title": "Betalingen & resterende uren",
+    "export": "Exporteren voor boekhouder",
+    "sendAll": "Alle herinneringen versturen",
+    "kpi": {
+      "received": "Ontvangen deze maand",
+      "vsLast": "{pct} t.o.v. vorige maand",
+      "outstanding": "Openstaand",
+      "openOverdue": "{open} open",
+      "overdue": "{n} achterstallig",
+      "prepaid": "Vooruitbetaalde uren te geven",
+      "acrossPackages": "Verdeeld over {n} pakketten",
+      "under3": "Minder dan 3 uur over",
+      "topUpReady": "Aanvullinglinks klaar om te versturen"
+    },
+    "balances": "Leerlingsaldo's",
+    "filters": {
+      "all": "Alle",
+      "unpaid": "Onbetaald",
+      "low": "Weinig uren"
+    },
+    "cols": {
+      "student": "Leerling",
+      "hours": "Uren gebruikt · over",
+      "paid": "Betaald",
+      "status": "Status",
+      "action": "Actie"
+    },
+    "hoursUsed": "{used} van {total} u",
+    "hoursLeft": "{left} over",
+    "paidOf": "van {total}",
+    "noPackage": "Geen pakket",
+    "empty": "Nog geen leerlingen met een pakket.",
+    "status": {
+      "PAID": "Betaald",
+      "PARTIALLY_PAID": "Deels betaald",
+      "OPEN": "Openstaand",
+      "OVERDUE": "Te laat · {days} dgn",
+      "NONE": "Geen factuur",
+      "VOID": "Vervallen",
+      "DRAFT": "Concept"
+    },
+    "actions": {
+      "viewInvoice": "Factuur bekijken",
+      "sendTopUp": "Stuur aanvulling",
+      "sendIdeal": "Stuur iDEAL-link",
+      "sendReminder": "Stuur herinnering",
+      "markPaid": "Als betaald markeren"
+    },
+    "revenue": "Omzet",
+    "last6": "Laatste 6 maanden",
+    "packages": "Pakketten",
+    "editPrices": "Prijzen aanpassen",
+    "linkSent": "iDEAL-link verstuurd",
+    "reminderSent": "Herinnering verstuurd",
+    "reminders": {
+      "title": "Herinneringen versturen",
+      "text": "Deze leerlingen hebben een achterstallige factuur en krijgen een herinnering (SMS en e-mail, als ze toestemming gaven):",
+      "none": "Niemand heeft een achterstallige factuur zonder recente herinnering.",
+      "send": "Versturen ({n})",
+      "done": "{sent} herinneringen verstuurd",
+      "skipped": "{n} overgeslagen (geen toestemming of contactgegevens)",
+      "line": "{days} dagen te laat · {amount}"
+    },
+    "topUp": {
+      "title": "Aanvulling versturen",
+      "text": "{name} heeft nog {hours} over. De leerling krijgt een factuur en een iDEAL-link voor het gekozen pakket.",
+      "package": "Pakket",
+      "send": "Factuur + link versturen",
+      "done": "Aanvulling verstuurd (factuur {number})"
+    },
+    "markPaid": {
+      "title": "Betaling vastleggen",
+      "text": "Factuur {number} · nog te betalen {owed}",
+      "method": "Betaalmethode",
+      "amount": "Bedrag (€)",
+      "confirm": "Vastleggen",
+      "done": "Betaling vastgelegd"
+    },
+    "methods": {
+      "CASH": "Contant",
+      "PIN": "Pinbetaling",
+      "BANK_TRANSFER": "Bankoverschrijving",
+      "IDEAL": "iDEAL"
+    },
+    "paymentStatus": {
+      "PENDING": "In afwachting",
+      "PAID": "Betaald",
+      "FAILED": "Mislukt",
+      "EXPIRED": "Verlopen",
+      "CANCELLED": "Geannuleerd",
+      "REFUNDED": "Terugbetaald"
+    },
+    "invoice": {
+      "title": "Factuur {number}",
+      "back": "Terug naar betalingen",
+      "download": "PDF downloaden",
+      "send": "Factuur versturen",
+      "sent": "Factuur verstuurd",
+      "issued": "Factuurdatum",
+      "due": "Vervaldatum",
+      "student": "Leerling",
+      "lines": "Regels",
+      "subtotal": "Totaal excl. btw",
+      "vat": "Btw {rate}%",
+      "total": "Totaal incl. btw",
+      "paid": "Betaald",
+      "outstanding": "Nog te betalen",
+      "history": "Betalingen",
+      "noPayments": "Nog geen betalingen.",
+      "remindersTitle": "Herinneringen",
+      "noReminders": "Nog geen herinneringen verstuurd.",
+      "level": "Herinnering {n}",
+      "createLink": "iDEAL-link kopiëren",
+      "linkCopied": "Link gekopieerd",
+      "void": "Factuur laten vervallen",
+      "voidTitle": "Factuur laten vervallen",
+      "voidText": "Een niet-betaalde factuur vervalt en de uren van het pakket worden teruggenomen.",
+      "voidReason": "Reden",
+      "voidConfirm": "Laten vervallen",
+      "voided": "Factuur is vervallen"
+    }
   }
 }

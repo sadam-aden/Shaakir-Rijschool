@@ -27,6 +27,7 @@ export default async function StudentProfilePage({ params, searchParams }: { par
   const sp = await searchParams;
   const t = await getTranslations("students");
   const tc = await getTranslations("common");
+  const tp = await getTranslations("payments");
   const tl = await getTranslations("lessonStatus");
   const tt = await getTranslations("lessonType");
   const locale = (await getLocale()) as AppLocale;
@@ -116,6 +117,21 @@ export default async function StudentProfilePage({ params, searchParams }: { par
                     </li>
                   ))}
                 </ul>
+                {student.packages.some((p) => p.invoice) && (
+                  <div>
+                    <h3 className="mb-2 text-sm font-bold">{t("detail.invoices")}</h3>
+                    <ul className="space-y-2 text-sm">
+                      {student.packages.filter((p) => p.invoice).map((p) => (
+                        <li key={p.invoice!.id}>
+                          <Link href={`/betalingen/facturen/${p.invoice!.id}`} className="flex items-center justify-between rounded-xl border border-line px-3 py-2 hover:bg-primary-faint">
+                            <span className="font-semibold">{p.invoice!.number}</span>
+                            <span className="flex items-center gap-3 text-muted">{formatMoney(p.invoice!.totalCents, locale)}<Badge tone={p.invoice!.status === "PAID" ? "green" : p.invoice!.status === "OVERDUE" ? "red" : "amber"}>{tp(`status.${p.invoice!.status}`, { days: 0 })}</Badge></span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
                 <div className="text-sm">
                   <Badge tone={payment.state === "PAID" ? "green" : payment.state === "NONE" ? "grey" : "amber"}>{t(`detail.paidStatus.${payment.state}`)}</Badge>
                   {payment.totalCents !== undefined && payment.paidCents !== undefined && payment.state !== "NONE" && (

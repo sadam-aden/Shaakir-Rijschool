@@ -88,6 +88,7 @@ export function BookingWizard({ todayKey, isAdmin, students, instructors, defaul
   const [reminder, setReminder] = useState(true);
   const [overrideAvail, setOverrideAvail] = useState(false);
   const [overrideHours, setOverrideHours] = useState(false);
+  const [overridePayment, setOverridePayment] = useState(false);
   const [overrideReason, setOverrideReason] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -96,10 +97,15 @@ export function BookingWizard({ todayKey, isAdmin, students, instructors, defaul
   // ── slots ──
   const needsSlots = !!student && type !== "THEORY";
   const slotsQ = useQuery<SlotResponse>({
-    queryKey: ["slots", studentId, instructorId, date, duration, type, locale],
+    queryKey: ["slots", studentId, instructorId, date, duration, type, locale, isAdmin && overrideAvail, isAdmin && overrideHours, isAdmin && overridePayment],
     enabled: needsSlots,
     queryFn: async () => {
       const q = new URLSearchParams({ studentId, instructorId, date, duration: String(duration), type, locale });
+      if (isAdmin) {
+        q.set("oa", overrideAvail ? "1" : "0");
+        q.set("oh", overrideHours ? "1" : "0");
+        q.set("op", overridePayment ? "1" : "0");
+      }
       const r = await fetch(`/api/slots?${q}`);
       if (!r.ok) throw new Error("slots");
       return r.json();
@@ -150,7 +156,7 @@ export function BookingWizard({ todayKey, isAdmin, students, instructors, defaul
         studentId: student.id, type: type === "EXAM" ? "EXAM" : "PRACTICAL", instructorId: instructorId, startsAt: selected.startsAt,
         durationMin: duration, pickupAddress: pickupValue || undefined, occurrences: repeat ? occurrences : 1,
         notify: { sms, email: sms, reminder },
-        override: isAdmin && (overrideAvail || overrideHours) ? { availability: overrideAvail, hours: overrideHours, reason: overrideReason } : undefined,
+        override: isAdmin && (overrideAvail || overrideHours || overridePayment) ? { availability: overrideAvail, hours: overrideHours, payment: overridePayment, reason: overrideReason } : undefined,
       });
       if (r.ok) {
         const d = r.data;
@@ -354,7 +360,8 @@ export function BookingWizard({ todayKey, isAdmin, students, instructors, defaul
             <div className="mt-3 space-y-2">
               <label className="flex items-center gap-2"><input type="checkbox" checked={overrideAvail} onChange={(e) => setOverrideAvail(e.target.checked)} /> {t("override.availability")}</label>
               <label className="flex items-center gap-2"><input type="checkbox" checked={overrideHours} onChange={(e) => setOverrideHours(e.target.checked)} /> {t("override.hours")}</label>
-              {(overrideAvail || overrideHours) && <Field label={t("override.reason")}><Input value={overrideReason} onChange={(e) => setOverrideReason(e.target.value)} /></Field>}
+              <label className="flex items-center gap-2"><input type="checkbox" checked={overridePayment} onChange={(e) => setOverridePayment(e.target.checked)} /> {t("override.payment")}</label>
+              {(overrideAvail || overrideHours || overridePayment) && <Field label={t("override.reason")}><Input value={overrideReason} onChange={(e) => setOverrideReason(e.target.value)} /></Field>}
             </div>
           </details>
         )}
@@ -404,7 +411,7 @@ export function BookingWizard({ todayKey, isAdmin, students, instructors, defaul
                   </Select>
                 </Field>
               )}
-              <Button className="mt-5 w-full py-3" disabled={!student || !selected || busy || (isAdmin && (overrideAvail || overrideHours) && !overrideReason.trim())} onClick={confirm}>
+              <Button className="mt-5 w-full py-3" disabled={!student || !selected || busy || (isAdmin && (overrideAvail || overrideHours || overridePayment) && !overrideReason.trim())} onClick={confirm}>
                 <Check className="h-4 w-4" aria-hidden /> {student && selected ? ts("confirm") : ts("selectFirst")}
               </Button>
             </>

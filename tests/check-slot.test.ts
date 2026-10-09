@@ -104,6 +104,16 @@ describe("checkSlot", () => {
     d.vehicles[1].busy = [{ id: "x", startsAt: at(13), endsAt: at(14) }];
     expect(checkSlot(d, slot(13, 0, 60)).conflicts[0].key).toBe("noVehicle");
   });
+  it("blocks booking while an invoice is overdue, unless the school allows it or an admin overrides", () => {
+    const c = ctx();
+    c.student!.hasOverdueInvoice = true;
+    expect(keys(checkSlot(c, slot(13, 0, 60)))).toContain("unpaidOverdue");
+    const o = checkSlot(c, { ...slot(13, 0, 60), overrides: { payment: true } });
+    expect(o.ok).toBe(true);
+    expect(o.overridden.map((x) => x.key)).toContain("unpaidOverdue");
+    c.settings.allowBookingOnUnpaid = true;
+    expect(checkSlot(c, slot(13, 0, 60)).ok).toBe(true);
+  });
   it("skips cars whose APK has expired", () => {
     const c = ctx();
     c.vehicles[1].apkDueDate = new Date("2026-09-01T00:00:00Z");

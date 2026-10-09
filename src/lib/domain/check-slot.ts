@@ -25,7 +25,7 @@ export type VehicleCtx = {
 
 export type SlotContext = {
   tz?: string;
-  settings: { travelBufferMin: number; urbanFactor?: number; speedKmh?: number };
+  settings: { travelBufferMin: number; urbanFactor?: number; speedKmh?: number; allowBookingOnUnpaid?: boolean };
   instructor: {
     id: string;
     maxMinutesPerDay: number;
@@ -39,6 +39,8 @@ export type SlotContext = {
     availability: Avail[];
     unavailability: Interval[];
     minutesAvailable: number;
+    /** an invoice of this student is past its due date and still (partly) unpaid */
+    hasOverdueInvoice?: boolean;
     busy: Busy[];
   };
   vehicles: VehicleCtx[];
@@ -54,7 +56,7 @@ export type SlotInput = {
   excludeLessonId?: string;
   preferredVehicleId?: string | null;
   /** admin overrides */
-  overrides?: { availability?: boolean; hours?: boolean };
+  overrides?: { availability?: boolean; hours?: boolean; payment?: boolean };
 };
 
 export type ConflictKey =
@@ -66,6 +68,7 @@ export type ConflictKey =
   | "studentUnavailable"
   | "outsideStudentAvailability"
   | "notEnoughHours"
+  | "unpaidOverdue"
   | "noVehicle"
   | "noVehicleRegistered"
   | "dayLimit";
@@ -84,6 +87,7 @@ const OVERRIDABLE = {
   studentUnavailable: "availability",
   outsideStudentAvailability: "availability",
   notEnoughHours: "hours",
+  unpaidOverdue: "payment",
 } as const;
 
 export function checkSlot(ctx: SlotContext, input: SlotInput): SlotResult {
@@ -141,6 +145,8 @@ export function checkSlot(ctx: SlotContext, input: SlotInput): SlotResult {
     // 4. Student overlap
     const clash = student.busy.filter(skip).find((b) => overlaps(startsAt, endsAt, b.startsAt, b.endsAt));
     if (clash) raw.push({ key: "studentBusy" });
+    // 5a. Overdue invoice (setting allowBookingOnUnpaid, default off)
+    if (input.type === "PRACTICAL" && student.hasOverdueInvoice && !ctx.settings.allowBookingOnUnpaid) raw.push({ key: "unpaidOverdue" });
     // 5. Hours
     if (input.type === "PRACTICAL" && student.minutesAvailable < durationMin) {
       raw.push({ key: "notEnoughHours", params: { available: student.minutesAvailable, needed: durationMin } });

@@ -3,9 +3,8 @@
 import { Plus, Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
-import {
-  addUnavailabilityAction, adjustHoursAction, assignPackageAction, removeUnavailabilityAction, saveExamAction,
-} from "@/app/actions/students";
+import { addUnavailabilityAction, adjustHoursAction, removeUnavailabilityAction, saveExamAction } from "@/app/actions/students";
+import { assignPackageAction } from "@/app/actions/payments";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
@@ -17,18 +16,20 @@ export function AddPackageDialog({ studentId, packages }: { studentId: string; p
   const tc = useTranslations("common");
   const [open, setOpen] = useState(false);
   const [pkg, setPkg] = useState(packages[0]?.id ?? "");
+  const [sendInvoice, setSendInvoice] = useState(true);
   const { run, pending } = useRunAction();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild><Button variant="soft" size="sm"><Plus className="h-3.5 w-3.5" aria-hidden />{t("addPackage")}</Button></DialogTrigger>
-      <DialogContent title={t("addPackage")} closeLabel={tc("close")}>
+      <DialogContent title={t("addPackage")} description={t("addPackageHint")} closeLabel={tc("close")}>
         <Field label={t("choosePackage")}>
           <Select value={pkg} onChange={(e) => setPkg(e.target.value)}>
             {packages.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
           </Select>
         </Field>
+        <label className="mt-4 flex items-center gap-2 text-sm font-semibold"><input type="checkbox" checked={sendInvoice} onChange={(e) => setSendInvoice(e.target.checked)} /> {t("sendInvoiceNow")}</label>
         <div className="mt-4 flex justify-end">
-          <Button disabled={pending || !pkg} onClick={() => run(() => assignPackageAction(studentId, pkg), { success: tc("saved"), onOk: () => setOpen(false) })}>
+          <Button disabled={pending || !pkg} onClick={() => run(() => assignPackageAction(studentId, pkg, sendInvoice), { success: tc("saved"), onOk: () => setOpen(false) })}>
             {tc("confirm")}
           </Button>
         </div>

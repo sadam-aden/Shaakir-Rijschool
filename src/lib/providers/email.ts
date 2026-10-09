@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 
-export type EmailAttachment = { filename: string; content: string; contentType: string };
+export type EmailAttachment = { filename: string; content: string | Uint8Array; contentType: string };
 export type EmailMessage = {
   to: string;
   subject: string;

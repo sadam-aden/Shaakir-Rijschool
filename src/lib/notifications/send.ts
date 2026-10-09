@@ -1,7 +1,7 @@
 import "server-only";
 import type { AppLocale } from "@/i18n/config";
 import { db } from "@/lib/db";
-import { getEmailProvider } from "@/lib/providers/email";
+import { getEmailProvider, type EmailAttachment } from "@/lib/providers/email";
 import { getSmsProvider } from "@/lib/providers/sms";
 import { getSchoolSettings } from "@/lib/queries/settings";
 import { buildIcs } from "./ics";
@@ -92,30 +92,69 @@ export async function dropQueuedReminders(lessonId: string) {
 export async function sendStudentMessage(
   studentId: string,
   template: string,
-  build: (ctx: { locale: AppLocale; school: string; studentName: string }) => { subject: string; text: string; sms: string },
+  build: (ctx: { locale: AppLocale; school: string; studentName: string }) => { subject: string; text: string; sms: string; attachments?: EmailAttachment[] },
   channels: Channels = { sms: true, email: true },
 ) {
   const student = await db.student.findUnique({ where: { id: studentId }, include: { school: true } });
-  if (!student) return { sent: 0 };
+  if (!student) return { sent: 0, channels: [] as ("EMAIL" | "SMS")[] };
   const { settings } = await getSchoolSettings(student.schoolId);
   const locale = student.locale as AppLocale;
   const msg = build({ locale, school: student.school.name, studentName: student.firstName });
   let sent = 0;
+  const channelsSent: ("EMAIL" | "SMS")[] = [];
   const log = async (channel: "EMAIL" | "SMS", send: () => Promise<{ id: string }>) => {
     const row = await db.notification.create({ data: { schoolId: student.schoolId, studentId, channel, template, locale } });
     try {
       const { id } = await send();
       await db.notification.update({ where: { id: row.id }, data: { status: "SENT", providerId: id, sentAt: new Date() } });
       sent++;
+      channelsSent.push(channel);
     } catch (e) {
       await db.notification.update({ where: { id: row.id }, data: { status: "FAILED", error: String(e).slice(0, 300) } });
     }
   };
   if (channels.email && student.emailConsent && student.email) {
-    await log("EMAIL", () => getEmailProvider().send({ to: student.email!, subject: msg.subject, text: msg.text, fromName: student.school.name }));
+    await log("EMAIL", () => getEmailProvider().send({ to: student.email!, subject: msg.subject, text: msg.text, fromName: student.school.name, attachments: msg.attachments }));
   }
   if (channels.sms && student.smsConsent && student.phone) {
     await log("SMS", () => getSmsProvider().send({ to: student.phone!, body: msg.sms, sender: settings.smsSender }));
   }
-  return { sent };
+  return { sent, channels: channelsSent };
+}
+
+/**
+ * Delivers one queued 24 h reminder row (job). Skips it when the lesson is gone or moved, or the student has no consent.
+ * Returns what happened so the job can count it.
+ */
+export async function deliverQueuedReminder(row: { id: string; payload: unknown; channel: "SMS" | "EMAIL" }): Promise<"sent" | "skipped" | "failed"> {
+  const lessonId = (row.payload as { lessonId?: string } | null)?.lessonId;
+  // claim the row first so two job runs never send the same reminder twice
+  const claimed = await db.notification.updateMany({ where: { id: row.id, status: "QUEUED" }, data: { status: "SENT", sentAt: new Date() } });
+  if (claimed.count === 0) return "skipped";
+  const skip = async () => {
+    await db.notification.update({ where: { id: row.id }, data: { status: "SKIPPED", sentAt: null } });
+    return "skipped" as const;
+  };
+  const lesson = lessonId ? await loadLesson(lessonId) : null;
+  const student = lesson?.student;
+  if (!lesson || !student || lesson.status !== "PLANNED" || lesson.startsAt <= new Date()) return skip();
+  const useEmail = row.channel === "EMAIL";
+  if (useEmail ? !(student.emailConsent && student.email) : !(student.smsConsent && student.phone)) return skip();
+
+  const { settings } = await getSchoolSettings(lesson.schoolId);
+  const locale = student.locale as AppLocale;
+  const msg = lessonMessage("reminder24h", locale, {
+    school: lesson.school.name, studentName: student.firstName, startsAt: lesson.startsAt, durationMin: lesson.durationMin,
+    type: lesson.type, instructor: lesson.instructor.displayName, pickup: lesson.pickupAddress,
+  });
+  try {
+    const sent = useEmail
+      ? await getEmailProvider().send({ to: student.email!, subject: msg.subject, text: msg.text, fromName: lesson.school.name })
+      : await getSmsProvider().send({ to: student.phone!, body: msg.sms, sender: settings.smsSender });
+    await db.notification.update({ where: { id: row.id }, data: { providerId: sent.id } });
+    return "sent";
+  } catch (e) {
+    await db.notification.update({ where: { id: row.id }, data: { status: "FAILED", sentAt: null, error: String(e).slice(0, 300) } });
+    return "failed";
+  }
 }

@@ -55,7 +55,7 @@ export async function bookLesson(
   if (!instructor) return fail("notFound");
 
   const override = user.role === "ADMIN" ? input.override : undefined;
-  if ((override?.availability || override?.hours) && !override.reason?.trim()) return fail("overrideReason");
+  if ((override?.availability || override?.hours || override?.payment) && !override.reason?.trim()) return fail("overrideReason");
 
   const { settings } = await getSchoolSettings(user.schoolId);
   const first = new Date(input.startsAt);
@@ -76,7 +76,7 @@ export async function bookLesson(
     const check = checkSlot(ctx, {
       startsAt, endsAt, type: input.type, gearbox: student.gearbox, preferredVehicleId: input.vehicleId,
       pickup: student.lat != null && student.lng != null ? { lat: student.lat, lng: student.lng } : null,
-      overrides: override ? { availability: override.availability, hours: override.hours } : undefined,
+      overrides: override ? { availability: override.availability, hours: override.hours, payment: override.payment } : undefined,
     });
     if (!check.ok) {
       if (k === 0) return conflictResult(check.conflicts);
@@ -112,9 +112,9 @@ export async function bookLesson(
             data: { schoolId: user.schoolId, studentId: student.id, kind: "PRACTICAL", scheduledAt: startsAt, cbrLocation: "CBR Rotterdam", lessonId: created.id, status: "SCHEDULED", attemptNumber: attempts + 1 },
           });
         }
-        if (override?.availability || override?.hours) {
+        if (override?.availability || override?.hours || override?.payment) {
           await audit(tx, user, "booking.override", "Lesson", created.id, {
-            availability: !!override.availability, hours: !!override.hours, reason: override.reason ?? "",
+            availability: !!override.availability, hours: !!override.hours, payment: !!override.payment, reason: override.reason ?? "",
             conflicts: check.overridden.map((c) => c.key),
           });
         }
@@ -166,6 +166,8 @@ export async function moveLesson(user: SessionUser, rawInput: MoveLessonInput, l
   });
   // hours held by this lesson itself must not count against it
   if (ctx.student && lesson.status === "PLANNED" && lesson.type === "PRACTICAL") ctx.student.minutesAvailable += lesson.durationMin;
+  // moving a lesson that is already booked is never blocked by an overdue invoice
+  if (ctx.student) ctx.student.hasOverdueInvoice = false;
 
   const check = checkSlot(ctx, {
     startsAt, endsAt, type: lesson.type, gearbox: lesson.gearbox ?? student?.gearbox ?? null, excludeLessonId: lesson.id,

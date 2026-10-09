@@ -8,6 +8,7 @@ export type NotifyChoice = z.infer<typeof notifySchema>;
 export const overrideSchema = z.object({
   availability: z.boolean().optional(),
   hours: z.boolean().optional(),
+  payment: z.boolean().optional(),
   reason: z.string().trim().max(200).optional(),
 });
 

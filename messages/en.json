@@ -158,7 +158,8 @@
     "noVehicle": "No {gearbox} car free",
     "dayLimit": "Daily limit of {max} min reached",
     "generic": "This time is not available",
-    "noVehicleRegistered": "No {gearbox} car added yet: add one under Manage → Vehicles"
+    "noVehicleRegistered": "No {gearbox} car added yet: add one under Manage → Vehicles",
+    "unpaidOverdue": "A payment is overdue"
   },
   "bestFit": {
     "intro": "{time} is the best fit.",
@@ -185,7 +186,12 @@
     "noConsent": "Nothing was sent: the student has no consent or no contact details.",
     "hasInvoices": "This student has invoices. Invoices must be kept for the tax authorities: archive the student instead of deleting.",
     "hasFutureLessons": "This student still has planned lessons. Cancel or move them first.",
-    "nameMismatch": "The name you typed does not match."
+    "nameMismatch": "The name you typed does not match.",
+    "overpayment": "The amount is higher than what is still owed.",
+    "alreadyPaid": "This invoice has already been paid in full.",
+    "paymentProvider": "The payment provider returned an error. Please try again shortly.",
+    "hasPayments": "An invoice with payments cannot be voided.",
+    "hoursInUse": "The hours of this package are already (partly) used or planned."
   },
   "students": {
     "title": "Students",
@@ -312,7 +318,9 @@
         "ADJUST": "Adjustment",
         "REFUND": "Refund"
       },
-      "examLocation": "Location"
+      "examLocation": "Location",
+      "addPackageHint": "The invoice is created automatically (prices incl. VAT); the hours are available at once.",
+      "sendInvoiceNow": "E-mail the invoice with an iDEAL link"
     },
     "form": {
       "titleNew": "New student",
@@ -534,11 +542,19 @@
       "mollie": "Payments (Mollie)",
       "ai": "AI summary (Anthropic)",
       "connected": "Connected",
-      "mock": "Test mode (console)"
+      "mock": "Test mode (console)",
+      "live": "Live",
+      "test": "Test mode (Mollie)"
     },
     "users": "Users",
     "save": "Save",
-    "saved": "Settings saved"
+    "saved": "Settings saved",
+    "jobs": {
+      "title": "Background jobs",
+      "text": "Sends the reminders that are due, marks late invoices as overdue, sends payment reminders and checks the hours ledger. This also runs automatically through the scheduled job.",
+      "run": "Run now",
+      "done": "Done: {reminders} lesson reminders, {overdue} invoices overdue, {payments} payment reminders, {drift} discrepancies repaired"
+    }
   },
   "booking": {
     "breadcrumbRoot": "Calendar",
@@ -606,7 +622,8 @@
       "title": "Override (admin)",
       "availability": "Allow outside the student's availability",
       "hours": "Book more hours than available",
-      "reason": "Reason (required)"
+      "reason": "Reason (required)",
+      "payment": "Book although an invoice is overdue"
     },
     "conflictTitle": "This time is not available",
     "packageLine": "{n}-lesson package",
@@ -781,5 +798,160 @@
     "apkSoon": "{name}: APK expires in {days} days",
     "apkToday": "{name}: APK expires today",
     "apkOverdue": "{name}: APK expired {days} days ago"
+  },
+  "pay": {
+    "school": "Driving school",
+    "invoice": "Invoice",
+    "amount": "Amount",
+    "title": {
+      "PAID": "Payment successful",
+      "PENDING": "Payment is being processed",
+      "FAILED": "Payment failed",
+      "CANCELLED": "Payment cancelled",
+      "EXPIRED": "Payment link expired",
+      "NONE": "Payment not found",
+      "REFUNDED": "Payment refunded"
+    },
+    "text": {
+      "PAID": "Thank you! Your payment has been received.",
+      "PENDING": "We are still waiting for confirmation from your bank. Refresh this page in a minute.",
+      "FAILED": "Something went wrong with the payment. Use the link again or contact us.",
+      "CANCELLED": "You cancelled the payment. You can use the link again.",
+      "EXPIRED": "This payment link is no longer valid. Ask for a new one.",
+      "NONE": "This payment does not exist (anymore).",
+      "REFUNDED": "This payment was refunded."
+    },
+    "mock": {
+      "badge": "Test mode",
+      "title": "iDEAL (test)",
+      "text": "There is no Mollie connection yet. Choose how the payment ends.",
+      "amount": "Amount due",
+      "pay": "Payment succeeds",
+      "fail": "Payment fails",
+      "done": "This payment has already been completed."
+    }
+  },
+  "payments": {
+    "title": "Payments & remaining hours",
+    "export": "Export for accountant",
+    "sendAll": "Send all reminders",
+    "kpi": {
+      "received": "Received this month",
+      "vsLast": "{pct} vs last month",
+      "outstanding": "Outstanding",
+      "openOverdue": "{open} open",
+      "overdue": "{n} overdue",
+      "prepaid": "Prepaid hours to teach",
+      "acrossPackages": "Across {n} packages",
+      "under3": "Under 3 hours left",
+      "topUpReady": "Top-up links ready to send"
+    },
+    "balances": "Student balances",
+    "filters": {
+      "all": "All",
+      "unpaid": "Unpaid",
+      "low": "Low hours"
+    },
+    "cols": {
+      "student": "Student",
+      "hours": "Hours used · remaining",
+      "paid": "Paid",
+      "status": "Status",
+      "action": "Action"
+    },
+    "hoursUsed": "{used} of {total} h",
+    "hoursLeft": "{left} left",
+    "paidOf": "of {total}",
+    "noPackage": "No package",
+    "empty": "No students with a package yet.",
+    "status": {
+      "PAID": "Paid",
+      "PARTIALLY_PAID": "Partially paid",
+      "OPEN": "Open",
+      "OVERDUE": "Overdue {days} days",
+      "NONE": "No invoice",
+      "VOID": "Void",
+      "DRAFT": "Draft"
+    },
+    "actions": {
+      "viewInvoice": "View invoice",
+      "sendTopUp": "Send top-up",
+      "sendIdeal": "Send iDEAL link",
+      "sendReminder": "Send reminder",
+      "markPaid": "Mark as paid"
+    },
+    "revenue": "Revenue",
+    "last6": "Last 6 months",
+    "packages": "Packages",
+    "editPrices": "Edit prices",
+    "linkSent": "iDEAL link sent",
+    "reminderSent": "Reminder sent",
+    "reminders": {
+      "title": "Send reminders",
+      "text": "These students have an overdue invoice and will get a reminder (SMS and e-mail, where they gave consent):",
+      "none": "Nobody has an overdue invoice without a recent reminder.",
+      "send": "Send ({n})",
+      "done": "{sent} reminders sent",
+      "skipped": "{n} skipped (no consent or contact details)",
+      "line": "{days} days overdue · {amount}"
+    },
+    "topUp": {
+      "title": "Send top-up",
+      "text": "{name} has {hours} left. The student gets an invoice and an iDEAL link for the chosen package.",
+      "package": "Package",
+      "send": "Send invoice + link",
+      "done": "Top-up sent (invoice {number})"
+    },
+    "markPaid": {
+      "title": "Record payment",
+      "text": "Invoice {number} · still owed {owed}",
+      "method": "Payment method",
+      "amount": "Amount (€)",
+      "confirm": "Record",
+      "done": "Payment recorded"
+    },
+    "methods": {
+      "CASH": "Cash",
+      "PIN": "Card (pin)",
+      "BANK_TRANSFER": "Bank transfer",
+      "IDEAL": "iDEAL"
+    },
+    "paymentStatus": {
+      "PENDING": "Pending",
+      "PAID": "Paid",
+      "FAILED": "Failed",
+      "EXPIRED": "Expired",
+      "CANCELLED": "Cancelled",
+      "REFUNDED": "Refunded"
+    },
+    "invoice": {
+      "title": "Invoice {number}",
+      "back": "Back to payments",
+      "download": "Download PDF",
+      "send": "Send invoice",
+      "sent": "Invoice sent",
+      "issued": "Invoice date",
+      "due": "Due date",
+      "student": "Student",
+      "lines": "Lines",
+      "subtotal": "Total excl. VAT",
+      "vat": "VAT {rate}%",
+      "total": "Total incl. VAT",
+      "paid": "Paid",
+      "outstanding": "Amount due",
+      "history": "Payments",
+      "noPayments": "No payments yet.",
+      "remindersTitle": "Reminders",
+      "noReminders": "No reminders sent yet.",
+      "level": "Reminder {n}",
+      "createLink": "Copy iDEAL link",
+      "linkCopied": "Link copied",
+      "void": "Void invoice",
+      "voidTitle": "Void invoice",
+      "voidText": "An unpaid invoice is voided and the hours of the package are taken back.",
+      "voidReason": "Reason",
+      "voidConfirm": "Void",
+      "voided": "Invoice voided"
+    }
   }
 }

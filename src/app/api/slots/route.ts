@@ -14,6 +14,10 @@ const query = z.object({
   duration: z.coerce.number().int().min(30).max(240),
   type: z.enum(["PRACTICAL", "EXAM"]).default("PRACTICAL"),
   locale: z.enum(["nl", "en"]).default("nl"),
+  // admin overrides chosen in the wizard
+  oa: z.enum(["0", "1"]).optional(),
+  oh: z.enum(["0", "1"]).optional(),
+  op: z.enum(["0", "1"]).optional(),
 });
 
 /** Ranked time slots for one day: best fit, other valid times and blocked times with their reason. */
@@ -39,6 +43,7 @@ export async function GET(req: NextRequest) {
     ctx,
     {
       type: q.type, gearbox: student.gearbox,
+      overrides: user.role === "ADMIN" ? { availability: q.oa === "1", hours: q.oh === "1", payment: q.op === "1" } : undefined,
       pickup: student.lat != null && student.lng != null ? { lat: student.lat, lng: student.lng } : null,
     },
     { year: y, month: m, day: d },

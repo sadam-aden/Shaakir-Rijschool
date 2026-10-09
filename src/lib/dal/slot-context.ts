@@ -2,6 +2,7 @@ import "server-only";
 import { db } from "@/lib/db";
 import type { Busy, SlotContext, VehicleCtx } from "@/lib/domain/check-slot";
 import { getSchoolSettings } from "@/lib/queries/settings";
+import { paidCentsOf } from "./invoices";
 
 const ACTIVE = ["PLANNED", "COMPLETED"] as const;
 
@@ -78,17 +79,22 @@ export async function loadSlotContext(p: {
         id: `exam-${e.id}`, kind: "EXAM", label: "", startsAt: e.scheduledAt!, endsAt: new Date(e.scheduledAt!.getTime() + EXAM_BLOCK_MIN * 60_000),
       })),
     ];
+    const overdueInvoices = await db.invoice.findMany({
+      where: { studentId: s.id, status: { notIn: ["VOID", "DRAFT", "PAID"] }, dueDate: { lt: new Date() } },
+      select: { totalCents: true, payments: { select: { status: true, amountCents: true } } },
+    });
     student = {
       id: s.id,
       availability: s.availability.map((a) => ({ weekday: a.weekday, part: a.part, startMin: a.startMin, endMin: a.endMin })),
       unavailability: s.unavailability.map((u) => ({ startsAt: u.startsAt, endsAt: u.endsAt })),
       minutesAvailable: s.minutesRemaining - s.minutesReserved,
+      hasOverdueInvoice: overdueInvoices.some((i) => i.totalCents > paidCentsOf(i.payments)),
       busy: studentBusy,
     };
   }
 
   return {
-    settings: { travelBufferMin: settings.travelBufferMin },
+    settings: { travelBufferMin: settings.travelBufferMin, allowBookingOnUnpaid: settings.allowBookingOnUnpaid },
     instructor: {
       id: instructor.id,
       maxMinutesPerDay: Math.min(instructor.maxMinutesPerDay, settings.maxTeachingMinutesPerDay),

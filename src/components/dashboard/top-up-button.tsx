@@ -1,16 +1,11 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { sendTopUpAction } from "@/app/actions/students";
 import { Button } from "@/components/ui/button";
-import { useRunAction } from "@/lib/use-action";
+import { TopUpDialog } from "@/components/payments/top-up-dialog";
 
-export function TopUpButton({ studentId }: { studentId: string }) {
+/** "Stuur aanvulling": opens the dialog where a package is chosen; the student then gets an invoice and an iDEAL link. */
+export function TopUpButton({ studentId, name, hoursLeft, packages }: { studentId: string; name: string; hoursLeft: string; packages: { id: string; label: string }[] }) {
   const t = useTranslations("dashboard");
-  const { run, pending } = useRunAction();
-  return (
-    <Button variant="soft" size="sm" disabled={pending} onClick={() => run(() => sendTopUpAction(studentId), { success: t("topUpSent"), refresh: false })}>
-      {t("sendTopUp")}
-    </Button>
-  );
+  return <TopUpDialog studentId={studentId} name={name} hoursLeft={hoursLeft} packages={packages} trigger={<Button variant="soft" size="sm">{t("sendTopUp")}</Button>} />;
 }

@@ -10,6 +10,7 @@ import { KpiCard } from "@/components/ui/kpi-card";
 import { ProgressBar } from "@/components/ui/progress";
 import type { AppLocale } from "@/i18n/config";
 import { requireUser } from "@/lib/dal/session";
+import { db } from "@/lib/db";
 import { greetingKey } from "@/lib/domain/time";
 import { formatDateShort, formatHours, formatMoney, formatTime } from "@/lib/format";
 import { getDashboard } from "@/lib/queries/dashboard";
@@ -23,6 +24,9 @@ export default async function DashboardPage() {
   const locale = (await getLocale()) as AppLocale;
   const isAdmin = user.role === "ADMIN";
   const d = await getDashboard(user, locale);
+  const pkgOptions = isAdmin
+    ? (await db.package.findMany({ where: { schoolId: user.schoolId, active: true }, orderBy: { sortOrder: "asc" } })).map((p) => ({ id: p.id, label: `${locale === "nl" ? p.nameNl : p.nameEn} · ${formatMoney(p.priceCents, locale)}` }))
+    : [];
   const k = d.kpis;
   const pct = k.capacityMinutes > 0 ? Math.round((k.plannedWeekMinutes / k.capacityMinutes) * 100) : 0;
 
@@ -143,7 +147,7 @@ export default async function DashboardPage() {
                         {s.planned > 0 ? td("lowLine", { hours: formatHours(s.minutesAvailable, locale), n: s.planned }) : td("lowLineNone", { hours: formatHours(s.minutesAvailable, locale) })}
                       </div>
                     </div>
-                    {isAdmin && <TopUpButton studentId={s.id} />}
+                    {isAdmin && <TopUpButton studentId={s.id} name={s.name} hoursLeft={formatHours(s.minutesAvailable, locale)} packages={pkgOptions} />}
                   </li>
                 ))}
               </ul>

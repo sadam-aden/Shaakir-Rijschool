@@ -110,38 +110,6 @@ export async function removeUnavailabilityAction(id: string) {
   return ok();
 }
 
-/** Admin: sell a package to a student. Adds the PURCHASE ledger entry (invoice generation arrives in Phase 2). */
-export async function assignPackageAction(studentId: string, packageId: string) {
-  const user = await requireAdmin();
-  const [student, pkg] = await Promise.all([
-    findStudentFor(user, studentId),
-    db.package.findFirst({ where: { id: packageId, schoolId: user.schoolId, active: true } }),
-  ]);
-  if (!student || !pkg) return fail("notFound");
-  const minutes = pkg.type === "THEORY" ? 0 : pkg.minutesIncluded;
-  await db.$transaction(async (tx) => {
-    const sp = await tx.studentPackage.create({
-      data: {
-        schoolId: user.schoolId, studentId, packageId, priceCents: pkg.priceCents,
-        minutesPurchased: minutes, examCredits: pkg.includesExam ? 1 : 0,
-      },
-    });
-    if (minutes > 0) {
-      await tx.hoursLedgerEntry.create({
-        data: {
-          schoolId: user.schoolId, studentId, studentPackageId: sp.id, type: "PURCHASE",
-          minutes, note: pkg.nameNl, createdById: user.id,
-        },
-      });
-      await refreshStudentCache(tx, studentId);
-    }
-    await audit(tx, user, "package.assign", "StudentPackage", sp.id, { packageId, studentId });
-  });
-  revalidatePath("/leerlingen");
-  revalidatePath(`/leerlingen/${studentId}`);
-  return ok();
-}
-
 const adjustSchema = z.object({
   minutes: z.number().int().min(-6000).max(6000).refine((n) => n !== 0),
   reason: z.string().trim().min(3).max(200),
@@ -190,22 +158,6 @@ export async function saveExamAction(studentId: string, examId: string | null, i
   revalidatePath(`/leerlingen/${studentId}`);
   revalidatePath("/leerlingen");
   return ok();
-}
-
-/** Admin: ask a student with few hours left to top up. Respects consent; logs the notification. */
-export async function sendTopUpAction(studentId: string) {
-  const user = await requireAdmin();
-  const student = await findStudentFor(user, studentId);
-  if (!student) return fail("notFound");
-  const { sendStudentMessage } = await import("@/lib/notifications/send");
-  const { topUpMessage } = await import("@/lib/notifications/templates");
-  const { formatHours } = await import("@/lib/format");
-  const left = student.minutesRemaining - student.minutesReserved;
-  const r = await sendStudentMessage(studentId, "topup", ({ locale, school, studentName }) =>
-    topUpMessage(locale, { school, studentName, hoursLeft: formatHours(Math.max(left, 0), locale) }),
-  );
-  if (r.sent === 0) return fail("noConsent");
-  return ok({ sent: r.sent });
 }
 
 /** Reversible alternative to deleting: hides the student from lists (restore via Edit → Status). */
