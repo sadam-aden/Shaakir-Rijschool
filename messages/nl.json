@@ -356,7 +356,14 @@
       "birthRequired": "Geboortedatum is verplicht.",
       "birthInvalid": "Geen geldige datum.",
       "birthFuture": "De geboortedatum ligt in de toekomst.",
-      "tooYoung": "De leerling moet minimaal 18 jaar oud zijn."
+      "tooYoung": "De leerling moet minimaal 18 jaar oud zijn.",
+      "sections": {
+        "person": "Persoonsgegevens",
+        "address": "Adres",
+        "lessons": "Lessen",
+        "consent": "Toestemming voor berichten"
+      },
+      "subtitleNew": "Voeg een nieuwe leerling toe. Leerlingen moeten minimaal 18 jaar zijn."
     },
     "delete": {
       "edit": "Bewerken",

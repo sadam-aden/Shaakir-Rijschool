@@ -356,7 +356,14 @@
       "birthRequired": "Date of birth is required.",
       "birthInvalid": "Not a valid date.",
       "birthFuture": "The date of birth is in the future.",
-      "tooYoung": "The student must be at least 18 years old."
+      "tooYoung": "The student must be at least 18 years old.",
+      "sections": {
+        "person": "Personal details",
+        "address": "Address",
+        "lessons": "Lessons",
+        "consent": "Consent for messages"
+      },
+      "subtitleNew": "Add a new student. Students must be at least 18 years old."
     },
     "delete": {
       "edit": "Edit",

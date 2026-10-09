@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
+import { Pencil, Plus, UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState, type ReactNode } from "react";
@@ -76,18 +76,36 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent title={mode === "create" ? t("titleNew") : t("titleEdit")} className="max-w-2xl" closeLabel={tc("close")}>
-        <form onSubmit={onSubmit} className="space-y-4" noValidate>
-          <div className="grid gap-3 sm:grid-cols-2">
+      <DialogContent
+        title={mode === "create" ? t("titleNew") : t("titleEdit")}
+        description={mode === "create" ? t("subtitleNew") : undefined}
+        icon={mode === "create" ? <UserPlus className="h-5 w-5" aria-hidden /> : <Pencil className="h-5 w-5" aria-hidden />}
+        className="max-w-2xl"
+        closeLabel={tc("close")}
+        footer={
+          <>
+            <Button type="button" variant="ghost" onClick={() => setOpen(false)}>{tc("cancel")}</Button>
+            <Button type="submit" form="student-form" disabled={pending}>{pending ? tc("saving") : t("submit")}</Button>
+          </>
+        }
+      >
+        <form id="student-form" onSubmit={onSubmit} className="space-y-7 pb-2" noValidate>
+          <Section title={t("sections.person")}>
             <Field label={t("firstName")} error={err("firstName")}><Input {...register("firstName")} autoComplete="off" /></Field>
             <Field label={t("lastName")} error={err("lastName")}><Input {...register("lastName")} autoComplete="off" /></Field>
-            <Field label={t("phone")}><Input {...register("phone")} type="tel" /></Field>
-            <Field label={t("email")} error={err("email")}><Input {...register("email")} type="email" /></Field>
             <Field label={t("birthDate")} error={err("birthDate")}><Input {...register("birthDate")} type="date" max={latestBirthDate(localDateKey(new Date()))} /></Field>
             <Field label={t("cbrNumber")}><Input {...register("cbrCandidateNumber")} /></Field>
+            <Field label={t("phone")}><Input {...register("phone")} type="tel" /></Field>
+            <Field label={t("email")} error={err("email")}><Input {...register("email")} type="email" /></Field>
+          </Section>
+
+          <Section title={t("sections.address")}>
             <Field label={t("address")} className="sm:col-span-2"><Input {...register("address")} /></Field>
             <Field label={t("postcode")}><Input {...register("postcode")} /></Field>
             <Field label={t("area")}><Input {...register("area")} /></Field>
+          </Section>
+
+          <Section title={t("sections.lessons")}>
             <Field label={t("gearbox")}>
               <Select {...register("gearbox")}>
                 <option value="MANUAL">{tg("MANUAL")}</option>
@@ -118,29 +136,38 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
                 </Select>
               </Field>
             )}
-          </div>
+          </Section>
 
-          <div className="flex flex-wrap gap-5 text-sm">
-            <label className="flex items-center gap-2"><input type="checkbox" {...register("smsConsent")} /> {t("smsConsent")}</label>
-            <label className="flex items-center gap-2"><input type="checkbox" {...register("emailConsent")} /> {t("emailConsent")}</label>
-          </div>
+          <Section title={t("sections.consent")}>
+            <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-line px-4 py-3 text-sm font-semibold transition hover:bg-primary-faint has-[:checked]:border-primary has-[:checked]:bg-primary-faint">
+              <input type="checkbox" className="h-4 w-4 accent-[var(--primary)]" {...register("smsConsent")} /> {t("smsConsent")}
+            </label>
+            <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-line px-4 py-3 text-sm font-semibold transition hover:bg-primary-faint has-[:checked]:border-primary has-[:checked]:bg-primary-faint">
+              <input type="checkbox" className="h-4 w-4 accent-[var(--primary)]" {...register("emailConsent")} /> {t("emailConsent")}
+            </label>
+          </Section>
 
-          <fieldset className="rounded-xl border border-line p-3">
-            <legend className="px-1 text-xs font-bold text-muted">{t("guardian")}</legend>
-            <div className="grid gap-3 sm:grid-cols-3">
-              <Field label={t("guardianName")}><Input {...register("guardianName")} /></Field>
-              <Field label={t("guardianPhone")}><Input {...register("guardianPhone")} type="tel" /></Field>
-              <Field label={t("guardianEmail")} error={err("guardianEmail")}><Input {...register("guardianEmail")} type="email" /></Field>
-            </div>
-          </fieldset>
+          <Section title={t("guardian")} cols="sm:grid-cols-3">
+            <Field label={t("guardianName")}><Input {...register("guardianName")} /></Field>
+            <Field label={t("guardianPhone")}><Input {...register("guardianPhone")} type="tel" /></Field>
+            <Field label={t("guardianEmail")} error={err("guardianEmail")}><Input {...register("guardianEmail")} type="email" /></Field>
+          </Section>
 
-          <Field label={t("notes")}><Textarea {...register("notes")} /></Field>
-
-          <div className="flex justify-end gap-2">
-            <Button type="submit" disabled={pending}>{pending ? tc("saving") : t("submit")}</Button>
-          </div>
+          <Section title={t("notes")} cols="">
+            <Textarea {...register("notes")} aria-label={t("notes")} />
+          </Section>
         </form>
       </DialogContent>
     </Dialog>
+  );
+}
+
+/** A titled block of fields inside the dialog. */
+function Section({ title, children, cols = "sm:grid-cols-2" }: { title: string; children: ReactNode; cols?: string }) {
+  return (
+    <section>
+      <h3 className="mb-3 text-[11px] font-bold uppercase tracking-wider text-muted">{title}</h3>
+      <div className={cols ? `grid gap-3 ${cols}` : ""}>{children}</div>
+    </section>
   );
 }
