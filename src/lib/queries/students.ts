@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import type { SessionUser } from "@/lib/dal/session";
 import { studentScope } from "@/lib/dal/scope";
 import type { Avail } from "@/lib/domain/availability";
+import { phoneSearchVariants } from "@/lib/domain/phone";
 import { deriveStatus, type DerivedStatus } from "@/lib/domain/student-status";
 import { getSchoolSettings } from "./settings";
 
@@ -124,11 +125,11 @@ export function filterStudents(rows: StudentRow[], filter: StudentFilter, q: str
   }
   const needle = q.trim().toLowerCase();
   if (needle) {
-    const digits = needle.replace(/\D/g, "");
+    const variants = phoneSearchVariants(needle); // "06 12…" and "+31 6 12…" both find the same student
     list = list.filter(
       (r) =>
         `${r.firstName} ${r.lastName}`.toLowerCase().includes(needle) ||
-        (digits.length >= 3 && (r.phone ?? "").replace(/\D/g, "").includes(digits)),
+        variants.some((v) => (r.phone ?? "").replace(/\D/g, "").includes(v)),
     );
   }
   return { list, counts };

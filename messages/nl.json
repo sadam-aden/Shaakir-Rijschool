@@ -318,12 +318,11 @@
       "titleEdit": "Leerling bewerken",
       "firstName": "Voornaam",
       "lastName": "Achternaam",
-      "phone": "Telefoon",
+      "phone": "Telefoon (Nederlands nummer)",
       "email": "E-mail",
       "birthDate": "Geboortedatum",
       "address": "Adres",
       "postcode": "Postcode",
-      "area": "Wijk",
       "gearbox": "Versnellingsbak",
       "track": "Traject",
       "tracks": {
@@ -369,10 +368,16 @@
       "city": "Plaats (stad of dorp)",
       "cityPlaceholder": "Begin te typen, bijv. Rotterdam",
       "chooseProvinceFirst": "Kies eerst een provincie",
-      "wijkPlaceholder": "Kies of typ een wijk",
       "cityUnknown": "Kies een plaats uit de lijst van deze provincie.",
       "addressPlaceholder": "Begin te typen, bijv. Oostzeedijk 120",
-      "addressNeedsProvince": "Kies eerst een provincie voor adressuggesties"
+      "addressNeedsProvince": "Kies eerst een provincie voor adressuggesties",
+      "phonePlaceholder": "06 12345678 of +31 6 12345678",
+      "emailPlaceholder": "naam@gmail.com",
+      "phoneRequired": "Telefoonnummer is verplicht.",
+      "phoneInvalid": "Vul een Nederlands telefoonnummer in, bijv. 06 12345678 of +31 6 12345678.",
+      "emailRequired": "E-mailadres is verplicht.",
+      "provinceRequired": "Kies een provincie: leerlingen moeten in Nederland wonen.",
+      "cityRequired": "Kies een plaats in Nederland."
     },
     "delete": {
       "edit": "Bewerken",

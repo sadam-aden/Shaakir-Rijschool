@@ -318,12 +318,11 @@
       "titleEdit": "Edit student",
       "firstName": "First name",
       "lastName": "Last name",
-      "phone": "Phone",
+      "phone": "Phone (Dutch number)",
       "email": "E-mail",
       "birthDate": "Date of birth",
       "address": "Address",
       "postcode": "Postcode",
-      "area": "Neighbourhood (wijk)",
       "gearbox": "Gearbox",
       "track": "Track",
       "tracks": {
@@ -369,10 +368,16 @@
       "city": "City or village",
       "cityPlaceholder": "Start typing, e.g. Rotterdam",
       "chooseProvinceFirst": "Choose a province first",
-      "wijkPlaceholder": "Choose or type a neighbourhood",
       "cityUnknown": "Choose a place from this province's list.",
       "addressPlaceholder": "Start typing, e.g. Oostzeedijk 120",
-      "addressNeedsProvince": "Choose a province first to get address suggestions"
+      "addressNeedsProvince": "Choose a province first to get address suggestions",
+      "phonePlaceholder": "06 12345678 or +31 6 12345678",
+      "emailPlaceholder": "name@gmail.com",
+      "phoneRequired": "Phone number is required.",
+      "phoneInvalid": "Enter a Dutch phone number, e.g. 06 12345678 or +31 6 12345678.",
+      "emailRequired": "E-mail address is required.",
+      "provinceRequired": "Choose a province: students must live in the Netherlands.",
+      "cityRequired": "Choose a place in the Netherlands."
     },
     "delete": {
       "edit": "Edit",

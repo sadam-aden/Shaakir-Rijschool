@@ -117,6 +117,15 @@ test("cancelling shows whether the hours are charged or returned", async ({ page
   await expect(page.getByText(/Ruim op tijd|Binnen \d+ uur/)).toBeVisible();
 });
 
+
+/** Fills the fields every new student needs (Dutch phone, e-mail, province and city in the Netherlands). */
+async function fillRequired(page: import("@playwright/test").Page, opts: { city?: boolean; phone?: string } = {}) {
+  await page.getByLabel("Telefoon (Nederlands nummer)").fill(opts.phone ?? "06 12345678");
+  await page.getByLabel("E-mail", { exact: true }).fill("student@gmail.com");
+  await page.getByLabel("Provincie").selectOption("Zuid-Holland");
+  if (opts.city !== false) await page.getByLabel("Plaats (stad of dorp)").fill("Rotterdam");
+}
+
 test("only accepts students who are at least 18 years old", async ({ page }) => {
   await login(page);
   await page.goto("/leerlingen");
@@ -124,6 +133,7 @@ test("only accepts students who are at least 18 years old", async ({ page }) => 
   await page.getByLabel("Voornaam").fill("Testy");
   await page.getByLabel("Achternaam").fill("Jong");
   await page.getByLabel("Geboortedatum").fill("2015-05-05");
+  await fillRequired(page);
   await page.getByRole("button", { name: "Opslaan" }).click();
   await expect(page.getByText("De leerling moet minimaal 18 jaar oud zijn.")).toBeVisible();
   await page.getByLabel("Geboortedatum").fill("2000-05-05");
@@ -138,6 +148,7 @@ test("creates, edits and permanently deletes a student", async ({ page }) => {
   await page.getByLabel("Voornaam").fill("Dolf");
   await page.getByLabel("Achternaam").fill("Tijdelijk");
   await page.getByLabel("Geboortedatum").fill("1990-01-01");
+  await fillRequired(page);
   await page.getByRole("button", { name: "Opslaan" }).click();
   await expectToast(page, "Leerling toegevoegd");
   await expect(page.getByRole("heading", { name: "Dolf Tijdelijk" })).toBeVisible();
@@ -180,13 +191,15 @@ test("the edit form always belongs to the student that is selected", async ({ pa
   await expect(page.getByLabel("Voornaam")).toHaveValue("Ayoub");
 });
 
-test("picks province, city and neighbourhood from the Dutch places list", async ({ page }) => {
+test("picks province and city from the Dutch places list", async ({ page }) => {
   await login(page);
   await page.goto("/leerlingen");
   await page.getByRole("button", { name: "Leerling toevoegen" }).click();
   await page.getByLabel("Voornaam").fill("Pien");
   await page.getByLabel("Achternaam").fill("Plaats");
   await page.getByLabel("Geboortedatum").fill("1995-03-03");
+  await page.getByLabel("Telefoon (Nederlands nummer)").fill("06 12345678");
+  await page.getByLabel("E-mail", { exact: true }).fill("pien@gmail.com");
 
   // the city box is locked until a province is chosen
   await expect(page.getByLabel("Plaats (stad of dorp)")).toBeDisabled();
@@ -196,11 +209,9 @@ test("picks province, city and neighbourhood from the Dutch places list", async 
   await expect(page.getByText("Kies een plaats uit de lijst van deze provincie.")).toBeVisible();
 
   await page.getByLabel("Plaats (stad of dorp)").fill("Rotterdam");
-  await expect(page.locator("#student-wijk-options option[value='Delfshaven']")).toHaveCount(1);
-  await page.getByLabel("Wijk").fill("Delfshaven");
   await page.getByRole("button", { name: "Opslaan" }).click();
   await expectToast(page, "Leerling toegevoegd");
-  await expect(page.getByText(/Delfshaven, Rotterdam/)).toBeVisible();
+  await expect(page.getByText(/Rotterdam/).first()).toBeVisible();
 });
 
 test("suggests addresses once a province is chosen and fills in the rest", async ({ page }) => {
@@ -221,6 +232,8 @@ test("suggests addresses once a province is chosen and fills in the rest", async
   await page.getByLabel("Voornaam").fill("Adres");
   await page.getByLabel("Achternaam").fill("Voorstel");
   await page.getByLabel("Geboortedatum").fill("1992-02-02");
+  await page.getByLabel("Telefoon (Nederlands nummer)").fill("+31 6 87654321");
+  await page.getByLabel("E-mail", { exact: true }).fill("adres@gmail.com");
 
   const address = page.locator("input[name=address]");
   await expect(address).toHaveAttribute("placeholder", /Kies eerst een provincie/);
@@ -233,8 +246,45 @@ test("suggests addresses once a province is chosen and fills in the rest", async
   await expect(address).toHaveValue("Oostzeedijk 120");
   await expect(page.getByLabel("Postcode")).toHaveValue("3063 BB");
   await expect(page.getByLabel("Plaats (stad of dorp)")).toHaveValue("Rotterdam");
-  await expect(page.getByLabel("Wijk")).toHaveValue("Kralingen-Crooswijk");
   await page.getByRole("button", { name: "Opslaan" }).click();
   await expectToast(page, "Leerling toegevoegd");
   await expect(page.getByText(/Kralingen-Crooswijk, Rotterdam/)).toBeVisible();
+});
+
+test("only accepts Dutch phone numbers and stores them as +31", async ({ page }) => {
+  await login(page);
+  await page.goto("/leerlingen");
+  await page.getByRole("button", { name: "Leerling toevoegen" }).click();
+  await page.getByLabel("Voornaam").fill("Nummer");
+  await page.getByLabel("Achternaam").fill("Controle");
+  await page.getByLabel("Geboortedatum").fill("1991-01-01");
+  await fillRequired(page, { phone: "+44 7911 123456" }); // a UK number
+  await page.getByRole("button", { name: "Opslaan" }).click();
+  await expect(page.getByText(/Vul een Nederlands telefoonnummer in/)).toBeVisible();
+
+  await page.getByLabel("Telefoon (Nederlands nummer)").fill("06-12 34 56 78");
+  await page.getByRole("button", { name: "Opslaan" }).click();
+  await expectToast(page, "Leerling toegevoegd");
+  await expect(page.getByText("06 12345678 · student@gmail.com")).toBeVisible();
+});
+
+test("a student needs an e-mail address and a place in the Netherlands", async ({ page }) => {
+  await login(page);
+  await page.goto("/leerlingen");
+  await page.getByRole("button", { name: "Leerling toevoegen" }).click();
+  await page.getByLabel("Voornaam").fill("Leeg");
+  await page.getByLabel("Achternaam").fill("Formulier");
+  await page.getByLabel("Geboortedatum").fill("1991-01-01");
+  await page.getByRole("button", { name: "Opslaan" }).click();
+  await expect(page.getByText("Telefoonnummer is verplicht.")).toBeVisible();
+  await expect(page.getByText("E-mailadres is verplicht.")).toBeVisible();
+  await expect(page.getByText(/Kies een provincie: leerlingen moeten in Nederland wonen/)).toBeVisible();
+});
+
+test("new students get Shaakir as the primary instructor by default", async ({ page }) => {
+  await login(page);
+  await page.goto("/leerlingen");
+  await page.getByRole("button", { name: "Leerling toevoegen" }).click();
+  const select = page.getByLabel("Vaste instructeur");
+  await expect(select.locator("option:checked")).toHaveText("Shaakir");
 });

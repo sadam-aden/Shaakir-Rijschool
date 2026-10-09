@@ -26,6 +26,7 @@
 - [x] Playwright suite (login, roles, language switch, booking, drag & drop, refusal feedback, check-off, cancellation policy) on an isolated test database
 - [x] Edit, archive and permanently delete a student (delete: admin only, blocked when invoices exist)
 - [x] Student address: province → city/village → wijk lists (all of the Netherlands) and address suggestions after choosing a province
+- [x] Netherlands-only students (Dutch phone in +31 format, e-mail, province + city required); Shaakir is the default primary instructor
 - [x] Student age rule: date of birth required, at least 18 years
 - [ ] Moved to later phases: month view + recurring-lesson management UI (Phase 4), AI banner/generator (Phase 3), invoices/iDEAL/SMS providers/reminder job (Phase 2), search ⌘K + bell (Phase 4), mobile sidebar drawer (Phase 4)
 

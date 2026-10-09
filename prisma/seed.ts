@@ -149,8 +149,10 @@ async function main() {
         schoolId: sid, firstName: s.f, lastName: s.l, gearbox: s.g, track: s.track ?? "PRACTICAL",
         // students must be at least 18: seeded ages are between 20 and 40
         birthDate: new Date(Date.UTC(now.getUTCFullYear() - 20 - ((i * 7) % 21), (i * 5) % 12, 1 + ((i * 3) % 27))),
-        status: s.status ?? "ACTIVE", area: s.area, address: s.addr, postcode: "3000 AA",
-        phone: `06 1234 ${String(1000 + i)}`, email: `${s.f}.${s.l}`.toLowerCase().replace(/\s/g, "") + "@example.com",
+        status: s.status ?? "ACTIVE", province: "Zuid-Holland", city: "Rotterdam", area: s.area, address: s.addr, postcode: "3000 AA",
+        // Dutch numbers in E.164, as the app stores them
+        phone: `+3161234${String(1000 + i)}`,
+        email: `${s.f}.${s.l}`.toLowerCase().replace(/\s/g, "") + "@example.com",
         smsConsent: true, emailConsent: true, locale: "nl", avatarColor: colors[i % colors.length],
         lat: (AREA_COORDS[s.area]?.lat ?? 51.92) + (((i * 37) % 100) - 50) / 20000,
         lng: (AREA_COORDS[s.area]?.lng ?? 4.48) + (((i * 53) % 100) - 50) / 20000,

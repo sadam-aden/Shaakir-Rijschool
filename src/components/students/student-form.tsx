@@ -18,8 +18,11 @@ import { localDateKey } from "@/lib/domain/time";
 import { studentSchema, type StudentData, type StudentInput } from "@/lib/schemas/student";
 import { useRunAction } from "@/lib/use-action";
 
+/** Validation codes that have their own translated message (students.form.*) */
+const SPECIFIC_ERRORS = new Set(["birthRequired", "birthInvalid", "birthFuture", "tooYoung", "cityUnknown", "cityRequired", "provinceRequired", "phoneRequired", "phoneInvalid", "emailRequired"]);
+
 export const emptyStudent: StudentInput = {
-  firstName: "", lastName: "", phone: "", email: "", birthDate: "", address: "", postcode: "", area: "",
+  firstName: "", lastName: "", phone: "", email: "", birthDate: "", address: "", postcode: "", province: "", city: "", area: "",
   gearbox: "MANUAL", track: "PRACTICAL", status: "ACTIVE", primaryInstructorId: "", locale: "nl",
   smsConsent: false, emailConsent: false, cbrCandidateNumber: "", guardianName: "", guardianPhone: "", guardianEmail: "", notes: "",
 };
@@ -30,11 +33,14 @@ type Props = {
   initial?: StudentInput;
   instructors?: { id: string; displayName: string }[];
   isAdmin: boolean;
+  /** pre-selected primary instructor for new students (the owner, Shaakir) */
+  defaultInstructorId?: string;
   trigger?: ReactNode;
 };
 
 /** Add / edit student dialog. Validation schema is shared with the server action. */
-export function StudentFormDialog({ mode, studentId, initial, instructors = [], isAdmin, trigger }: Props) {
+export function StudentFormDialog({ mode, studentId, initial, instructors = [], isAdmin, defaultInstructorId, trigger }: Props) {
+  const base: StudentInput = initial ?? { ...emptyStudent, primaryInstructorId: defaultInstructorId ?? "" };
   const t = useTranslations("students.form");
   const tc = useTranslations("common");
   const tg = useTranslations("gearbox");
@@ -43,7 +49,7 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
   const { run, pending } = useRunAction();
   const form = useForm<StudentInput, unknown, StudentData>({
     resolver: zodResolver(studentSchema),
-    defaultValues: initial ?? emptyStudent,
+    defaultValues: base,
   });
   const { register, handleSubmit, reset, control, setValue, setError, formState: { errors } } = form;
 
@@ -63,15 +69,11 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
   });
   const placesQ = useQuery({ ...placesOptions(provinceSlug), enabled: !!provinceSlug && open });
   const placeOptions = placesQ.data?.places ?? [];
-  const chosenPlace = placeOptions.find((p) => p.name === city);
-  const wijkOptions = chosenPlace ? (placesQ.data?.wijken[chosenPlace.municipality] ?? []) : [];
   const err = (k: keyof StudentInput) => {
     if (!errors[k]) return undefined;
-    if (k === "birthDate" || k === "city") {
-      const code = String(errors[k]?.message ?? "");
-      return t.has(code) ? t(code) : tc("required");
-    }
-    return k === "email" || k === "guardianEmail" ? t("invalidEmail") : tc("required");
+    const code = String(errors[k]?.message ?? "");
+    if (SPECIFIC_ERRORS.has(code)) return t(code);
+    return k === "email" || k === "guardianEmail" ? t("invalidEmail") : k === "guardianPhone" ? t("phoneInvalid") : tc("required");
   };
 
   const onSubmit = handleSubmit(async (values) => {
@@ -99,7 +101,7 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
   });
 
   return (
-    <Dialog open={open} onOpenChange={(o) => { if (o) reset(initial ?? emptyStudent); setOpen(o); }}>
+    <Dialog open={open} onOpenChange={(o) => { if (o) reset(base); setOpen(o); }}>
       <DialogTrigger asChild>
         {trigger ?? (
           <Button variant="soft">
@@ -126,20 +128,20 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
             <Field label={t("lastName")} error={err("lastName")}><Input {...register("lastName")} autoComplete="off" /></Field>
             <Field label={t("birthDate")} error={err("birthDate")}><Input {...register("birthDate")} type="date" max={latestBirthDate(localDateKey(new Date()))} /></Field>
             <Field label={t("cbrNumber")}><Input {...register("cbrCandidateNumber")} /></Field>
-            <Field label={t("phone")}><Input {...register("phone")} type="tel" /></Field>
-            <Field label={t("email")} error={err("email")}><Input {...register("email")} type="email" /></Field>
+            <Field label={t("phone")} error={err("phone")}><Input {...register("phone")} type="tel" inputMode="tel" autoComplete="off" placeholder={t("phonePlaceholder")} /></Field>
+            <Field label={t("email")} error={err("email")}><Input {...register("email")} type="email" autoComplete="off" placeholder={t("emailPlaceholder")} /></Field>
           </Section>
 
           <Section title={t("sections.address")}>
             <Field label={t("address")} className="sm:col-span-2"><AddressField form={form} province={province} city={city} /></Field>
             <Field label={t("postcode")}><Input {...register("postcode")} /></Field>
-            <Field label={t("province")}>
+            <Field label={t("province")} error={err("province")}>
               <Select {...register("province", { onChange: () => { setValue("city", ""); setValue("area", ""); } })}>
                 <option value="">{t("provincePlaceholder")}</option>
                 {provinceIndex.map((p) => <option key={p.slug} value={p.name}>{p.name}</option>)}
               </Select>
             </Field>
-            <Field label={t("city")} error={err("city")}>
+            <Field label={t("city")} error={err("city")} className="sm:col-span-2">
               <Input
                 {...register("city", { onChange: () => setValue("area", "") })}
                 list="student-city-options" autoComplete="off" disabled={!province}
@@ -148,10 +150,6 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
               <datalist id="student-city-options">
                 {placeOptions.map((p) => <option key={`${p.name}-${p.municipality}`} value={p.name} label={p.municipality !== p.name ? p.municipality : undefined} />)}
               </datalist>
-            </Field>
-            <Field label={t("area")}>
-              <Input {...register("area")} list="student-wijk-options" autoComplete="off" disabled={!city} placeholder={wijkOptions.length ? t("wijkPlaceholder") : undefined} />
-              <datalist id="student-wijk-options">{wijkOptions.map((w) => <option key={w} value={w} />)}</datalist>
             </Field>
           </Section>
 
@@ -199,7 +197,7 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
 
           <Section title={t("guardian")} cols="sm:grid-cols-3">
             <Field label={t("guardianName")}><Input {...register("guardianName")} /></Field>
-            <Field label={t("guardianPhone")}><Input {...register("guardianPhone")} type="tel" /></Field>
+            <Field label={t("guardianPhone")} error={err("guardianPhone")}><Input {...register("guardianPhone")} type="tel" placeholder={t("phonePlaceholder")} /></Field>
             <Field label={t("guardianEmail")} error={err("guardianEmail")}><Input {...register("guardianEmail")} type="email" /></Field>
           </Section>
 

@@ -27,7 +27,7 @@ export async function createStudentAction(input: StudentInput) {
       schoolId: user.schoolId,
       birthDate: d.birthDate ? new Date(d.birthDate) : null,
       // instructors can only add students for themselves
-      primaryInstructorId: user.role === "ADMIN" ? (d.primaryInstructorId ?? null) : user.instructorId,
+      primaryInstructorId: user.role === "ADMIN" ? (d.primaryInstructorId ?? user.instructorId) : user.instructorId,
       avatarColor: COLORS[count % COLORS.length],
     },
   });

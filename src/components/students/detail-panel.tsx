@@ -5,6 +5,7 @@ import { Avatar, initialsOf } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ProgressBar, Ring } from "@/components/ui/progress";
 import type { AppLocale } from "@/i18n/config";
+import { formatDutchPhone } from "@/lib/domain/phone";
 import { formatDateShort, formatNumber } from "@/lib/format";
 import type { getStudentDetail, paymentSummary } from "@/lib/queries/students";
 import { AvailabilityGrid } from "./availability-grid";
@@ -45,6 +46,9 @@ export async function StudentDetailPanel({ student, payment, profileLink, action
             {t("since", { date: new Intl.DateTimeFormat(locale === "nl" ? "nl-NL" : "en-GB", { month: "long", year: "numeric" }).format(student.since) })}
             {[student.area, student.city].filter(Boolean).length ? ` · ${[student.area, student.city].filter(Boolean).join(", ")}` : ""}
           </p>
+          {(student.phone || student.email) && (
+            <p className="mt-0.5 truncate text-xs text-muted">{[formatDutchPhone(student.phone), student.email].filter(Boolean).join(" · ")}</p>
+          )}
         </div>
       </div>
 

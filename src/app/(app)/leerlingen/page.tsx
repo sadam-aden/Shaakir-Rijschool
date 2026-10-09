@@ -55,7 +55,7 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
               />
             </form>
             <StudentFormDialog
-              mode="create" instructors={instructors} isAdmin={user.role === "ADMIN"}
+              mode="create" instructors={instructors} isAdmin={user.role === "ADMIN"} defaultInstructorId={user.instructorId ?? undefined}
               trigger={<Button variant="soft"><Plus className="h-4 w-4" aria-hidden />{t("add")}</Button>}
             />
           </>
