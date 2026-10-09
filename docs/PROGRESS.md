@@ -28,7 +28,7 @@
 - [x] Student address: province → city/village → wijk lists (all of the Netherlands) and address suggestions after choosing a province
 - [x] Netherlands-only students (Dutch phone in +31 format, e-mail, province + city required); Shaakir is the default primary instructor
 - [x] Student age rule: date of birth required, at least 18 years
-- [ ] Moved to later phases: month view + recurring-lesson management UI (Phase 4), AI banner/generator (Phase 3), search ⌘K + bell (Phase 4), mobile sidebar drawer (Phase 4), accountant PDF report (Phase 4)
+- [ ] Moved to later phases: month view + recurring-lesson management UI (Phase 4), search ⌘K + bell (Phase 4), mobile sidebar drawer (Phase 4), accountant PDF report (Phase 4)
 
 ## Phase 2 – Money  (tag `phase-2`) ✅
 - [x] **Invoices**: created when a package is sold (prices include 21 % VAT, total always equals the package price), sequential number per year (2026-0142, atomic), due date from the payment term (14 days), status OPEN → PARTIALLY_PAID → PAID / OVERDUE / VOID
@@ -43,9 +43,22 @@
 - [x] **Booking rule**: no new lessons while an invoice is overdue (setting `allowBookingOnUnpaid`), admin can override with a reason; the booking wizard's admin overrides now really unlock slots
 - [x] Tests: money rules, providers (fake network), PDF rendering, CSV, overdue rule, 11 end-to-end money flows
 
+## Phase 3 – AI scheduling  (tag `phase-3`) ✅
+- [x] **Planner** (pure code, unit tested): demand list (active students with hours, no lesson that day, available that weekday, no overdue invoice) → priority (exam soon > hours left vs time to exam > days since last lesson > waiting time) → greedy best-fit with the same `checkSlot` as manual booking → local-search improvement (shifts and swaps that cut driving and gaps)
+- [x] **Hard rules always enforced**: inside student availability, never more than the remaining hours, gearbox/car matched, max teaching hours per day, short drives between pick-ups, exam candidates first, fixed blocks (theory, exams, time off, existing lessons) respected
+- [x] **"Planning genereren" button** (every page): date or range (max 14 days), instructor (admin), live preview of what the planner sees (students available, free hours, theory groups, exam note, the hard rules), existing-draft warning with explicit replace
+- [x] **Draft output**: `ScheduleDraft` + DRAFT lessons (dashed in the calendar, no hours reserved, nobody notified), stats, reasons for students left out, explanation text; one pending draft per instructor per day
+- [x] **Review in the calendar**: banner per draft with Discard and **Approve & notify students** (confirm dialog with SMS / e-mail / 24 h reminder choices); drag to adjust (items marked MOVED), remove a lesson from the draft (REMOVED); the day header shows "AI-concept · 6,5 u"
+- [x] **Approve**: every lesson is re-validated, set to PLANNED with hours reserved, students informed in their own language, reminders queued; lessons that no longer fit stay in the draft (partial approval). **Discard** removes the draft lessons but keeps the stats
+- [x] **Dashboard banner** (mockup 1): "Morgen is nog niet ingepland…" with chips (students available, free hours, theory groups, exam prep), one-click "Genereer morgen" and the review link; shows "draft ready" when a draft exists
+- [x] **Rules in Settings**: exam candidates first, default and exam lesson length, longest drive between pick-ups; the calendar's rules panel follows them
+- [x] **Optional Claude summary** (`ANTHROPIC_API_KEY`): wording only, names replaced by labels before anything is sent, template fallback
+- [x] Tests: 19 planner unit tests, summary/pseudonymisation tests, 8 end-to-end planner flows
+
 ### Known issues / notes
 - Date inputs (`type=date`, `datetime-local`) follow the browser/OS locale; time of day in lesson and working-hour forms uses a 24 h text field.
 - Theory groups cannot be created from the UI yet (seeded); group management comes in Phase 4.
 - The Dev server (`npm run dev`) on OneDrive may serve stale CSS after style changes; stop it, delete `.next`, restart.
 - Real e-mail needs RESEND_API_KEY, real iDEAL needs MOLLIE_API_KEY and a public APP_URL, real SMS needs SMS_PROVIDER plus its keys; without them everything runs in test/mock mode (see README).
 - Vercel Hobby runs the cron job once a day; for exact 24 h reminders call `/api/cron/run` every 15 minutes from Vercel Pro or any external scheduler.
+- The AI day summary uses Claude only when ANTHROPIC_API_KEY is set; without it a built-in text is used.

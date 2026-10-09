@@ -1,10 +1,11 @@
 "use client";
 
-import { Check, Save, UserX, X } from "lucide-react";
+import { Check, Save, Trash2, UserX, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
+import { removeDraftLessonAction } from "@/app/actions/schedule";
 import {
   cancelLessonAction, completeLessonAction, markNoShowAction, moveLessonAction, saveLessonNotesAction, setAttendanceAction,
 } from "@/app/actions/lessons";
@@ -57,6 +58,7 @@ export function LessonSheet({ lesson, vehicles, instructors, cancellationWindowH
   const tt = useTranslations("lessonType");
   const ta = useTranslations("lessons.attendance");
   const tc = useTranslations("common");
+  const tdr = useTranslations("schedule.draft");
   const te = useTranslations("errors");
   const locale = useLocale() as AppLocale;
   const router = useRouter();
@@ -193,6 +195,15 @@ export function LessonSheet({ lesson, vehicles, instructors, cancellationWindowH
                 ))}
               </ul>
               <Button variant="outline" size="sm" disabled={pending} onClick={() => run(() => setAttendanceAction(lesson.id, attendance.map((a) => ({ enrollmentId: a.id, attendance: a.attendance }))), { success: tc("saved") })}>{t("saveAttendance")}</Button>
+            </section>
+          )}
+
+          {lesson.status === "DRAFT" && (
+            <section className="space-y-3 border-t border-line pt-4">
+              <p className="rounded-xl bg-primary-faint p-3 text-sm font-semibold text-primary">{tdr("draftNote")}</p>
+              <Button variant="outline" disabled={pending} onClick={() => run(() => removeDraftLessonAction(lesson.id), { success: tdr("removed"), onOk: close })}>
+                <Trash2 className="h-4 w-4" aria-hidden />{tdr("remove")}
+              </Button>
             </section>
           )}
 

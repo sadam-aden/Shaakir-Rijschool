@@ -61,3 +61,13 @@
 - **Server action safety**: exported functions of `"use server"` files are callable from the browser, so helpers that take a school id live in normal modules (`src/lib/jobs`, `src/lib/dal`), never in action files.
 - **PDF storage**: `storage/` locally; on read-only hosts (Vercel) the PDF is simply rendered on demand. Plug object storage in behind `FileStorage` for permanent copies.
 - **Accountant export**: CSV (semicolon, BOM, decimal comma, formulas neutralised) in Phase 2; the accountant PDF with VAT summary and prepaid-hours liability comes in Phase 4.
+
+## Phase 3
+- **The planner never decides outside `checkSlot`**: it only chooses among slots the manual-booking checker accepts, so the hard rules cannot be broken. The improvement pass re-validates every shift or swap the same way. Output is deterministic (ties broken by student id), which keeps it testable.
+- **Candidates**: active practical students whose primary instructor is the chosen instructor or who have none. Hours promised by other pending drafts are subtracted so the same hours are never offered twice. Students with an overdue invoice are skipped (unless the school allows booking on unpaid).
+- **Priority** (higher = earlier): exam requested +800; exam within 3 / 7 / 14 days +1000 / +800 / +500; needs more lessons than time allows up to +400; days since last lesson (max 300); waiting time (max 60). "Exam candidates first" can be switched off in Settings.
+- **Durations**: default 60 min, exam candidates 90 min when they have the hours; the planner falls back to 60 / 45 / 30 minutes when the longer lesson does not fit.
+- **Short drives**: a pick-up may not be further than `maxTravelMinutes` (default 25) from the previous or next lesson; straight-line distance x 1.3 at 40 km/h until real routing is added.
+- **Drafts are real lesson rows with status DRAFT**: they never reserve hours, never block the database exclusion constraints and never notify anyone. Dragging one marks its draft item MOVED, removing one marks it REMOVED, discarding keeps the draft record and its stats for the Phase 4 reports.
+- **Approval is per lesson** (each in its own transaction with a student row lock) so that one lesson that no longer fits cannot block the rest: the draft becomes PARTIALLY_APPROVED and the leftovers stay reviewable.
+- **LLM boundary**: Claude only receives labels (S1, S2 ...), times, minutes and counts, writes at most two sentences, and the labels are replaced by first names locally afterwards. Failure, timeout, an empty or over-long answer all fall back to the template text.

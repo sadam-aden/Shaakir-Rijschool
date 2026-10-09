@@ -1,6 +1,7 @@
 import { AlertTriangle, CalendarClock, ClipboardCheck, Clock, Users, Wallet, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
+import { AiBanner } from "@/components/dashboard/ai-banner";
 import { TopUpButton } from "@/components/dashboard/top-up-button";
 import { PageHeader } from "@/components/shell/page-header";
 import { AutBadge, Badge } from "@/components/ui/badge";
@@ -33,6 +34,8 @@ export default async function DashboardPage() {
   return (
     <>
       <PageHeader title={t(`greeting.${greetingKey(new Date())}`, { name: user.name.split(" ")[0] })} />
+
+      <AiBanner user={user} />
 
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
         <KpiCard

@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { CalendarBoard } from "@/components/calendar/calendar-board";
+import { DraftBanner } from "@/components/schedule/draft-banner";
 import { LessonSheetLoader } from "@/components/lessons/lesson-sheet-loader";
 import { PageHeader } from "@/components/shell/page-header";
 import { AutBadge } from "@/components/ui/badge";
@@ -82,6 +83,7 @@ export default async function AgendaPage({ searchParams }: { searchParams: Promi
         )}
       </div>
 
+      {data.drafts.map((d) => <DraftBanner key={d.id} draft={d} showInstructor={data.instructorId === "all"} />)}
       <CalendarBoard data={data} todayKey={todayKey} nowMin={localParts(now).minutes} />
       {sp.lesson && <LessonSheetLoader user={user} id={sp.lesson} />}
     </>

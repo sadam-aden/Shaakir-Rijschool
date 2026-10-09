@@ -196,6 +196,9 @@ export async function moveLesson(user: SessionUser, rawInput: MoveLessonInput, l
   }
 
   await dropQueuedReminders(lesson.id);
+  if (lesson.status === "DRAFT") {
+    await db.scheduleDraftItem.updateMany({ where: { lessonId: lesson.id, outcome: "KEPT" }, data: { outcome: "MOVED" } });
+  }
   if (lesson.status === "PLANNED") {
     if (lesson.studentId) await scheduleReminder(lesson.id, { sms: true, email: true });
     if (input.notify) await sendLessonNotification(lesson.id, "change", { sms: true, email: true });

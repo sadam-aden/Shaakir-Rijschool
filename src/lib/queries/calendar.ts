@@ -5,6 +5,8 @@ import { lessonScope } from "@/lib/dal/scope";
 import type { Avail } from "@/lib/domain/availability";
 import { localDateKey, localParts, zonedToUtc } from "@/lib/domain/time";
 import { addDays, keyParts, mondayOfKey, type DateKey } from "@/lib/date-key";
+import { pendingDrafts } from "@/lib/dal/schedule";
+import { getSchoolSettings } from "./settings";
 import { getStudentRows } from "./students";
 
 export const GRID_START = 8 * 60;
@@ -51,6 +53,10 @@ export type CalendarData = {
   instructors: { id: string; displayName: string }[];
   instructorId: string | "all";
   dayTotals: Record<string, number>;
+  /** minutes per day that are still only a draft */
+  draftTotals: Record<string, number>;
+  drafts: Awaited<ReturnType<typeof pendingDrafts>>;
+  rules: { maxHours: number; maxTravelMinutes: number; examFirst: boolean };
 };
 
 export async function getCalendarData(
@@ -128,7 +134,13 @@ export async function getCalendarData(
   }
 
   const dayTotals: Record<string, number> = {};
-  for (const i of items) if (i.status !== "DRAFT") dayTotals[i.dayKey] = (dayTotals[i.dayKey] ?? 0) + i.durationMin;
+  const draftTotals: Record<string, number> = {};
+  for (const i of items) {
+    const bucket = i.status === "DRAFT" ? draftTotals : dayTotals;
+    bucket[i.dayKey] = (bucket[i.dayKey] ?? 0) + i.durationMin;
+  }
+  const { settings } = await getSchoolSettings(user.schoolId);
+  const drafts = await pendingDrafts(user, days[0], days[days.length - 1], selected !== "all" ? selected : undefined);
 
   // students still to schedule: practical students with hours left and no lesson in the shown range
   const { rows } = await getStudentRows(user);
@@ -150,5 +162,6 @@ export async function getCalendarData(
     .sort((a, b) => (a.kind === "theory" ? 1 : 0) - (b.kind === "theory" ? 1 : 0) || a.minutesAvailable - b.minutesAvailable)
     .slice(0, 8);
 
-  return { days, items, offBlocks, toSchedule, instructors: instructors.map((i) => ({ id: i.id, displayName: i.displayName })), instructorId: selected, dayTotals };
+  return { days, items, offBlocks, toSchedule, instructors: instructors.map((i) => ({ id: i.id, displayName: i.displayName })), instructorId: selected, dayTotals, draftTotals, drafts,
+    rules: { maxHours: settings.maxTeachingMinutesPerDay / 60, maxTravelMinutes: settings.scheduling.maxTravelMinutes, examFirst: settings.scheduling.examFirst } };
 }

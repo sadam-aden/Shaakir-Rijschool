@@ -154,8 +154,8 @@ export function CalendarBoard({ data, todayKey, nowMin }: { data: CalendarData; 
           <div className="rounded-2xl bg-primary-soft p-4">
             <h3 className="mb-3 text-sm font-bold">{t("rules.title")}</h3>
             <ul className="space-y-1.5 text-sm text-primary">
-              {(["availability", "hours", "car", "maxDay", "drives", "exam"] as const).map((k) => (
-                <li key={k} className="flex items-start gap-2"><Check className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />{t(`rules.${k}`)}</li>
+              {[t("rules.availability"), t("rules.hours"), t("rules.car"), t("rulesMaxDay", { hours: data.rules.maxHours }), t("rulesDrives", { min: data.rules.maxTravelMinutes }), ...(data.rules.examFirst ? [t("rules.exam")] : [])].map((x) => (
+                <li key={x} className="flex items-start gap-2"><Check className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />{x}</li>
               ))}
             </ul>
           </div>
@@ -174,7 +174,9 @@ export function CalendarBoard({ data, todayKey, nowMin }: { data: CalendarData; 
                     <span className={cn("flex h-8 min-w-8 items-center justify-center rounded-full text-sm font-bold", isToday ? "bg-primary text-white" : "")}>{dayNumber(k)}</span>
                     <div>
                       <div className="text-[11px] font-bold uppercase text-primary">{weekdayShort(isoWeekdayOfKey(k), locale)}</div>
-                      <div className="text-xs text-muted">{t("hours", { h: formatHours(total, locale).replace(/ [uh]$/, "") })}</div>
+                      <div className="text-xs text-muted">
+                        {data.draftTotals[k] ? <span className="font-bold text-primary">{t("draftLabel", { h: formatHours(data.draftTotals[k], locale).replace(/ [uh]$/, "") })}</span> : t("hours", { h: formatHours(total, locale).replace(/ [uh]$/, "") })}
+                      </div>
                     </div>
                   </div>
                 </div>

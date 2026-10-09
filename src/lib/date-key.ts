@@ -19,3 +19,12 @@ export const keyParts = (k: DateKey) => {
 export function formatKey(k: DateKey, locale: "nl" | "en", opts: Intl.DateTimeFormatOptions) {
   return new Intl.DateTimeFormat(locale === "nl" ? "nl-NL" : "en-GB", { ...opts, timeZone: "UTC" }).format(parse(k));
 }
+
+/** First date from `fromKey` on whose ISO weekday is in `weekdays` (looks at most two weeks ahead, else returns `fromKey`). */
+export function nextWorkingDay(fromKey: DateKey, weekdays: number[]): DateKey {
+  for (let i = 0; i < 14; i++) {
+    const k = addDays(fromKey, i);
+    if (weekdays.includes(isoWeekdayOfKey(k))) return k;
+  }
+  return fromKey;
+}

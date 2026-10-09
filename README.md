@@ -72,3 +72,11 @@ Everything works without accounts (test/mock mode). To go live, set these in `.e
 | Jobs | `CRON_SECRET` (long random value) | Call `GET /api/cron/run` with `Authorization: Bearer <secret>`. `vercel.json` schedules it daily; use Vercel Pro or an external scheduler every 15 minutes for exact 24 h reminders. Settings → "Run now" runs it by hand. |
 
 Try it locally: **Students → a student → Payments → Add package** creates an invoice. **Payments & hours → Send iDEAL link** creates the link; open it from the invoice page and press "Payment succeeds" on the mock checkout.
+
+## AI scheduling
+
+1. Click **Planning genereren** (top right on any page), pick a date (or a range) and press **Genereren**. The planner drafts the day in a few seconds.
+2. Open **Agenda**: the draft lessons are dashed and a banner shows what the planner did and who it could not place and why. Drag lessons to adjust, or remove one.
+3. Press **Goedkeuren & leerlingen informeren** to make the lessons real (hours reserved, students informed), or **Verwerpen** to throw the draft away.
+
+The rules are shown in the calendar and can be tuned in **Instellingen → AI-planningsregels**. Optional: set `ANTHROPIC_API_KEY` to let Claude write the short summary above the draft (it only ever sees anonymous labels, never names or addresses).

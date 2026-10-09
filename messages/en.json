@@ -191,7 +191,10 @@
     "alreadyPaid": "This invoice has already been paid in full.",
     "paymentProvider": "The payment provider returned an error. Please try again shortly.",
     "hasPayments": "An invoice with payments cannot be voided.",
-    "hoursInUse": "The hours of this package are already (partly) used or planned."
+    "hoursInUse": "The hours of this package are already (partly) used or planned.",
+    "draftExists": "There is already a draft for this day. Replace it, or approve or discard it first.",
+    "pastDate": "You cannot generate a schedule for the past.",
+    "noWorkingHours": "This instructor does not work on that day."
   },
   "students": {
     "title": "Students",
@@ -752,7 +755,10 @@
       "drives": "Short drives between pickups",
       "exam": "Exam candidates first"
     },
-    "empty": "No lessons in this period."
+    "empty": "No lessons in this period.",
+    "draftLabel": "AI draft · {h} h",
+    "rulesMaxDay": "Max {hours} teaching hours a day",
+    "rulesDrives": "Short drives between pick-ups (max {min} min)"
   },
   "dashboard": {
     "lessonsToday": "Lessons today",
@@ -953,6 +959,91 @@
       "voidConfirm": "Void",
       "voided": "Invoice voided",
       "openLink": "Open payment link"
+    }
+  },
+  "schedule": {
+    "dialog": {
+      "title": "Generate schedule",
+      "subtitle": "The planner drafts a day for you. You review, drag and approve.",
+      "from": "Date",
+      "to": "Until (optional)",
+      "instructor": "Instructor",
+      "preview": "What the planner sees",
+      "studentsAvailable": "{n} students available",
+      "openSlots": "{n} teaching hours free",
+      "theory": "{n, plural, one {# theory group} other {# theory groups}}",
+      "examNote": "{name} has an exam on {day}: goes first",
+      "rulesTitle": "Hard rules (always on)",
+      "ruleAvailability": "Only within the student's availability",
+      "ruleHours": "Never more than the remaining hours",
+      "ruleCar": "Manual or automatic car matched",
+      "ruleMaxDay": "Max {hours} teaching hours a day",
+      "ruleDrives": "Drives between pick-ups max {min} min",
+      "ruleExam": "Exam candidates first",
+      "noWorkingDay": "This instructor does not work on this day.",
+      "existing": "There is already a draft for this day.",
+      "replace": "Replace the existing draft",
+      "generate": "Generate",
+      "generating": "Planning…",
+      "created": "{n, plural, one {# lesson} other {# lessons}} drafted",
+      "nothing": "Nobody could be planned.",
+      "view": "View in calendar",
+      "skipped": "Not planned"
+    },
+    "skip": {
+      "noHours": "no hours left",
+      "unpaidOverdue": "overdue invoice",
+      "notAvailableThatDay": "not available that day",
+      "outsideAvailability": "no free time inside their availability",
+      "studentUnavailable": "away that day",
+      "noCar": "no car free",
+      "dayFull": "the day is full",
+      "noSlot": "no suitable time",
+      "tooFarAway": "pick-up too far from the other lessons"
+    },
+    "banner": {
+      "eyebrow": "{when} · {date}",
+      "tomorrow": "tomorrow",
+      "title": "{when} isn't planned yet. Let AI draft it in under a minute.",
+      "titleDraft": "A draft is ready for {when}. Review it and approve.",
+      "chipStudents": "{n} students available",
+      "chipSlots": "{n} practical hours open",
+      "chipTheory": "{n, plural, one {# theory group} other {# theory groups}}",
+      "chipExam": "{name} needs exam prep before {day}",
+      "generate": "Generate {when}",
+      "review": "Review draft",
+      "link": "You review, drag & approve",
+      "created": "Draft for {when} is ready"
+    },
+    "draft": {
+      "title": "{day} drafted by AI",
+      "summary": "{n, plural, one {# lesson} other {# lessons}} · {hours}",
+      "hint": "Drag to adjust.",
+      "partial": "Part of it is already approved; the rest is still a draft.",
+      "discard": "Discard",
+      "approve": "Approve & notify students",
+      "confirmTitle": "Approve and notify students",
+      "confirmText": "{n, plural, one {# lesson will be} other {# lessons will be}} scheduled, the hours reserved and the students get a confirmation in their own language.",
+      "notifySms": "Confirm by SMS",
+      "notifyEmail": "Confirm by e-mail",
+      "notifyReminder": "Reminder 24 hours before",
+      "discardTitle": "Discard the draft?",
+      "discardText": "The draft lessons of this day are removed. The statistics are kept.",
+      "approved": "{n, plural, one {# lesson approved} other {# lessons approved}}",
+      "someFailed": "{n, plural, one {# lesson no longer fits} other {# lessons no longer fit}} and stays in the draft: adjust and approve again.",
+      "discarded": "Draft discarded",
+      "remove": "Remove from draft",
+      "removed": "Removed from the draft",
+      "tag": "AI draft",
+      "draftNote": "This is a draft: no hours are reserved yet and the student has not been informed."
+    },
+    "settings": {
+      "title": "AI scheduling rules",
+      "examFirst": "Exam candidates first",
+      "defaultDuration": "Default lesson length (min)",
+      "examDuration": "Lesson length for exam candidates (min)",
+      "maxTravel": "Max drive between pick-ups (min)",
+      "hardRules": "Always on: inside the student's availability, never more than the remaining hours, the right car and the maximum teaching hours per day."
     }
   }
 }

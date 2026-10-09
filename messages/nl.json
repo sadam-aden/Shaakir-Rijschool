@@ -191,7 +191,10 @@
     "alreadyPaid": "Deze factuur is al volledig betaald.",
     "paymentProvider": "De betaalprovider gaf een fout. Probeer het zo nog eens.",
     "hasPayments": "Een factuur met betalingen kan niet vervallen.",
-    "hoursInUse": "De uren van dit pakket zijn al (deels) gebruikt of gepland."
+    "hoursInUse": "De uren van dit pakket zijn al (deels) gebruikt of gepland.",
+    "draftExists": "Er staat al een concept voor deze dag. Vervang het, of keur het eerst goed of verwerp het.",
+    "pastDate": "Je kunt geen planning voor het verleden genereren.",
+    "noWorkingHours": "Deze instructeur werkt niet op die dag."
   },
   "students": {
     "title": "Leerlingen",
@@ -752,7 +755,10 @@
       "drives": "Korte ritten tussen ophaaladressen",
       "exam": "Examenkandidaten eerst"
     },
-    "empty": "Geen lessen in deze periode."
+    "empty": "Geen lessen in deze periode.",
+    "draftLabel": "AI-concept · {h} u",
+    "rulesMaxDay": "Max. {hours} lesuren per dag",
+    "rulesDrives": "Korte ritten tussen ophaaladressen (max. {min} min)"
   },
   "dashboard": {
     "lessonsToday": "Lessen vandaag",
@@ -953,6 +959,91 @@
       "voidConfirm": "Laten vervallen",
       "voided": "Factuur is vervallen",
       "openLink": "Betaallink openen"
+    }
+  },
+  "schedule": {
+    "dialog": {
+      "title": "Planning genereren",
+      "subtitle": "De planner stelt een dag voor jou op. Jij controleert, sleept en keurt goed.",
+      "from": "Datum",
+      "to": "Tot en met (optioneel)",
+      "instructor": "Instructeur",
+      "preview": "Wat de planner ziet",
+      "studentsAvailable": "{n} leerlingen beschikbaar",
+      "openSlots": "{n} lesuren vrij",
+      "theory": "{n, plural, one {# theoriegroep} other {# theoriegroepen}}",
+      "examNote": "{name} heeft examen op {day}: staat voorop",
+      "rulesTitle": "Harde regels (altijd aan)",
+      "ruleAvailability": "Alleen binnen beschikbaarheid van de leerling",
+      "ruleHours": "Nooit meer dan de resterende uren",
+      "ruleCar": "Schakel of automaat past bij de leerling",
+      "ruleMaxDay": "Max. {hours} lesuren per dag",
+      "ruleDrives": "Ritten tussen ophaaladressen max. {min} min",
+      "ruleExam": "Examenkandidaten eerst",
+      "noWorkingDay": "Deze instructeur werkt niet op deze dag.",
+      "existing": "Er staat al een concept klaar voor deze dag.",
+      "replace": "Bestaand concept vervangen",
+      "generate": "Genereren",
+      "generating": "Bezig met plannen…",
+      "created": "{n, plural, one {# les} other {# lessen}} als concept klaargezet",
+      "nothing": "Er kon niemand worden ingepland.",
+      "view": "Bekijken in de agenda",
+      "skipped": "Niet ingepland"
+    },
+    "skip": {
+      "noHours": "geen uren meer",
+      "unpaidOverdue": "te late factuur",
+      "notAvailableThatDay": "die dag niet beschikbaar",
+      "outsideAvailability": "geen vrij tijdstip binnen de beschikbaarheid",
+      "studentUnavailable": "die dag afwezig",
+      "noCar": "geen lesauto vrij",
+      "dayFull": "de dag zit vol",
+      "noSlot": "geen passend tijdstip",
+      "tooFarAway": "ophaaladres te ver van de andere lessen"
+    },
+    "banner": {
+      "eyebrow": "{when} · {date}",
+      "tomorrow": "morgen",
+      "title": "{when} is nog niet ingepland. Laat AI het in een minuut opstellen.",
+      "titleDraft": "Er staat een concept klaar voor {when}. Bekijk het en keur het goed.",
+      "chipStudents": "{n} leerlingen beschikbaar",
+      "chipSlots": "{n} praktijkuren vrij",
+      "chipTheory": "{n, plural, one {# theoriegroep} other {# theoriegroepen}}",
+      "chipExam": "{name} heeft examenvoorbereiding nodig voor {day}",
+      "generate": "Genereer {when}",
+      "review": "Concept bekijken",
+      "link": "Jij controleert, sleept & keurt goed",
+      "created": "Concept voor {when} staat klaar"
+    },
+    "draft": {
+      "title": "{day} opgesteld door AI",
+      "summary": "{n, plural, one {# les} other {# lessen}} · {hours}",
+      "hint": "Sleep om aan te passen.",
+      "partial": "Een deel is al goedgekeurd; de rest staat nog als concept.",
+      "discard": "Verwerpen",
+      "approve": "Goedkeuren & leerlingen informeren",
+      "confirmTitle": "Goedkeuren en leerlingen informeren",
+      "confirmText": "{n, plural, one {# les wordt} other {# lessen worden}} ingepland, de uren gereserveerd en de leerlingen krijgen een bevestiging in hun eigen taal.",
+      "notifySms": "Bevestiging per SMS",
+      "notifyEmail": "Bevestiging per e-mail",
+      "notifyReminder": "Herinnering 24 uur van tevoren",
+      "discardTitle": "Concept verwerpen?",
+      "discardText": "De conceptlessen van deze dag worden verwijderd. De statistieken blijven bewaard.",
+      "approved": "{n, plural, one {# les goedgekeurd} other {# lessen goedgekeurd}}",
+      "someFailed": "{n, plural, one {# les paste} other {# lessen pasten}} niet meer en blijft in het concept: pas aan en keur opnieuw goed.",
+      "discarded": "Concept verworpen",
+      "remove": "Uit concept verwijderen",
+      "removed": "Uit het concept verwijderd",
+      "tag": "AI-concept",
+      "draftNote": "Dit is een concept: er zijn nog geen uren gereserveerd en de leerling is niet geïnformeerd."
+    },
+    "settings": {
+      "title": "AI-planningsregels",
+      "examFirst": "Examenkandidaten eerst",
+      "defaultDuration": "Standaard lesduur (min)",
+      "examDuration": "Lesduur voor examenkandidaten (min)",
+      "maxTravel": "Max. rit tussen ophaaladressen (min)",
+      "hardRules": "Altijd aan: binnen beschikbaarheid van de leerling, nooit meer dan de resterende uren, de juiste auto en het maximum aantal lesuren per dag."
     }
   }
 }

@@ -13,12 +13,14 @@ type School = { name: string; address: string; postcode: string; city: string; k
 
 export function SettingsForm({ school, settings }: { school: School; settings: SchoolSettings }) {
   const t = useTranslations("settings");
+  const ts = useTranslations("schedule.settings");
   const tc = useTranslations("common");
   const [s, setS] = useState(school);
   const [r, setR] = useState(settings);
   const { run, pending } = useRunAction();
   const ss = <K extends keyof School>(k: K, v: School[K]) => setS((x) => ({ ...x, [k]: v }));
   const rr = <K extends keyof SchoolSettings>(k: K, v: SchoolSettings[K]) => setR((x) => ({ ...x, [k]: v }));
+  const sch = <K extends keyof SchoolSettings["scheduling"]>(k: K, v: SchoolSettings["scheduling"][K]) => setR((x) => ({ ...x, scheduling: { ...x.scheduling, [k]: v } }));
   const num = (k: keyof SchoolSettings) => (e: React.ChangeEvent<HTMLInputElement>) => rr(k, Number(e.target.value) as never);
 
   return (
@@ -59,6 +61,17 @@ export function SettingsForm({ school, settings }: { school: School; settings: S
           <Field label={t("vat")}><Input type="number" value={r.vatRate} onChange={num("vatRate")} /></Field>
           <Field label={t("paymentTerm")}><Input type="number" value={r.paymentTermDays} onChange={num("paymentTermDays")} /></Field>
           <Field label={t("smsSender")}><Input maxLength={11} value={r.smsSender} onChange={(e) => rr("smsSender", e.target.value)} /></Field>
+        </div>
+      </Card>
+
+      <Card className="space-y-4 p-6">
+        <h2 className="text-lg font-bold">{ts("title")}</h2>
+        <p className="text-sm text-muted">{ts("hardRules")}</p>
+        <label className="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" checked={r.scheduling.examFirst} onChange={(e) => sch("examFirst", e.target.checked)} /> {ts("examFirst")}</label>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <Field label={ts("defaultDuration")}><Input type="number" step={15} value={r.scheduling.defaultDurationMin} onChange={(e) => sch("defaultDurationMin", Number(e.target.value))} /></Field>
+          <Field label={ts("examDuration")}><Input type="number" step={15} value={r.scheduling.examDurationMin} onChange={(e) => sch("examDurationMin", Number(e.target.value))} /></Field>
+          <Field label={ts("maxTravel")}><Input type="number" value={r.scheduling.maxTravelMinutes} onChange={(e) => sch("maxTravelMinutes", Number(e.target.value))} /></Field>
         </div>
       </Card>
 
