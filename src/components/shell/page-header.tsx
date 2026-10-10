@@ -21,11 +21,11 @@ export async function PageHeader({ title, eyebrow, actions, hideSearch }: { titl
   const label = eyebrow ?? `${formatDateLong(now, locale)} · ${t("week", { week: isoWeek(now).week })}`;
   return (
     <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
-      <div>
+      <div className="min-w-0">
         <div className="text-xs font-semibold text-muted first-letter:uppercase">{label}</div>
         <h1 className="mt-1 text-3xl font-bold tracking-tight">{title}</h1>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         {actions}
         {!hideSearch && (
         <label className="relative hidden md:block">

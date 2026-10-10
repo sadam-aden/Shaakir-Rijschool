@@ -15,7 +15,10 @@
     "instructors": "Instructeurs",
     "vehicles": "Lesauto's",
     "packages": "Pakketten",
-    "settings": "Instellingen"
+    "settings": "Instellingen",
+    "openMenu": "Menu openen",
+    "closeMenu": "Menu sluiten",
+    "menu": "Hoofdmenu"
   },
   "topbar": {
     "week": "Week {week}",

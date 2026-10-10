@@ -15,7 +15,10 @@
     "instructors": "Instructors",
     "vehicles": "Vehicles",
     "packages": "Packages",
-    "settings": "Settings"
+    "settings": "Settings",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "menu": "Main menu"
   },
   "topbar": {
     "week": "Week {week}",

@@ -42,7 +42,7 @@ export default async function DashboardPage() {
 
       <AiBanner user={user} />
 
-      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
         <KpiCard
           label={td("lessonsToday")} icon={<Clock className="h-4 w-4" />}
           value={k.todayPractical + k.todayTheory}
@@ -67,7 +67,7 @@ export default async function DashboardPage() {
         )}
       </div>
 
-      <div className={cn("mt-6 grid gap-6", charts.revenue ? "lg:grid-cols-3" : "lg:grid-cols-2")}>
+      <div className={cn("mt-6 grid grid-cols-1 gap-6", charts.revenue ? "lg:grid-cols-3" : "lg:grid-cols-2")}>
         <Card className="p-6">
           <CardHeader title={tch("weekTitle")} action={<Link href="/agenda" className="text-xs font-bold text-primary">{td("openCalendar")}</Link>} />
           <WeekChart days={charts.days} />
@@ -84,12 +84,12 @@ export default async function DashboardPage() {
         )}
       </div>
 
-      <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
+      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
         <Card className="p-6">
           <CardHeader
             title={td("todaysLessons")}
             action={
-              <div className="flex items-center gap-4 text-xs font-bold">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-bold">
                 <span className="flex items-center gap-1.5 text-primary"><span className="h-2.5 w-2.5 rounded-sm bg-primary" />{td("legendPractical")}</span>
                 <span className="flex items-center gap-1.5 text-theory-ink"><span className="h-2.5 w-2.5 rounded-sm bg-theory" />{td("legendTheory")}</span>
                 <Link href="/agenda" className="text-primary">{td("openCalendar")}</Link>

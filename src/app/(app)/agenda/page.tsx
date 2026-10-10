@@ -53,7 +53,7 @@ export default async function AgendaPage({ searchParams }: { searchParams: Promi
         title={view === "week" ? t("title") : t("dayTitle")}
         eyebrow={label}
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <div role="group" className="inline-flex rounded-xl border border-line bg-card p-0.5 text-sm font-semibold">
               {(["day", "week"] as const).map((v) => (
                 <Link key={v} href={href({ view: v })} aria-current={view === v ? "page" : undefined} className={cn("rounded-lg px-3.5 py-1.5", view === v ? "bg-primary-soft text-primary" : "text-muted hover:text-ink")}>{t(`views.${v}`)}</Link>

@@ -6,9 +6,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const user = await requireUser();
   const school = await db.school.findUnique({ where: { id: user.schoolId }, select: { name: true } });
   return (
-    <div className="flex min-h-screen">
+    <div className="min-h-screen lg:flex">
       <Sidebar user={user} schoolName={school?.name ?? ""} />
-      <main className="min-w-0 flex-1 p-6 lg:p-8">{children}</main>
+      <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { mainNav, manageNav } from "./nav";
+import { MobileNav } from "./mobile-nav";
 import { SidebarNav } from "./sidebar-nav";
 import { UserMenu } from "./user-menu";
 import { getTheme } from "@/lib/theme-server";
@@ -10,8 +11,8 @@ export async function Sidebar({ user, schoolName }: { user: SessionUser; schoolN
   const tc = await getTranslations("common");
   const theme = await getTheme();
   const initials = user.name.split(/\s+/).map((p) => p[0]).slice(0, 2).join("").toUpperCase();
-  return (
-    <aside className="sticky top-0 hidden h-screen w-[230px] shrink-0 flex-col border-r border-line bg-card p-5 lg:flex">
+  const content = (
+    <>
       <div className="mb-8 flex items-center gap-3">
         <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-sm font-bold text-white">SR</div>
         <div className="min-w-0">
@@ -29,6 +30,14 @@ export async function Sidebar({ user, schoolName }: { user: SessionUser; schoolN
         )}
       </nav>
       <UserMenu name={user.name} role={user.role} initials={initials} theme={theme} />
-    </aside>
+    </>
+  );
+  return (
+    <>
+      <MobileNav schoolName={schoolName}>{content}</MobileNav>
+      <aside className="sticky top-0 hidden h-screen w-[230px] shrink-0 flex-col border-r border-line bg-card p-5 lg:flex">
+        {content}
+      </aside>
+    </>
   );
 }

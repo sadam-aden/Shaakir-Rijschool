@@ -7,7 +7,7 @@ export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
 
 export function CardHeader({ title, action, className }: { title: ReactNode; action?: ReactNode; className?: string }) {
   return (
-    <div className={cn("mb-4 flex items-center justify-between gap-3", className)}>
+    <div className={cn("mb-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-2", className)}>
       <h2 className="text-lg font-bold">{title}</h2>
       {action}
     </div>

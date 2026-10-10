@@ -17,7 +17,8 @@ export function StudentTable({
   const locale = useLocale() as AppLocale;
 
   return (
-    <div role="table" className="overflow-hidden">
+    <div role="table" className="overflow-x-auto">
+      <div className="min-w-[720px]">
       <div role="row" className="grid grid-cols-[minmax(0,2.1fr)_minmax(0,1.4fr)_minmax(0,1.5fr)_minmax(0,1.4fr)_minmax(0,1.5fr)] gap-3 border-b border-line bg-page/60 px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-muted">
         <span role="columnheader">{t("cols.student")}</span>
         <span role="columnheader">{t("cols.remaining")}</span>
@@ -87,6 +88,7 @@ export function StudentTable({
           </Link>
         );
       })}
+      </div>
     </div>
   );
 }
