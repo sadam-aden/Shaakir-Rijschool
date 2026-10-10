@@ -803,7 +803,17 @@
     "apkTitle": "APK alerts",
     "apkSoon": "{name}: APK expires in {days} days",
     "apkToday": "{name}: APK expires today",
-    "apkOverdue": "{name}: APK expired {days} days ago"
+    "apkOverdue": "{name}: APK expired {days} days ago",
+    "charts": {
+      "weekTitle": "Hours this week",
+      "outcomesTitle": "Lessons, last 30 days",
+      "revenueTitle": "Revenue, last 6 months",
+      "completed": "Completed",
+      "noShow": "No-show",
+      "cancelled": "Cancelled",
+      "lessons": "lessons",
+      "noData": "No lessons in this period yet."
+    }
   },
   "pay": {
     "school": "Driving school",

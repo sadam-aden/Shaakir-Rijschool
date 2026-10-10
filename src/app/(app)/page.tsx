@@ -2,7 +2,9 @@ import { AlertTriangle, CalendarClock, ClipboardCheck, Clock, Users, Wallet, Boo
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { AiBanner } from "@/components/dashboard/ai-banner";
+import { OutcomeChart, WeekChart } from "@/components/dashboard/dashboard-charts";
 import { TopUpButton } from "@/components/dashboard/top-up-button";
+import { RevenueChart } from "@/components/payments/revenue-chart";
 import { PageHeader } from "@/components/shell/page-header";
 import { AutBadge, Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,6 +17,7 @@ import { db } from "@/lib/db";
 import { greetingKey } from "@/lib/domain/time";
 import { formatDateShort, formatHours, formatMoney, formatTime } from "@/lib/format";
 import { getDashboard } from "@/lib/queries/dashboard";
+import { getDashboardCharts } from "@/lib/queries/dashboard-charts";
 import { cn } from "@/lib/utils";
 
 export default async function DashboardPage() {
@@ -24,7 +27,9 @@ export default async function DashboardPage() {
   const tg = await getTranslations("gearbox");
   const locale = (await getLocale()) as AppLocale;
   const isAdmin = user.role === "ADMIN";
-  const d = await getDashboard(user, locale);
+  const [d, charts] = await Promise.all([getDashboard(user, locale), getDashboardCharts(user)]);
+  const tch = await getTranslations("dashboard.charts");
+  const outcomeTotal = charts.outcomes.completed + charts.outcomes.noShow + charts.outcomes.cancelled;
   const pkgOptions = isAdmin
     ? (await db.package.findMany({ where: { schoolId: user.schoolId, active: true }, orderBy: { sortOrder: "asc" } })).map((p) => ({ id: p.id, label: `${locale === "nl" ? p.nameNl : p.nameEn} · ${formatMoney(p.priceCents, locale)}` }))
     : [];
@@ -59,6 +64,23 @@ export default async function DashboardPage() {
             label={td("outstanding")} icon={<Wallet className="h-4 w-4" />} tone="amber" value={formatMoney(k.outstandingCents, locale)}
             sub={<>{td("outstandingSub", { open: k.openInvoices })}{k.overdueInvoices > 0 && <> · <span className="font-bold text-danger-ink underline">{td("overdueLink", { n: k.overdueInvoices })}</span></>}</>}
           />
+        )}
+      </div>
+
+      <div className={cn("mt-6 grid gap-6", charts.revenue ? "lg:grid-cols-3" : "lg:grid-cols-2")}>
+        <Card className="p-6">
+          <CardHeader title={tch("weekTitle")} action={<Link href="/agenda" className="text-xs font-bold text-primary">{td("openCalendar")}</Link>} />
+          <WeekChart days={charts.days} />
+        </Card>
+        <Card className="p-6">
+          <CardHeader title={tch("outcomesTitle")} />
+          {outcomeTotal === 0 ? <EmptyState>{tch("noData")}</EmptyState> : <OutcomeChart {...charts.outcomes} />}
+        </Card>
+        {charts.revenue && (
+          <Card className="p-6">
+            <CardHeader title={tch("revenueTitle")} />
+            <RevenueChart months={charts.revenue} />
+          </Card>
         )}
       </div>
 

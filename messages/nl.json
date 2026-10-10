@@ -803,7 +803,17 @@
     "apkTitle": "APK-meldingen",
     "apkSoon": "{name}: APK verloopt over {days} dagen",
     "apkToday": "{name}: APK verloopt vandaag",
-    "apkOverdue": "{name}: APK is {days} dagen verlopen"
+    "apkOverdue": "{name}: APK is {days} dagen verlopen",
+    "charts": {
+      "weekTitle": "Uren deze week",
+      "outcomesTitle": "Lessen afgelopen 30 dagen",
+      "revenueTitle": "Omzet laatste 6 maanden",
+      "completed": "Afgerond",
+      "noShow": "Niet verschenen",
+      "cancelled": "Geannuleerd",
+      "lessons": "lessen",
+      "noData": "Nog geen lessen in deze periode."
+    }
   },
   "pay": {
     "school": "Rijschool",

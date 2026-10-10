@@ -158,3 +158,11 @@ test("the dashboard banner offers to draft the next working day when nothing is 
     await expect(page.getByText("Laat AI het in een minuut opstellen")).toHaveCount(0);
   }
 });
+
+test("the dashboard shows the hours, outcomes and revenue charts", async ({ page }) => {
+  await login(page);
+  await expect(page.getByRole("heading", { name: "Uren deze week" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Lessen afgelopen 30 dagen" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Omzet laatste 6 maanden" })).toBeVisible();
+  await expect(page.locator("svg.recharts-surface").first()).toBeVisible();
+});
