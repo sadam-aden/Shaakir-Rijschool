@@ -182,17 +182,17 @@ test("Settings can run the background jobs on demand", async ({ page }) => {
 test("the admin can check a student as paid in cash and back to unpaid", async ({ page }) => {
   await login(page);
   await page.goto("/betalingen");
-  const sw = page.getByRole("switch", { name: /Betaald · Yusuf Demir/ }); // unpaid; earlier tests never pay him
-  await expect(sw).toHaveAttribute("aria-checked", "false");
+  const sw = page.getByRole("checkbox", { name: /Betaald · Yusuf Demir/ }); // unpaid; earlier tests never pay him
+  await expect(sw).not.toBeChecked();
   await sw.click();
   await page.getByRole("dialog").getByRole("button", { name: "Ja, betaald" }).click();
   await expectToast(page, "Als betaald gemarkeerd");
-  await expect(sw).toHaveAttribute("aria-checked", "true");
+  await expect(sw).toBeChecked();
 
   await sw.click();
   await page.getByRole("dialog").getByRole("button", { name: "Ja, onbetaald" }).click();
   await expectToast(page, "Als onbetaald gemarkeerd");
-  await expect(sw).toHaveAttribute("aria-checked", "false");
+  await expect(sw).not.toBeChecked();
 });
 
 test("a package can be chosen while adding a student; it starts as an unpaid invoice", async ({ page }) => {
@@ -210,5 +210,5 @@ test("a package can be chosen while adding a student; it starts as an unpaid inv
 
   await page.goto("/betalingen");
   await expect(row(page, /Pakket Nieuwling/)).toContainText("Openstaand");
-  await expect(page.getByRole("switch", { name: /Betaald · Pakket Nieuwling/ })).toHaveAttribute("aria-checked", "false");
+  await expect(page.getByRole("checkbox", { name: /Betaald · Pakket Nieuwling/ })).not.toBeChecked();
 });
