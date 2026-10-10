@@ -17,10 +17,10 @@ export function PaidSwitch({ invoiceId, paid, name, amountLabel }: { invoiceId: 
   const k = paid ? "undo" : "mark";
   return (
     <>
-      <label className="flex cursor-pointer items-center gap-2 text-xs font-bold">
+      <label className="flex cursor-pointer items-center gap-2 text-xs font-bold has-[:checked]:text-[#16a34a]">
         <input
           type="checkbox" checked={paid} onChange={() => setOpen(true)} aria-label={`${t("switch")} · ${name}`}
-          className="h-4 w-4 cursor-pointer accent-[var(--primary)]"
+          className="check-green"
         />
         {t("switch")}
       </label>

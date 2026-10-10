@@ -131,3 +131,22 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .dialog-overlay[data-state="open"], .dialog-pop[data-state="open"], .sheet-slide[data-state="open"] { animation: none; }
 }
+
+/* modern checkbox: rounded box that turns green with a white check mark when ticked */
+.check-green {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  cursor: pointer;
+  border-radius: 0.4rem;
+  border: 2px solid var(--line);
+  background: var(--card) center / 80% no-repeat;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.check-green:checked {
+  border-color: #16a34a;
+  background-color: #16a34a;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E");
+}
+.check-green:focus-visible { outline: 2px solid #16a34a; outline-offset: 2px; }
