@@ -48,7 +48,7 @@ export function OutcomeChart({ completed, noShow, cancelled }: { completed: numb
     { name: t("cancelled"), value: cancelled, color: "var(--theory)" },
   ];
   return (
-    <div className="flex items-center gap-5">
+    <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
       <div className="relative h-40 w-40 shrink-0" role="img" aria-label={data.map((d) => `${d.name} ${d.value}`).join(", ")}>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
