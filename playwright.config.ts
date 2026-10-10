@@ -9,7 +9,7 @@ export default defineConfig({
   fullyParallel: false,
   timeout: 60_000,
   expect: { timeout: 10_000 },
-  reporter: [["list"]],
+  reporter: process.env.CI ? [["list"], ["github"]] : [["list"]],
   use: {
     baseURL: "http://localhost:3100",
     // locally use the installed Edge; CI installs Chromium (npx playwright install chromium)
