@@ -162,7 +162,7 @@
     "dayLimit": "Daily limit of {max} min reached",
     "generic": "This time is not available",
     "noVehicleRegistered": "No {gearbox} car added yet: add one under Manage → Vehicles",
-    "unpaidOverdue": "A payment is overdue"
+    "unpaidOverdue": "The package is not paid yet: pay first, then book"
   },
   "bestFit": {
     "intro": "{time} is the best fit.",
@@ -197,7 +197,8 @@
     "hoursInUse": "The hours of this package are already (partly) used or planned.",
     "draftExists": "There is already a draft for this day. Replace it, or approve or discard it first.",
     "pastDate": "You cannot generate a schedule for the past.",
-    "noWorkingHours": "This instructor does not work on that day."
+    "noWorkingHours": "This instructor does not work on that day.",
+    "onlinePayment": "This invoice was paid online (iDEAL) and cannot be reversed here."
   },
   "students": {
     "title": "Students",
@@ -629,7 +630,7 @@
       "availability": "Allow outside the student's availability",
       "hours": "Book more hours than available",
       "reason": "Reason (required)",
-      "payment": "Book although an invoice is overdue"
+      "payment": "Book although the package is unpaid"
     },
     "conflictTitle": "This time is not available",
     "packageLine": "{n}-lesson package",
@@ -972,6 +973,17 @@
       "voidConfirm": "Void",
       "voided": "Invoice voided",
       "openLink": "Open payment link"
+    },
+    "paid": {
+      "switch": "Paid",
+      "markTitle": "Paid in cash?",
+      "markText": "{name}: {amount} will be recorded as a cash payment. The student can then book lessons.",
+      "markConfirm": "Yes, paid",
+      "markDone": "Marked as paid",
+      "undoTitle": "Mark as unpaid again?",
+      "undoText": "{name}: the manual payment(s) on this invoice are reversed. Booking stays blocked until it is paid again.",
+      "undoConfirm": "Yes, unpaid",
+      "undoDone": "Marked as unpaid"
     }
   },
   "schedule": {
@@ -1005,7 +1017,7 @@
     },
     "skip": {
       "noHours": "no hours left",
-      "unpaidOverdue": "overdue invoice",
+      "unpaidOverdue": "package not paid yet",
       "notAvailableThatDay": "not available that day",
       "outsideAvailability": "no free time inside their availability",
       "studentUnavailable": "away that day",

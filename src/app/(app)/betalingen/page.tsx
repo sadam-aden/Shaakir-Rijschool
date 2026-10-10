@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Download } from "lucide-react";
 import { BalanceActionButton } from "@/components/payments/balance-action";
 import { SendAllRemindersDialog } from "@/components/payments/reminders-dialog";
+import { PaidSwitch } from "@/components/payments/paid-switch";
 import { RevenueChart } from "@/components/payments/revenue-chart";
 import { PageHeader } from "@/components/shell/page-header";
 import { Badge } from "@/components/ui/badge";
@@ -114,7 +115,8 @@ export default async function PaymentsPage({ searchParams }: { searchParams: Pro
                         {t(`status.${r.status}`, { days: r.overdueDays })}
                       </Badge>
                     </span>
-                    <span className="flex justify-end">
+                    <span className="flex flex-wrap items-center justify-end gap-x-3 gap-y-2">
+                      {r.invoiceId && r.status !== "NONE" && <PaidSwitch invoiceId={r.invoiceId} paid={r.status === "PAID"} name={r.name} amountLabel={money(r.status === "PAID" ? r.totalCents : r.invoiceOwedCents)} />}
                       <BalanceActionButton action={r.action} invoiceId={r.invoiceId} studentId={r.studentId} name={r.name} hoursLeft={formatHours(Math.max(0, r.minutesRemaining), locale)} packages={pkgOptions} />
                     </span>
                   </div>

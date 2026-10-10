@@ -162,7 +162,7 @@
     "dayLimit": "Daglimiet van {max} min bereikt",
     "generic": "Dit tijdstip is niet beschikbaar",
     "noVehicleRegistered": "Nog geen {gearbox} lesauto toegevoegd: voeg er een toe onder Beheer → Lesauto's",
-    "unpaidOverdue": "Er staat een te late factuur open"
+    "unpaidOverdue": "Het pakket is nog niet betaald: eerst betalen, dan boeken"
   },
   "bestFit": {
     "intro": "{time} is de beste keuze.",
@@ -197,7 +197,8 @@
     "hoursInUse": "De uren van dit pakket zijn al (deels) gebruikt of gepland.",
     "draftExists": "Er staat al een concept voor deze dag. Vervang het, of keur het eerst goed of verwerp het.",
     "pastDate": "Je kunt geen planning voor het verleden genereren.",
-    "noWorkingHours": "Deze instructeur werkt niet op die dag."
+    "noWorkingHours": "Deze instructeur werkt niet op die dag.",
+    "onlinePayment": "Deze factuur is online (iDEAL) betaald en kan hier niet worden teruggedraaid."
   },
   "students": {
     "title": "Leerlingen",
@@ -629,7 +630,7 @@
       "availability": "Buiten beschikbaarheid van de leerling toestaan",
       "hours": "Meer uren boeken dan beschikbaar",
       "reason": "Reden (verplicht)",
-      "payment": "Boeken ondanks een te late factuur"
+      "payment": "Boeken ondanks een onbetaald pakket"
     },
     "conflictTitle": "Deze tijd is niet beschikbaar",
     "packageLine": "{n}-lessenpakket",
@@ -972,6 +973,17 @@
       "voidConfirm": "Laten vervallen",
       "voided": "Factuur is vervallen",
       "openLink": "Betaallink openen"
+    },
+    "paid": {
+      "switch": "Betaald",
+      "markTitle": "Contant betaald?",
+      "markText": "{name}: {amount} wordt als contante betaling vastgelegd. Daarna kan de leerling lessen boeken.",
+      "markConfirm": "Ja, betaald",
+      "markDone": "Als betaald gemarkeerd",
+      "undoTitle": "Weer als onbetaald markeren?",
+      "undoText": "{name}: de handmatige betaling(en) op deze factuur worden teruggedraaid. Boeken blijft geblokkeerd tot er opnieuw is betaald.",
+      "undoConfirm": "Ja, onbetaald",
+      "undoDone": "Als onbetaald gemarkeerd"
     }
   },
   "schedule": {
@@ -1005,7 +1017,7 @@
     },
     "skip": {
       "noHours": "geen uren meer",
-      "unpaidOverdue": "te late factuur",
+      "unpaidOverdue": "pakket nog niet betaald",
       "notAvailableThatDay": "die dag niet beschikbaar",
       "outsideAvailability": "geen vrij tijdstip binnen de beschikbaarheid",
       "studentUnavailable": "die dag afwezig",

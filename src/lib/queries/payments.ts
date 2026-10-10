@@ -20,6 +20,7 @@ export type BalanceRow = {
   status: InvoiceStatus | "NONE";
   overdueDays: number;
   owedCents: number;
+  invoiceOwedCents: number;
   /** invoice the action refers to: the one that needs attention, else the latest */
   invoiceId: string | null;
   action: BalanceAction;
@@ -86,7 +87,7 @@ export async function getPaymentsOverview(user: SessionUser, now = new Date()) {
       studentId: s.id, name: `${s.firstName} ${s.lastName}`,
       packageNameNl: activePackages[0]?.package.nameNl ?? null, packageNameEn: activePackages[0]?.package.nameEn ?? null,
       minutesPurchased: purchased, minutesRemaining: s.minutesRemaining, paidCents, totalCents, status,
-      overdueDays: worst ? daysOverdue(worst.dueDate, now) : 0, owedCents: invs.reduce((a, i) => a + i.owed, 0),
+      overdueDays: worst ? daysOverdue(worst.dueDate, now) : 0, owedCents: invs.reduce((a, i) => a + i.owed, 0), invoiceOwedCents: attention?.owed ?? 0,
       invoiceId: attention?.id ?? null, action, low,
     });
   }

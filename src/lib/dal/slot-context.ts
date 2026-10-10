@@ -80,7 +80,7 @@ export async function loadSlotContext(p: {
       })),
     ];
     const overdueInvoices = await db.invoice.findMany({
-      where: { studentId: s.id, status: { notIn: ["VOID", "DRAFT", "PAID"] }, dueDate: { lt: new Date() } },
+      where: { studentId: s.id, status: { notIn: ["VOID", "DRAFT", "PAID"] } },
       select: { totalCents: true, payments: { select: { status: true, amountCents: true } } },
     });
     student = {

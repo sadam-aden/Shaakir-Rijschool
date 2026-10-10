@@ -101,6 +101,29 @@ export async function recordManualPayment(
 }
 
 /**
+ * Admin check "paid / unpaid" for money received in person. Paid: books the whole open amount as a cash payment.
+ * Unpaid: reverses the manual (cash, pin, transfer) payments again; online iDEAL payments are never reversed here.
+ */
+export async function setInvoicePaid(user: SessionUser, invoiceId: string, paid: boolean) {
+  const inv = await db.invoice.findFirst({ where: { id: invoiceId, schoolId: user.schoolId }, include: { payments: true } });
+  if (!inv) return fail("notFound");
+  if (inv.status === "VOID" || inv.status === "DRAFT") return fail("invalidState");
+  if (paid) {
+    const owed = outstandingCents(inv.totalCents, paidCentsOf(inv.payments));
+    if (owed <= 0) return ok({ status: inv.status });
+    return recordManualPayment(user, invoiceId, { method: "CASH", amountCents: owed });
+  }
+  const manual = inv.payments.filter((p) => p.status === "PAID" && p.method !== "IDEAL");
+  if (manual.length === 0) return fail(paidCentsOf(inv.payments) > 0 ? "onlinePayment" : "invalidState");
+  const status = await db.$transaction(async (tx) => {
+    await tx.payment.updateMany({ where: { id: { in: manual.map((p) => p.id) } }, data: { status: "REFUNDED" } });
+    await audit(tx, user, "payment.reverse", "Invoice", invoiceId, { paymentIds: manual.map((p) => p.id), amountCents: manual.reduce((a, p) => a + p.amountCents, 0) });
+    return refreshInvoiceStatus(tx, invoiceId);
+  });
+  return ok({ status });
+}
+
+/**
  * Creates (or reuses a recent) iDEAL payment for the outstanding amount of an invoice and returns the checkout link.
  * Without a Mollie key the link points to the local mock checkout page.
  */

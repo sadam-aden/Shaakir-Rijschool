@@ -38,17 +38,17 @@ test("an instructor cannot reach the money pages or exports", async ({ page }) =
   expect((await page.request.get("/api/export/accountant")).status()).toBe(403);
 });
 
-test("the booking wizard blocks a student with an overdue invoice until an admin overrides it", async ({ page }) => {
+test("the booking wizard blocks a student with an unpaid package until an admin overrides it", async ({ page }) => {
   await login(page);
   await page.goto(`/les-inplannen?date=${nextWeekday(3)}`);
   await page.getByRole("button", { name: "Kies een leerling", exact: true }).click();
   await page.getByPlaceholder("Zoek een leerling").fill("Yusuf");
   await page.getByRole("button", { name: /Yusuf Demir/ }).click();
-  await expect(page.getByText("Er staat een te late factuur open").first()).toBeVisible();
+  await expect(page.getByText("Het pakket is nog niet betaald").first()).toBeVisible();
   await expect(page.getByText("Beste keuze")).toHaveCount(0);
 
   await page.getByText("Overschrijven (beheerder)").click();
-  await page.getByLabel("Boeken ondanks een te late factuur").check();
+  await page.getByLabel("Boeken ondanks een onbetaald pakket").check();
   await page.getByLabel("Reden (verplicht)").fill("Betaalt vrijdag contant");
   await expect(page.getByText("Beste keuze").first()).toBeVisible();
   await page.getByRole("button", { name: "Boeking bevestigen" }).click();
@@ -177,4 +177,20 @@ test("Settings can run the background jobs on demand", async ({ page }) => {
   await page.goto("/instellingen");
   await page.getByRole("button", { name: "Nu uitvoeren" }).click();
   await expectToast(page, /Klaar:/);
+});
+
+test("the admin can check a student as paid in cash and back to unpaid", async ({ page }) => {
+  await login(page);
+  await page.goto("/betalingen");
+  const sw = page.getByRole("switch", { name: /Betaald · Yusuf Demir/ }); // unpaid; earlier tests never pay him
+  await expect(sw).toHaveAttribute("aria-checked", "false");
+  await sw.click();
+  await page.getByRole("dialog").getByRole("button", { name: "Ja, betaald" }).click();
+  await expectToast(page, "Als betaald gemarkeerd");
+  await expect(sw).toHaveAttribute("aria-checked", "true");
+
+  await sw.click();
+  await page.getByRole("dialog").getByRole("button", { name: "Ja, onbetaald" }).click();
+  await expectToast(page, "Als onbetaald gemarkeerd");
+  await expect(sw).toHaveAttribute("aria-checked", "false");
 });

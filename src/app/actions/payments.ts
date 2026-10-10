@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { fail, ok } from "@/lib/action-result";
-import { createPaymentLink, sellPackage, recordManualPayment, voidInvoice } from "@/lib/dal/invoices";
+import { createPaymentLink, sellPackage, recordManualPayment, setInvoicePaid, voidInvoice } from "@/lib/dal/invoices";
 import { sendInvoice, sendPaymentLink, sendReminder, sendTopUp } from "@/lib/dal/money-flow";
 import { requireAdmin } from "@/lib/dal/session";
 import { db } from "@/lib/db";
@@ -44,6 +44,17 @@ export async function markPaidAction(invoiceId: string, input: z.input<typeof ma
   const r = await recordManualPayment(user, invoiceId, p.data);
   if (r.ok) refresh();
   if (r.ok) revalidatePath(`/betalingen/facturen/${invoiceId}`);
+  return r;
+}
+
+/** Admin: the simple paid / unpaid check for money received in person (cash by default). */
+export async function setInvoicePaidAction(invoiceId: string, paid: boolean) {
+  const user = await requireAdmin();
+  const r = await setInvoicePaid(user, invoiceId, paid);
+  if (r.ok) {
+    refresh();
+    revalidatePath(`/betalingen/facturen/${invoiceId}`);
+  }
   return r;
 }
 

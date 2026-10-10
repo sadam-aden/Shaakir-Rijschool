@@ -64,7 +64,7 @@ export async function loadScheduleInputs(p: { schoolId: string; instructorId: st
     db.lesson.findMany({ where: { studentId: { in: ids }, status: { in: ["PLANNED", "DRAFT", "COMPLETED"] }, startsAt: { gte: dayStart, lte: dayEnd } }, select: { studentId: true } }),
     db.lesson.findMany({ where: { studentId: { in: ids }, status: "DRAFT", startsAt: { gte: now } }, select: { studentId: true, durationMin: true } }),
     db.invoice.findMany({
-      where: { studentId: { in: ids }, status: { notIn: ["VOID", "DRAFT", "PAID"] }, dueDate: { lt: now } },
+      where: { studentId: { in: ids }, status: { notIn: ["VOID", "DRAFT", "PAID"] } },
       select: { studentId: true, totalCents: true, payments: { select: { status: true, amountCents: true } } },
     }),
   ]);
