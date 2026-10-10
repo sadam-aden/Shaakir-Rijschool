@@ -33,6 +33,8 @@ type Props = {
   studentId?: string;
   initial?: StudentInput;
   instructors?: { id: string; displayName: string }[];
+  /** active packages an admin can attach to a new student */
+  packages?: { id: string; label: string }[];
   isAdmin: boolean;
   /** pre-selected primary instructor for new students (the owner, Shaakir) */
   defaultInstructorId?: string;
@@ -40,13 +42,14 @@ type Props = {
 };
 
 /** Add / edit student dialog. Validation schema is shared with the server action. */
-export function StudentFormDialog({ mode, studentId, initial, instructors = [], isAdmin, defaultInstructorId, trigger }: Props) {
+export function StudentFormDialog({ mode, studentId, initial, instructors = [], packages = [], isAdmin, defaultInstructorId, trigger }: Props) {
   const base: StudentInput = initial ?? { ...emptyStudent, primaryInstructorId: defaultInstructorId ?? "" };
   const t = useTranslations("students.form");
   const tc = useTranslations("common");
   const tg = useTranslations("gearbox");
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [packageId, setPackageId] = useState("");
   const { run, pending } = useRunAction();
   const form = useForm<StudentInput, unknown, StudentData>({
     resolver: zodResolver(studentSchema),
@@ -88,9 +91,9 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
       }
     }
     run(
-      () => (mode === "create" ? createStudentAction(values) : updateStudentAction(studentId!, values)),
+      () => (mode === "create" ? createStudentAction(values, packageId || undefined) : updateStudentAction(studentId!, values)),
       {
-        success: mode === "create" ? t("created") : t("updated"),
+        success: mode === "create" ? (packageId ? t("createdWithPackage") : t("created")) : t("updated"),
         // after creating, navigating to the new student already loads fresh data; a parallel refresh would undo it
         refresh: mode !== "create",
         onOk: (data) => {
@@ -102,7 +105,7 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
   });
 
   return (
-    <Dialog open={open} onOpenChange={(o) => { if (o) reset(base); setOpen(o); }}>
+    <Dialog open={open} onOpenChange={(o) => { if (o) { reset(base); setPackageId(""); } setOpen(o); }}>
       <DialogTrigger asChild>
         {trigger ?? (
           <Button variant="soft">
@@ -177,6 +180,15 @@ export function StudentFormDialog({ mode, studentId, initial, instructors = [], 
                 <option value="en">English</option>
               </Select>
             </Field>
+            {mode === "create" && isAdmin && packages.length > 0 && (
+              <Field label={t("package")} className="sm:col-span-2">
+                <Select value={packageId} onChange={(e) => setPackageId(e.target.value)}>
+                  <option value="">{t("packageNone")}</option>
+                  {packages.map((p) => <option key={p.id} value={p.id}>{p.label}</option>)}
+                </Select>
+                <span className="mt-1 block text-xs font-normal text-muted">{t("packageHint")}</span>
+              </Field>
+            )}
             {isAdmin && (
               <Field label={t("instructor")} className="sm:col-span-2">
                 <Select {...register("primaryInstructorId")}>

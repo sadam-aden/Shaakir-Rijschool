@@ -393,7 +393,11 @@
       "phoneInvalid": "Enter a Dutch phone number, e.g. 06 12345678 or +31 6 12345678.",
       "emailRequired": "E-mail address is required.",
       "provinceRequired": "Choose a province: students must live in the Netherlands.",
-      "cityRequired": "Choose a city in the Netherlands."
+      "cityRequired": "Choose a city in the Netherlands.",
+      "package": "Package",
+      "packageNone": "No package yet",
+      "packageHint": "Creates the invoice and the lesson hours right away. Booking is possible once the package is marked as paid.",
+      "createdWithPackage": "Student added, package invoice created"
     },
     "delete": {
       "edit": "Edit",

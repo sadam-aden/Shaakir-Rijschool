@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { fail, ok } from "@/lib/action-result";
 import { audit } from "@/lib/dal/audit";
+import { sellPackage } from "@/lib/dal/invoices";
 import { findStudentFor } from "@/lib/dal/guards";
 import { requireAdmin, requireUser } from "@/lib/dal/session";
 import { db } from "@/lib/db";
@@ -13,7 +14,8 @@ import { studentSchema, type StudentInput } from "@/lib/schemas/student";
 
 const COLORS = ["#DBEAFE", "#E0E7FF", "#DCFCE7", "#FEE2E2", "#FEF3C7", "#F3E8FF"];
 
-export async function createStudentAction(input: StudentInput) {
+/** Creates a student; an admin can pick a package at the same time (creates the invoice and the hours). */
+export async function createStudentAction(input: StudentInput, packageId?: string) {
   const user = await requireUser();
   const parsed = studentSchema.safeParse(input);
   if (!parsed.success) return fail("invalid");
@@ -31,8 +33,14 @@ export async function createStudentAction(input: StudentInput) {
       avatarColor: COLORS[count % COLORS.length],
     },
   });
+  let invoiceNumber: string | null = null;
+  if (packageId && user.role === "ADMIN") {
+    const sold = await sellPackage(user, s.id, packageId);
+    if (sold.ok) invoiceNumber = sold.data.number;
+  }
   revalidatePath("/leerlingen");
-  return ok({ id: s.id });
+  revalidatePath("/betalingen");
+  return ok({ id: s.id, invoiceNumber });
 }
 
 export async function updateStudentAction(id: string, input: StudentInput) {

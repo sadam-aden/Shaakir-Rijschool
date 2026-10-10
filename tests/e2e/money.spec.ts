@@ -194,3 +194,21 @@ test("the admin can check a student as paid in cash and back to unpaid", async (
   await expectToast(page, "Als onbetaald gemarkeerd");
   await expect(sw).toHaveAttribute("aria-checked", "false");
 });
+
+test("a package can be chosen while adding a student; it starts as an unpaid invoice", async ({ page }) => {
+  await login(page);
+  await page.goto("/leerlingen");
+  await page.getByRole("button", { name: "Leerling toevoegen" }).click();
+  await page.getByLabel("Voornaam").fill("Pakket");
+  await page.getByLabel("Achternaam").fill("Nieuwling");
+  await page.getByLabel("Geboortedatum").fill("1995-03-03");
+  await page.getByLabel("Telefoon (Nederlands nummer)").fill("06 12345678");
+  await page.getByLabel("E-mail", { exact: true }).fill("pakket@gmail.com");
+  await page.getByLabel("Pakket").selectOption({ index: 1 });
+  await page.getByRole("button", { name: "Opslaan" }).click();
+  await expectToast(page, "Leerling toegevoegd, pakketfactuur aangemaakt");
+
+  await page.goto("/betalingen");
+  await expect(row(page, /Pakket Nieuwling/)).toContainText("Openstaand");
+  await expect(page.getByRole("switch", { name: /Betaald · Pakket Nieuwling/ })).toHaveAttribute("aria-checked", "false");
+});

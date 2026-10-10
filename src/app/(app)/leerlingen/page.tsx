@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { PageHeader } from "@/components/shell/page-header";
 import { StudentActions } from "@/components/students/student-actions";
 import { StudentDetailPanel } from "@/components/students/detail-panel";
@@ -8,6 +8,7 @@ import { StudentTable } from "@/components/students/student-table";
 import { Card, EmptyState } from "@/components/ui/card";
 import { requireUser } from "@/lib/dal/session";
 import { db } from "@/lib/db";
+import { formatMoney } from "@/lib/format";
 import { filterStudents, getStudentDetail, getStudentRows, paymentSummary, type StudentFilter } from "@/lib/queries/students";
 import { cn } from "@/lib/utils";
 import { Plus, Search } from "lucide-react";
@@ -27,6 +28,11 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
   const selectedId = list.find((r) => r.id === sp.id)?.id ?? list[0]?.id;
   const selected = selectedId ? await getStudentDetail(user, selectedId) : null;
   const instructors = user.role === "ADMIN" ? await db.instructor.findMany({ where: { schoolId: user.schoolId, active: true }, select: { id: true, displayName: true } }) : [];
+
+  const locale = (await getLocale()) as "nl" | "en";
+  const packages = user.role === "ADMIN"
+    ? (await db.package.findMany({ where: { schoolId: user.schoolId, active: true }, orderBy: { sortOrder: "asc" } })).map((p) => ({ id: p.id, label: `${locale === "nl" ? p.nameNl : p.nameEn} · ${formatMoney(p.priceCents, locale)}` }))
+    : [];
 
   const href = (over: { filter?: string; id?: string }) => {
     const p = new URLSearchParams();
@@ -55,7 +61,7 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
               />
             </form>
             <StudentFormDialog
-              mode="create" instructors={instructors} isAdmin={user.role === "ADMIN"} defaultInstructorId={user.instructorId ?? undefined}
+              mode="create" instructors={instructors} packages={packages} isAdmin={user.role === "ADMIN"} defaultInstructorId={user.instructorId ?? undefined}
               trigger={<Button variant="soft"><Plus className="h-4 w-4" aria-hidden />{t("add")}</Button>}
             />
           </>

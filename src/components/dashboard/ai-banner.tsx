@@ -36,7 +36,7 @@ export async function AiBanner({ user }: { user: SessionUser }) {
   return (
     <section className="mb-6 flex flex-wrap items-center gap-6 rounded-3xl bg-primary p-6 text-white" aria-label={t("eyebrow", { when, date: dateLabel })}>
       <span className="hidden h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/15 sm:flex"><Sparkles className="h-7 w-7" aria-hidden /></span>
-      <div className="min-w-0 flex-1 basis-96">
+      <div className="min-w-0 flex-1 basis-60 sm:basis-96">
         <p className="text-xs font-bold uppercase tracking-wider text-white/80">{t("eyebrow", { when, date: dateLabel })}</p>
         <h2 className="mt-1 text-2xl font-bold leading-snug">{hasDraft ? t("titleDraft", { when }) : t("title", { when: whenStart })}</h2>
         <div className="mt-3 flex flex-wrap gap-2 text-xs font-bold">
